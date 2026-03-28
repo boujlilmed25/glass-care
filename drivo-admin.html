@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Boujlilcar — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --accent:#6366f1;--accent2:#06b6d4;--accent3:#f59e0b;
+  --green:#22c55e;--red:#ef4444;--whatsapp:#25D366;
+  --radius:16px;--radius-sm:10px;
+  --transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"]{
+  --bg:#0a0a1a;--bg2:#0f0f24;--bg3:#14142e;
+  --sidebar:#0d0d20;--sidebar-border:rgba(255,255,255,0.08);
+  --card:rgba(255,255,255,0.05);--card-border:rgba(255,255,255,0.1);
+  --card-hover:rgba(255,255,255,0.08);
+  --text:#fff;--text2:rgba(255,255,255,0.65);--text3:rgba(255,255,255,0.35);
+  --input:rgba(255,255,255,0.06);--input-border:rgba(255,255,255,0.12);
+}
+[data-theme="light"]{
+  --bg:#f0f4ff;--bg2:#e8eeff;--bg3:#dde4ff;
+  --sidebar:#fff;--sidebar-border:rgba(0,0,0,0.08);
+  --card:rgba(255,255,255,0.8);--card-border:rgba(0,0,0,0.08);
+  --card-hover:rgba(255,255,255,0.95);
+  --text:#0f172a;--text2:rgba(15,23,42,0.65);--text3:rgba(15,23,42,0.35);
+  --input:rgba(255,255,255,0.9);--input-border:rgba(0,0,0,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Montserrat','Noto Color Emoji','Segoe UI Emoji','Apple Color Emoji',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+.topbar-title{font-family:'Noto Color Emoji','Segoe UI Emoji','Apple Color Emoji','Montserrat',sans-serif;}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 80% 60% at 10% 20%,#1a1a3e 0%,transparent 60%),
+  radial-gradient(ellipse 60% 80% at 90% 80%,#0d1b2a 0%,transparent 60%),#0a0a1a;}
+.login-box{background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);
+  border-radius:24px;padding:48px;width:100%;max-width:420px;text-align:center;}
+.login-logo{font-size:2rem;font-weight:900;letter-spacing:4px;margin-bottom:8px;}
+.login-logo span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.login-sub{color:rgba(255,255,255,0.4);font-size:0.85rem;margin-bottom:32px;}
+.login-field{text-align:left;margin-bottom:16px;}
+.login-field label{display:block;font-size:0.8rem;color:rgba(255,255,255,0.5);margin-bottom:6px;font-weight:600;}
+.login-field input{width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;font-family:inherit;font-size:0.95rem;outline:none;transition:var(--transition);}
+.login-field input:focus{border-color:var(--accent);box-shadow:0 0 20px rgba(99,102,241,0.2);}
+.login-field input::placeholder{color:rgba(255,255,255,0.25);}
+.login-btn{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:var(--transition);font-family:inherit;margin-top:8px;}
+.login-btn:hover{transform:translateY(-2px);filter:brightness(1.1);}
+.login-error{color:var(--red);font-size:0.82rem;margin-top:12px;display:none;}
+.otp-input{width:100%;padding:16px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;font-family:monospace;font-size:2rem;letter-spacing:12px;text-align:center;outline:none;transition:var(--transition);}
+.otp-input:focus{border-color:var(--accent);box-shadow:0 0 20px rgba(99,102,241,0.2);}
+.back-link{background:none;border:none;color:rgba(255,255,255,0.4);margin-top:16px;cursor:pointer;font-size:0.8rem;font-family:inherit;}
+.back-link:hover{color:rgba(255,255,255,0.7);}
+.twofa-qr{border-radius:12px;border:4px solid #fff;width:180px;height:180px;display:block;margin:0 auto 16px;}
+.twofa-secret{background:var(--input);border:1px solid var(--input-border);border-radius:8px;padding:10px;text-align:center;font-family:monospace;font-size:0.85rem;letter-spacing:3px;color:var(--text2);margin-bottom:16px;word-break:break-all;}
+
+/* LAYOUT */
+#app{display:none;min-height:100vh;}
+.layout{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:260px;flex-shrink:0;background:var(--sidebar);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto;}
+.sidebar-logo{padding:24px 20px;border-bottom:1px solid var(--sidebar-border);}
+.sidebar-logo .logo{font-size:1.4rem;font-weight:900;letter-spacing:3px;}
+.sidebar-logo .logo span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sidebar-logo .tagline{font-size:0.72rem;color:var(--text3);margin-top:2px;}
+.sidebar-nav{padding:16px 12px;flex:1;}
+.nav-section-label{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text3);padding:12px 8px 6px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:var(--transition);color:var(--text2);font-size:0.88rem;font-weight:500;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:inherit;}
+.nav-item:hover{background:var(--card);color:var(--text);}
+.nav-item.active{background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(6,182,212,0.1));color:var(--accent);border:1px solid rgba(99,102,241,0.2);}
+.nav-item .nav-icon{font-size:1.1rem;width:22px;text-align:center;flex-shrink:0;font-family:'Noto Color Emoji','Segoe UI Emoji','Apple Color Emoji','Twemoji Mozilla',sans-serif !important;}
+.sidebar-footer{padding:16px;border-top:1px solid var(--sidebar-border);}
+.sidebar-user{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;color:#fff;flex-shrink:0;}
+.user-name{font-size:0.85rem;font-weight:600;}
+.user-role{font-size:0.72rem;color:var(--text3);}
+
+/* MAIN */
+.main{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{padding:16px 28px;border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;justify-content:space-between;background:var(--sidebar);position:sticky;top:0;z-index:50;}
+.topbar-title{font-size:1.1rem;font-weight:700;}
+.topbar-actions{display:flex;align-items:center;gap:10px;}
+.tb-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--card-border);background:var(--card);color:var(--text);font-family:inherit;font-size:0.82rem;cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:6px;}
+.tb-btn:hover{background:var(--card-hover);}
+.tb-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;}
+.content{padding:28px;flex:1;}
+
+/* PANELS */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:28px;}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;transition:var(--transition);}
+.stat-card:hover{background:var(--card-hover);transform:translateY(-2px);}
+.stat-card .sc-icon{font-size:1.8rem;margin-bottom:10px;}
+.stat-card .sc-val{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-card .sc-label{font-size:0.8rem;color:var(--text2);margin-top:2px;}
+.stat-card .sc-change{font-size:0.75rem;margin-top:8px;display:flex;align-items:center;gap:4px;}
+.sc-up{color:var(--green);}
+.sc-down{color:var(--red);}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.card-title{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+.card-actions{display:flex;gap:8px;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:10px 14px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--card-border);}
+td{padding:12px 14px;font-size:0.88rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
+tr:hover td{background:var(--card-hover);}
+tr:last-child td{border-bottom:none;}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;}
+.badge-green{background:rgba(34,197,94,0.15);color:var(--green);}
+.badge-amber{background:rgba(245,158,11,0.15);color:var(--accent3);}
+.badge-red{background:rgba(239,68,68,0.15);color:var(--red);}
+.badge-blue{background:rgba(99,102,241,0.15);color:var(--accent);}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-family:inherit;font-size:0.83rem;font-weight:600;cursor:pointer;transition:var(--transition);border:none;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-ghost{background:var(--card);border:1px solid var(--card-border);color:var(--text2);}
+.btn-ghost:hover{background:var(--card-hover);color:var(--text);}
+.btn-danger{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.25);color:var(--red);}
+.btn-danger:hover{background:rgba(239,68,68,0.25);}
+.btn-success{background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.25);color:var(--green);}
+.btn-success:hover{background:rgba(34,197,94,0.25);}
+.btn-sm{padding:5px 10px;font-size:0.75rem;}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-grid.col3{grid-template-columns:1fr 1fr 1fr;}
+.form-grid.col1{grid-template-columns:1fr;}
+.form-field{display:flex;flex-direction:column;gap:6px;}
+.form-field.span2{grid-column:span 2;}
+.form-field label{font-size:0.78rem;font-weight:600;color:var(--text2);}
+.form-field input,.form-field select,.form-field textarea{padding:10px 14px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;font-size:0.88rem;outline:none;transition:var(--transition);}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
+.form-field textarea{resize:vertical;min-height:80px;}
+.form-field select option{background:var(--bg2);}
+.form-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-backdrop.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--card-border);border-radius:20px;padding:32px;width:90%;max-width:640px;max-height:85vh;overflow-y:auto;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.modal-title{font-size:1.1rem;font-weight:700;}
+.modal-close{width:32px;height:32px;border-radius:8px;background:var(--card);border:1px solid var(--card-border);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.modal-close:hover{background:rgba(239,68,68,0.2);color:var(--red);}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 20px;border-radius:12px;font-size:0.85rem;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;animation:slideInToast 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+.toast-success{background:linear-gradient(135deg,#22c55e,#16a34a);}
+.toast-error{background:linear-gradient(135deg,#ef4444,#dc2626);}
+.toast-info{background:linear-gradient(135deg,var(--accent),var(--accent2));}
+@keyframes slideInToast{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* SEARCH BAR */
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--input-border);border-radius:10px;padding:8px 14px;margin-bottom:20px;}
+.search-bar input{background:none;border:none;color:var(--text);font-family:inherit;font-size:0.88rem;outline:none;flex:1;}
+.search-bar input::placeholder{color:var(--text3);}
+
+/* SWITCH */
+.switch{position:relative;display:inline-block;width:44px;height:24px;}
+.switch input{opacity:0;width:0;height:0;}
+.switch-track{position:absolute;inset:0;border-radius:12px;background:rgba(255,255,255,0.1);border:1px solid var(--card-border);cursor:pointer;transition:var(--transition);}
+.switch input:checked + .switch-track{background:var(--accent);border-color:var(--accent);}
+.switch-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:var(--transition);}
+.switch input:checked ~ .switch-thumb{transform:translateX(20px);}
+
+/* COLOR SWATCH */
+.color-preview{width:32px;height:32px;border-radius:8px;border:2px solid var(--card-border);cursor:pointer;flex-shrink:0;}
+
+/* CHART PLACEHOLDER */
+.mini-chart{height:60px;display:flex;align-items:flex-end;gap:4px;margin-top:12px;}
+.chart-bar{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(to top,var(--accent),var(--accent2));opacity:0.7;transition:var(--transition);}
+.chart-bar:hover{opacity:1;}
+
+/* AVATAR CELL */
+.avatar-cell{display:flex;align-items:center;gap:10px;}
+.av{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0;}
+
+/* GPS DOT */
+.gps-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;display:inline-block;}
+.gps-dot.active{background:var(--green);box-shadow:0 0 8px var(--green);}
+.gps-dot.parked{background:var(--accent3);box-shadow:0 0 8px var(--accent3);}
+.gps-dot.maint{background:var(--red);box-shadow:0 0 8px var(--red);}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:4px;margin-bottom:20px;width:fit-content;}
+.tab{padding:7px 18px;border-radius:7px;border:none;background:transparent;color:var(--text2);font-family:inherit;font-size:0.83rem;font-weight:600;cursor:pointer;transition:var(--transition);}
+.tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+
+/* QUICK PREVIEW */
+.hero-thumb{width:80px;height:48px;object-fit:cover;border-radius:6px;border:2px solid var(--card-border);cursor:pointer;}
+.hero-thumb.active{border-color:var(--accent);}
+
+/* SETTINGS SECTIONS */
+.settings-list{display:flex;flex-direction:column;gap:12px;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;}
+.settings-row-info{display:flex;flex-direction:column;gap:2px;}
+.settings-row-label{font-size:0.9rem;font-weight:600;}
+.settings-row-desc{font-size:0.78rem;color:var(--text3);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{width:64px;}
+  .sidebar .sidebar-logo .tagline,.sidebar .nav-item span,.sidebar .user-name,.sidebar .user-role,.sidebar .sidebar-footer .user-avatar+div,.sidebar .nav-section-label{display:none;}
+  .nav-item{justify-content:center;padding:12px;}
+  .main{margin-left:64px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box" id="loginBox">
+    <div class="login-logo"><span>Boujlil</span>car</div>
+    <p class="login-sub">Admin Dashboard — Secure Access</p>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="admin" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <p class="login-error" id="loginError">❌ Invalid credentials.</p>
+    <p class="login-error" id="loginLocked" style="color:#f59e0b">🔒 Too many attempts. Try again in <span id="lockCountdown">15:00</span></p>
+  </div>
+  <div class="login-box" id="twoFABox" style="display:none">
+    <div class="login-logo"><span>Boujlil</span>car</div>
+    <p class="login-sub">Two-Factor Authentication</p>
+    <p style="color:rgba(255,255,255,0.55);font-size:0.83rem;margin-bottom:24px;line-height:1.6">Open your authenticator app and enter the 6-digit code.</p>
+    <div class="login-field">
+      <label>Authentication Code</label>
+      <input type="text" class="otp-input" id="twoFACode" placeholder="000000" maxlength="6" inputmode="numeric" pattern="[0-9]*" onkeydown="if(event.key==='Enter')verify2FA()"/>
+    </div>
+    <button class="login-btn" onclick="verify2FA()">Verify →</button>
+    <p class="login-error" id="twoFAError">❌ Invalid code. Try again.</p>
+    <button class="back-link" onclick="cancelTwoFA()">← Back to login</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo"><span>Boujlil</span>car</div>
+    <div class="tagline">Admin Dashboard</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Fleet & Bookings</div>
+    <button class="nav-item active" onclick="showPanel('fleet')"><span class="nav-icon">🚗</span><span>Fleet Manager</span></button>
+    <button class="nav-item" onclick="showPanel('bookings')"><span class="nav-icon">📅</span><span>Bookings</span></button>
+    <button class="nav-item" onclick="showPanel('gps')"><span class="nav-icon">📍</span><span>GPS Tracking</span></button>
+    <button class="nav-item" onclick="showPanel('clients')"><span class="nav-icon">👥</span><span>Clients</span></button>
+
+    <div class="nav-section-label">Content</div>
+    <button class="nav-item" onclick="showPanel('pricing')"><span class="nav-icon">💰</span><span>Pricing Plans</span></button>
+    <button class="nav-item" onclick="showPanel('hero')"><span class="nav-icon">🖼️</span><span>Hero Slider</span></button>
+    <button class="nav-item" onclick="showPanel('testimonials')"><span class="nav-icon">⭐</span><span>Testimonials</span></button>
+    <button class="nav-item" onclick="showPanel('faq')"><span class="nav-icon">❓</span><span>FAQ</span></button>
+    <button class="nav-item" onclick="showPanel('texts')"><span class="nav-icon">✏️</span><span>Site Texts</span></button>
+    <button class="nav-item" onclick="showPanel('featured')"><span class="nav-icon">🌟</span><span>Featured Cars</span></button>
+    <button class="nav-item" onclick="showPanel('gpscontent')"><span class="nav-icon">🗺️</span><span>GPS Content</span></button>
+    <button class="nav-item" onclick="showPanel('footer')"><span class="nav-icon">🦶</span><span>Footer & Contact</span></button>
+
+    <div class="nav-section-label">System</div>
+    <button class="nav-item" onclick="showPanel('whatsapp')"><span class="nav-icon">💬</span><span>WhatsApp Config</span></button>
+    <button class="nav-item" onclick="showPanel('ads')"><span class="nav-icon">📊</span><span>Ads & Analytics</span></button>
+    <button class="nav-item" onclick="showPanel('settings')"><span class="nav-icon">⚙️</span><span>Settings</span></button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="user-avatar">A</div>
+      <div><div class="user-name">Admin</div><div class="user-role">Super Admin</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="logout()" style="margin-left:auto;padding:6px 8px">🚪</button>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">🚗 Fleet Manager</div>
+    <div class="topbar-actions">
+      <button class="tb-btn" onclick="toggleTheme()">🌙</button>
+      <a href="drivo-car-rental.html" target="_blank" class="tb-btn primary">🌐 View Site</a>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- ===== FLEET MANAGER ===== -->
+    <div class="panel active" id="panel-fleet">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🚗 Fleet Manager</div>
+          <button class="btn btn-primary" onclick="openCarModal()">+ Add Car</button>
+        </div>
+        <div class="search-bar">
+          <span>🔍</span>
+          <input type="text" placeholder="Search cars..." oninput="searchCars(this.value)"/>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Car</th><th>Category</th><th>Price/Day</th><th>Fuel</th><th>Seats</th><th>Trans</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="fleetTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BOOKINGS ===== -->
+    <div class="panel" id="panel-bookings">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📅 Bookings Manager</div>
+          <button class="btn btn-primary" onclick="openBookingModal()">+ New Booking</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="filterBookings('all')" id="bf-all">All</button>
+          <button class="btn btn-ghost btn-sm" onclick="filterBookings('active')" id="bf-active">Active</button>
+          <button class="btn btn-ghost btn-sm" onclick="filterBookings('pending')" id="bf-pending">Pending</button>
+          <button class="btn btn-ghost btn-sm" onclick="filterBookings('completed')" id="bf-completed">Completed</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Client</th><th>Car</th><th>From</th><th>To</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="bookingsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== GPS ===== -->
+    <div class="panel" id="panel-gps">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📍 GPS Fleet Tracker</div>
+          <span class="badge badge-green">● Live</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Vehicle ID</th><th>Car</th><th>Status</th><th>Speed</th><th>Location</th><th>Last Update</th><th>Actions</th></tr></thead>
+            <tbody id="gpsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PRICING ===== -->
+    <div class="panel" id="panel-pricing">
+      <div id="pricingPanelContent"></div>
+    </div>
+
+    <!-- ===== HERO SLIDER ===== -->
+    <div class="panel" id="panel-hero">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🖼️ Hero Slider Manager</div>
+          <button class="btn btn-primary" onclick="addSlide()">+ Add Slide</button>
+        </div>
+        <div id="slidesList"></div>
+      </div>
+    </div>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <div class="panel" id="panel-testimonials">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⭐ Testimonials</div>
+          <button class="btn btn-primary" onclick="openTestiModal()">+ Add Review</button>
+        </div>
+        <div id="testiGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px"></div>
+      </div>
+    </div>
+
+    <!-- ===== FAQ ===== -->
+    <div class="panel" id="panel-faq">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">❓ FAQ Manager</div>
+          <button class="btn btn-primary" onclick="openFAQModal()">+ Add Question</button>
+        </div>
+        <div id="faqAdminList" style="display:flex;flex-direction:column;gap:10px"></div>
+      </div>
+    </div>
+
+    <!-- ===== SITE TEXTS ===== -->
+    <div class="panel" id="panel-texts">
+      <div class="tabs" style="margin-bottom:20px">
+        <button class="tab active" onclick="setTextTab('en')">🇬🇧 English</button>
+        <button class="tab" onclick="setTextTab('ar')">🇲🇦 Arabic</button>
+      </div>
+      <div id="textsPanel"></div>
+    </div>
+
+    <!-- ===== SETTINGS ===== -->
+    <div class="panel" id="panel-settings">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📞 Contact Info</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>WhatsApp Number</label><input type="text" id="set-whatsapp" placeholder="+212641750719"/></div>
+            <div class="form-field"><label>Phone</label><input type="text" id="set-phone" placeholder="+212 641 750 719"/></div>
+            <div class="form-field"><label>Email</label><input type="email" id="set-email" placeholder="contact@drivo.ma"/></div>
+            <div class="form-field"><label>Address (EN)</label><input type="text" id="set-addr-en" placeholder="Casablanca, Morocco"/></div>
+            <div class="form-field"><label>Address (AR)</label><input type="text" id="set-addr-ar" placeholder="الدار البيضاء، المغرب" dir="rtl"/></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="saveContactSettings()">💾 Save</button></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🎨 Appearance</div></div>
+          <div class="settings-list">
+            <div class="settings-row">
+              <div class="settings-row-info"><div class="settings-row-label">Dark Mode</div><div class="settings-row-desc">Toggle dark/light theme</div></div>
+              <label class="switch"><input type="checkbox" id="darkModeSwitch" checked onchange="toggleTheme()"/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row-info"><div class="settings-row-label">Canvas Animation</div><div class="settings-row-desc">Animated background particles</div></div>
+              <label class="switch"><input type="checkbox" id="animSwitch" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row-info"><div class="settings-row-label">WhatsApp Float Button</div><div class="settings-row-desc">Floating WhatsApp button</div></div>
+              <label class="switch"><input type="checkbox" id="waSwitch" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔍 SEO Settings</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Site Title</label><input type="text" id="set-title" placeholder="Boujlilcar — Premium Car Rental Morocco"/></div>
+            <div class="form-field"><label>Meta Description</label><textarea id="set-desc" placeholder="Premium car rental in Morocco..."></textarea></div>
+            <div class="form-field"><label>Keywords</label><input type="text" id="set-kw" placeholder="car rental morocco, location voiture maroc..."/></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="saveSEOSettings()">💾 Save SEO</button></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔐 Security</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Current Password</label><input type="password" id="set-oldpw" placeholder="••••••••"/></div>
+            <div class="form-field"><label>New Password</label><input type="password" id="set-newpw" placeholder="••••••••"/></div>
+            <div class="form-field"><label>Confirm Password</label><input type="password" id="set-confirmpw" placeholder="••••••••"/></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="changePassword()">🔒 Change Password</button></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📱 Two-Factor Authentication (2FA)</div></div>
+          <div id="twoFASection"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FEATURED CARS ===== -->
+    <div class="panel" id="panel-featured">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🌟 Featured Cars Slider</div>
+          <button class="btn btn-ghost btn-sm" onclick="addFeaturedSlide()">+ Add Car</button>
+        </div>
+        <p style="color:var(--text2);font-size:0.82rem;margin-bottom:16px">These cars appear in the Featured Vehicles slider on the homepage. Each "Book Now" button opens WhatsApp with the message below.</p>
+        <div id="featuredCarsList"></div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="saveFeaturedCars()">💾 Save Featured Cars</button></div>
+      </div>
+    </div>
+
+    <!-- ===== GPS CONTENT ===== -->
+    <div class="panel" id="panel-gpscontent">
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header"><div class="card-title">🗺️ GPS Section Header</div></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Badge (EN)</label><input type="text" id="gpsc-badge-en"/></div>
+          <div class="form-field"><label>Badge (AR)</label><input type="text" id="gpsc-badge-ar" dir="rtl"/></div>
+          <div class="form-field"><label>Title (EN)</label><input type="text" id="gpsc-title-en"/></div>
+          <div class="form-field"><label>Title (AR)</label><input type="text" id="gpsc-title-ar" dir="rtl"/></div>
+          <div class="form-field"><label>Subtitle (EN)</label><input type="text" id="gpsc-sub-en"/></div>
+          <div class="form-field"><label>Subtitle (AR)</label><input type="text" id="gpsc-sub-ar" dir="rtl"/></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="saveGPSContent()">💾 Save Header</button></div>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header"><div class="card-title">🚗 Live Vehicles List</div><button class="btn btn-primary btn-sm" onclick="addGPSVehicle()">+ Add</button></div>
+        <div id="gpsContentVehicles"></div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="saveGPSContent()">💾 Save Vehicles</button></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">⚡ Feature Cards</div><button class="btn btn-primary btn-sm" onclick="addGPSFeat()">+ Add</button></div>
+        <div id="gpsContentFeats"></div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="saveGPSContent()">💾 Save Features</button></div>
+      </div>
+    </div>
+
+    <!-- ===== FOOTER & CONTACT ===== -->
+    <div class="panel" id="panel-footer">
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header"><div class="card-title">🦶 Footer Description & Copyright</div></div>
+        <div class="form-grid col1">
+          <div class="form-field"><label>Description (EN)</label><textarea id="ftd-desc-en"></textarea></div>
+          <div class="form-field"><label>Description (AR)</label><textarea id="ftd-desc-ar" dir="rtl"></textarea></div>
+          <div class="form-field"><label>Copyright (EN)</label><input type="text" id="ftd-copy-en"/></div>
+          <div class="form-field"><label>Copyright (AR)</label><input type="text" id="ftd-copy-ar" dir="rtl"/></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔗 Col 1 — Quick Links</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Title (EN)</label><input type="text" id="ftd-c0t-en"/></div>
+            <div class="form-field"><label>Title (AR)</label><input type="text" id="ftd-c0t-ar" dir="rtl"/></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🛎️ Col 2 — Services</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Title (EN)</label><input type="text" id="ftd-c1t-en"/></div>
+            <div class="form-field"><label>Title (AR)</label><input type="text" id="ftd-c1t-ar" dir="rtl"/></div>
+            <div class="form-field"><label>Links (EN, one per line)</label><textarea id="ftd-c1l-en" rows="4"></textarea></div>
+            <div class="form-field"><label>Links (AR, one per line)</label><textarea id="ftd-c1l-ar" dir="rtl" rows="4"></textarea></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">🏙️ Col 3 — Cities</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Title (EN)</label><input type="text" id="ftd-c2t-en"/></div>
+            <div class="form-field"><label>Title (AR)</label><input type="text" id="ftd-c2t-ar" dir="rtl"/></div>
+            <div class="form-field"><label>Cities (EN, one per line)</label><textarea id="ftd-c2l-en" rows="4"></textarea></div>
+            <div class="form-field"><label>Cities (AR, one per line)</label><textarea id="ftd-c2l-ar" dir="rtl" rows="4"></textarea></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📋 Contact Column & Legal</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Contact Column Title (EN)</label><input type="text" id="ftd-ct-en"/></div>
+            <div class="form-field"><label>Contact Column Title (AR)</label><input type="text" id="ftd-ct-ar" dir="rtl"/></div>
+            <div class="form-field"><label>Legal Links (EN, one per line)</label><textarea id="ftd-leg-en" rows="3"></textarea></div>
+            <div class="form-field"><label>Legal Links (AR, one per line)</label><textarea id="ftd-leg-ar" dir="rtl" rows="3"></textarea></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="saveFooterContent()">💾 Save All Footer</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== WHATSAPP CONFIG ===== -->
+    <div class="panel" id="panel-whatsapp">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">💬 WhatsApp Number & Button</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>WhatsApp Number (with country code)</label><input type="text" id="wa-number" placeholder="+212641750719"/></div>
+            <div class="form-field">
+              <div class="settings-row">
+                <div class="settings-row-info"><div class="settings-row-label">Float Button</div><div class="settings-row-desc">Show floating WhatsApp button on site</div></div>
+                <label class="switch"><input type="checkbox" id="wa-float-enabled" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="saveWAConfig()">💾 Save</button></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📝 Prefilled WhatsApp Messages</div></div>
+          <p style="font-size:0.78rem;color:var(--text2);margin-bottom:12px">These messages are pre-filled when users tap Book Now / WhatsApp buttons on the site.</p>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Hero Section CTA</label><input type="text" id="wa-msg-hero"/></div>
+            <div class="form-field"><label>Fleet "Book Now" Prefix</label><input type="text" id="wa-msg-fleet"/></div>
+            <div class="form-field"><label>Featured Cars "Book Now"</label><input type="text" id="wa-msg-featured"/></div>
+            <div class="form-field"><label>Pricing Plans CTA</label><input type="text" id="wa-msg-pricing"/></div>
+            <div class="form-field"><label>CTA Section Button</label><input type="text" id="wa-msg-cta"/></div>
+            <div class="form-field"><label>Footer WhatsApp Button</label><input type="text" id="wa-msg-footer"/></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="saveWAConfig()">💾 Save Messages</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ADS & ANALYTICS ===== -->
+    <div class="panel" id="panel-ads">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📈 Google Analytics 4</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Measurement ID</label><input type="text" id="ads-ga4" placeholder="G-XXXXXXXXXX"/></div>
+            <div class="form-field"><div class="settings-row"><div class="settings-row-info"><div class="settings-row-label">Enable GA4</div><div class="settings-row-desc">Inject GA4 tracking on site</div></div><label class="switch"><input type="checkbox" id="ads-ga4-on"/><div class="switch-track"></div><div class="switch-thumb"></div></label></div></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="saveAdsConfig()">💾 Save</button></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🏷️ Google Tag Manager</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>GTM Container ID</label><input type="text" id="ads-gtm" placeholder="GTM-XXXXXXX"/></div>
+            <div class="form-field"><div class="settings-row"><div class="settings-row-info"><div class="settings-row-label">Enable GTM</div><div class="settings-row-desc">Inject Google Tag Manager</div></div><label class="switch"><input type="checkbox" id="ads-gtm-on"/><div class="switch-track"></div><div class="switch-thumb"></div></label></div></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="saveAdsConfig()">💾 Save</button></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📢 Google Ads</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Google Ads ID</label><input type="text" id="ads-gads" placeholder="AW-XXXXXXXXX"/></div>
+            <div class="form-field"><label>Conversion Label</label><input type="text" id="ads-gads-label" placeholder="XXXXXXXXXXXX"/></div>
+            <div class="form-field"><div class="settings-row"><div class="settings-row-info"><div class="settings-row-label">Enable Google Ads</div><div class="settings-row-desc">Inject conversion tracking</div></div><label class="switch"><input type="checkbox" id="ads-gads-on"/><div class="switch-track"></div><div class="switch-thumb"></div></label></div></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="saveAdsConfig()">💾 Save</button></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📘 Meta (Facebook) Pixel</div></div>
+          <div class="form-grid col1">
+            <div class="form-field"><label>Meta Pixel ID</label><input type="text" id="ads-meta" placeholder="XXXXXXXXXXXXXXXXXX"/></div>
+            <div class="form-field"><div class="settings-row"><div class="settings-row-info"><div class="settings-row-label">Enable Meta Pixel</div><div class="settings-row-desc">Inject Meta Pixel tracking</div></div><label class="switch"><input type="checkbox" id="ads-meta-on"/><div class="switch-track"></div><div class="switch-thumb"></div></label></div></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="saveAdsConfig()">💾 Save</button></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:20px">
+        <div class="card-header"><div class="card-title">ℹ️ How It Works</div></div>
+        <p style="font-size:0.85rem;color:var(--text2);line-height:1.6">After saving your IDs and enabling them, <strong>reload the main site</strong> — tracking scripts will be automatically injected via localStorage. No server required.</p>
+      </div>
+    </div>
+
+    <!-- ===== CLIENTS ===== -->
+    <div class="panel" id="panel-clients">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">👥 Clients Manager</div>
+          <button class="btn btn-primary" onclick="openClientModal()">+ Add Client</button>
+        </div>
+        <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search clients..." oninput="searchClients(this.value)"/></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Client</th><th>Phone</th><th>Email</th><th>Bookings</th><th>Spent (MAD)</th><th>Actions</th></tr></thead>
+            <tbody id="clientsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+</div><!-- /layout -->
+</div><!-- /app -->
+
+<!-- ===== MODALS ===== -->
+<!-- Car Modal -->
+<div class="modal-backdrop" id="carModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="carModalTitle">🚗 Add New Car</div>
+      <button class="modal-close" onclick="closeModal('carModal')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-field"><label>Car Name (EN)</label><input type="text" id="car-name-en" placeholder="Mercedes C-Class"/></div>
+      <div class="form-field"><label>Car Name (AR)</label><input type="text" id="car-name-ar" placeholder="مرسيدس C-Class" dir="rtl"/></div>
+      <div class="form-field"><label>Category</label>
+        <select id="car-cat">
+          <option value="1">Economy / اقتصادية</option>
+          <option value="2">SUV</option>
+          <option value="3">Luxury / فاخرة</option>
+          <option value="4">Sport / رياضية</option>
+          <option value="5">Electric / كهربائية</option>
+        </select>
+      </div>
+      <div class="form-field"><label>Price (MAD/day)</label><input type="number" id="car-price" placeholder="500"/></div>
+      <div class="form-field"><label>Fuel Type</label>
+        <select id="car-fuel">
+          <option>Diesel / ديزل</option>
+          <option>Petrol / بنزين</option>
+          <option>Electric / كهرباء</option>
+          <option>Hybrid / هجين</option>
+        </select>
+      </div>
+      <div class="form-field"><label>Seats</label><input type="number" id="car-seats" placeholder="5" min="1" max="9"/></div>
+      <div class="form-field"><label>Transmission</label>
+        <select id="car-trans">
+          <option value="Auto">Automatic / أوتوماتيك</option>
+          <option value="Manual">Manual / يدوي</option>
+        </select>
+      </div>
+      <div class="form-field span2">
+        <label>Car Image / Emoji</label>
+        <div id="carImgPreview" style="width:100%;height:130px;border-radius:12px;background:var(--input);border:2px dashed var(--input-border);display:flex;align-items:center;justify-content:center;font-size:4rem;margin-bottom:10px;position:relative;overflow:hidden;cursor:pointer;transition:var(--transition)" onclick="document.getElementById('carImgFile').click()">
+          <span id="carImgPreviewContent">🚗</span>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:8px;background:rgba(0,0,0,0.6);font-size:0.72rem;color:rgba(255,255,255,0.7);text-align:center;font-weight:600">Click to upload photo</div>
+        </div>
+        <input type="file" id="carImgFile" accept="image/*" style="display:none" onchange="handleCarImgUpload(this)"/>
+        <input type="hidden" id="car-img" value="🚗"/>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="text" id="car-img-emoji" placeholder="🚗 or paste URL" style="flex:1" oninput="setCarImgEmoji(this.value)" maxlength="200"/>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('carImgFile').click()" style="white-space:nowrap;padding:8px 14px">📷 Upload</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="clearCarImg()" style="padding:8px 14px;color:var(--red)">✕</button>
+        </div>
+        <div style="font-size:0.72rem;color:var(--text3);margin-top:6px">Upload a photo, paste an image URL, or type an emoji</div>
+      </div>
+      <div class="form-field"><label>Status</label>
+        <select id="car-status">
+          <option value="available">Available</option>
+          <option value="rented">Rented</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeModal('carModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCar()">💾 Save Car</button>
+    </div>
+  </div>
+</div>
+
+<!-- Booking Modal -->
+<div class="modal-backdrop" id="bookingModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📅 New Booking</div>
+      <button class="modal-close" onclick="closeModal('bookingModal')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-field"><label>Client Name</label><input type="text" id="bk-client" placeholder="Ahmed Benali"/></div>
+      <div class="form-field"><label>Phone</label><input type="text" id="bk-phone" placeholder="+212 6XX XXX XXX"/></div>
+      <div class="form-field"><label>Car</label><select id="bk-car"></select></div>
+      <div class="form-field"><label>Status</label>
+        <select id="bk-status">
+          <option value="pending">Pending</option>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="form-field"><label>Pickup Date</label><input type="date" id="bk-from"/></div>
+      <div class="form-field"><label>Return Date</label><input type="date" id="bk-to"/></div>
+      <div class="form-field"><label>Pickup Location</label><input type="text" id="bk-pickup" placeholder="Casablanca Airport"/></div>
+      <div class="form-field"><label>Total (MAD)</label><input type="number" id="bk-total" placeholder="1500"/></div>
+      <div class="form-field span2"><label>Notes</label><textarea id="bk-notes" placeholder="Special requests..."></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeModal('bookingModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBooking()">💾 Save Booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonial Modal -->
+<div class="modal-backdrop" id="testiModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="testiModalTitle">⭐ Add Review</div>
+      <button class="modal-close" onclick="closeModal('testiModal')">✕</button>
+    </div>
+    <div class="form-grid col1">
+      <div class="form-grid">
+        <div class="form-field"><label>Name (EN)</label><input type="text" id="ti-name-en" placeholder="Ahmed B."/></div>
+        <div class="form-field"><label>Name (AR)</label><input type="text" id="ti-name-ar" placeholder="أحمد ب." dir="rtl"/></div>
+        <div class="form-field"><label>Role (EN)</label><input type="text" id="ti-role-en" placeholder="Business Traveler"/></div>
+        <div class="form-field"><label>Role (AR)</label><input type="text" id="ti-role-ar" placeholder="مسافر أعمال" dir="rtl"/></div>
+      </div>
+      <div class="form-field"><label>Review Text (EN)</label><textarea id="ti-text-en" placeholder="Excellent service!..."></textarea></div>
+      <div class="form-field"><label>Review Text (AR)</label><textarea id="ti-text-ar" placeholder="خدمة ممتازة!..." dir="rtl"></textarea></div>
+      <div class="form-field"><label>Rating (1-5)</label><input type="number" id="ti-rating" min="1" max="5" value="5"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeModal('testiModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTesti()">💾 Save Review</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ Modal -->
+<div class="modal-backdrop" id="faqModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="faqModalTitle">❓ Add FAQ</div>
+      <button class="modal-close" onclick="closeModal('faqModal')">✕</button>
+    </div>
+    <div class="form-grid col1">
+      <div class="form-field"><label>Question (EN)</label><input type="text" id="faq-q-en" placeholder="What documents do I need?"/></div>
+      <div class="form-field"><label>Answer (EN)</label><textarea id="faq-a-en"></textarea></div>
+      <div class="form-field"><label>Question (AR)</label><input type="text" id="faq-q-ar" dir="rtl"/></div>
+      <div class="form-field"><label>Answer (AR)</label><textarea id="faq-a-ar" dir="rtl"></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeModal('faqModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveFAQ()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Client Modal -->
+<div class="modal-backdrop" id="clientModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="clientModalTitle">👥 Add Client</div>
+      <button class="modal-close" onclick="closeModal('clientModal')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-field"><label>Name</label><input type="text" id="cl-name" placeholder="Ahmed Benali"/></div>
+      <div class="form-field"><label>Phone</label><input type="text" id="cl-phone" placeholder="+212 6XX XXX XXX"/></div>
+      <div class="form-field span2"><label>Email</label><input type="email" id="cl-email" placeholder="client@email.com"/></div>
+      <div class="form-field"><label>Total Bookings</label><input type="number" id="cl-bookings" value="0" min="0"/></div>
+      <div class="form-field"><label>Total Spent (MAD)</label><input type="number" id="cl-spent" value="0" min="0"/></div>
+      <div class="form-field span2"><label>Notes</label><textarea id="cl-notes" placeholder="VIP client, monthly plan..."></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeModal('clientModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveClient()">💾 Save Client</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================== DATA LAYER ===================== */
+const DB = {
+  load(key, def) { try { const v=localStorage.getItem('drivo_'+key); return v?JSON.parse(v):def; } catch(e){ return def; } },
+  save(key, val) { localStorage.setItem('drivo_'+key, JSON.stringify(val)); }
+};
+
+// Default data
+const defaultCars = [
+  {id:1,nameEn:'Dacia Logan',nameAr:'داسيا لوغان',cat:1,catNameEn:'Economy',catNameAr:'اقتصادية',price:250,fuel:'Diesel / ديزل',seats:5,trans:'Manual',img:'🚗',status:'available'},
+  {id:2,nameEn:'Renault Clio',nameAr:'رينو كليو',cat:1,catNameEn:'Economy',catNameAr:'اقتصادية',price:300,fuel:'Petrol / بنزين',seats:5,trans:'Auto',img:'🚙',status:'rented'},
+  {id:3,nameEn:'Hyundai Tucson',nameAr:'هيونداي توسان',cat:2,catNameEn:'SUV',catNameAr:'SUV',price:550,fuel:'Diesel / ديزل',seats:5,trans:'Auto',img:'🚙',status:'available'},
+  {id:4,nameEn:'Toyota Land Cruiser',nameAr:'تويوتا لاند كروزر',cat:2,catNameEn:'SUV',catNameAr:'SUV',price:1200,fuel:'Diesel / ديزل',seats:7,trans:'Auto',img:'🚙',status:'available'},
+  {id:5,nameEn:'Mercedes C-Class',nameAr:'مرسيدس C-Class',cat:3,catNameEn:'Luxury',catNameAr:'فاخرة',price:800,fuel:'Petrol / بنزين',seats:5,trans:'Auto',img:'🏎️',status:'available'},
+  {id:6,nameEn:'BMW 5 Series',nameAr:'بي ام دبليو الفئة 5',cat:3,catNameEn:'Luxury',catNameAr:'فاخرة',price:900,fuel:'Petrol / بنزين',seats:5,trans:'Auto',img:'🏎️',status:'rented'},
+  {id:7,nameEn:'Porsche 911',nameAr:'بورش 911',cat:4,catNameEn:'Sport',catNameAr:'رياضية',price:2000,fuel:'Petrol / بنزين',seats:2,trans:'Auto',img:'🏎️',status:'maintenance'},
+  {id:8,nameEn:'Tesla Model 3',nameAr:'تسلا موديل 3',cat:5,catNameEn:'Electric',catNameAr:'كهربائية',price:700,fuel:'Electric / كهرباء',seats:5,trans:'Auto',img:'⚡',status:'available'}
+];
+
+const defaultBookings = [
+  {id:1,client:'Ahmed Benali',phone:'+212 661 234 567',car:'Mercedes C-Class',from:'2026-03-25',to:'2026-03-28',total:2400,status:'active',pickup:'Casablanca Airport',notes:''},
+  {id:2,client:'Sophie Martin',phone:'+33 6 12 34 56 78',car:'BMW 5 Series',from:'2026-03-27',to:'2026-04-01',total:4500,status:'active',pickup:'Hotel Sofitel Marrakech',notes:'VIP client'},
+  {id:3,client:'Karim Lahbabi',phone:'+212 641 987 654',car:'Dacia Logan',from:'2026-03-20',to:'2026-03-26',total:1500,status:'completed',pickup:'Casablanca',notes:'Monthly plan'},
+  {id:4,client:'Omar Idrissi',phone:'+212 655 111 222',car:'Tesla Model 3',from:'2026-04-01',to:'2026-04-05',total:2800,status:'pending',pickup:'Rabat',notes:''}
+];
+
+const defaultGPS = [
+  {id:'MRC-001',car:'Mercedes C200',status:'active',speed:67,city:'Casablanca',updated:'2min ago'},
+  {id:'MRC-002',car:'BMW X5',status:'active',speed:45,city:'Rabat',updated:'1min ago'},
+  {id:'MRC-003',car:'Audi A6',status:'parked',speed:0,city:'Marrakech',updated:'15min ago'},
+  {id:'MRC-004',car:'Range Rover',status:'active',speed:82,city:'Tangier',updated:'30sec ago'},
+  {id:'MRC-005',car:'Porsche Cayenne',status:'maint',speed:0,city:'Agadir',updated:'2hr ago'}
+];
+
+const defaultPricing = [
+  {id:1,nameEn:'Economy',nameAr:'اقتصادي',daily:250,weekly:1500,monthly:5000,currency:'MAD',popular:false,
+   featuresEn:['Dacia Logan or similar','Basic insurance','150km/day limit','Manual transmission','WhatsApp support'],
+   featuresAr:['داسيا لوغان أو مماثلة','تأمين أساسي','150 كم/يوم','ناقل يدوي','دعم واتساب']},
+  {id:2,nameEn:'Premium',nameAr:'بريميوم',daily:600,weekly:3500,monthly:12000,currency:'MAD',popular:true,
+   featuresEn:['BMW 3 or Mercedes C','Full insurance','Unlimited km','Automatic','GPS tracking','Free delivery','Priority support'],
+   featuresAr:['BMW 3 أو مرسيدس C','تأمين شامل','كيلومترات غير محدودة','أوتوماتيك','تتبع GPS','توصيل مجاني','دعم أولوية']},
+  {id:3,nameEn:'Luxury',nameAr:'فاخر',daily:1500,weekly:9000,monthly:30000,currency:'MAD',popular:false,
+   featuresEn:['Porsche / Range Rover','VIP insurance','Unlimited km','Personal driver option','GPS + dashcam','Airport VIP pickup','24/7 concierge'],
+   featuresAr:['بورش / رنج روفر','تأمين VIP','كيلومترات غير محدودة','خيار سائق خاص','GPS + كاميرا','استقبال VIP بالمطار','كونسيرج 24/7']}
+];
+
+const defaultSlides = [
+  {url:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=80',capEn:'Feel the Power',capAr:'اشعر بالقوة'},
+  {url:'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80',capEn:'Elegance in Motion',capAr:'الأناقة في الحركة'},
+  {url:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1920&q=80',capEn:'Adventure Awaits',capAr:'المغامرة تنتظرك'},
+  {url:'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1920&q=80',capEn:'Timeless Class',capAr:'فخامة خالدة'},
+  {url:'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80',capEn:'Born to Drive',capAr:'صُنعت للقيادة'},
+  {url:'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1920&q=80',capEn:'Own the Night',capAr:'امتلك الليل'}
+];
+
+const defaultTestimonials = [
+  {id:1,nameEn:'Ahmed B.',nameAr:'أحمد ب.',roleEn:'Business Traveler',roleAr:'مسافر أعمال',textEn:'Excellent service! The GPS tracking gave me peace of mind. The car was spotless and delivered on time.',textAr:'خدمة ممتازة! تتبع GPS أعطاني راحة بال. السيارة كانت نظيفة وتم تسليمها في الوقت المحدد.',rating:5},
+  {id:2,nameEn:'Sophie M.',nameAr:'صوفي م.',roleEn:'Tourist from France',roleAr:'سائحة من فرنسا',textEn:'Best car rental experience in Morocco. The WhatsApp support was incredibly responsive!',textAr:'أفضل تجربة تأجير سيارات في المغرب. دعم واتساب كان سريع الاستجابة بشكل لا يصدق!',rating:5},
+  {id:3,nameEn:'Karim L.',nameAr:'كريم ل.',roleEn:'Local Entrepreneur',roleAr:'رائد أعمال محلي',textEn:'I use their monthly plan for my business. Great fleet and competitive pricing.',textAr:'أستخدم باقتهم الشهرية لأعمالي. أسطول رائع وأسعار تنافسية.',rating:4}
+];
+
+const defaultFAQ = [
+  {id:1,qEn:'What documents do I need to rent?',aEn:"A valid driver's license (held for at least 1 year), passport or national ID, and a credit card for the deposit.",qAr:'ما الوثائق المطلوبة للإيجار؟',aAr:'رخصة قيادة سارية (سنة واحدة على الأقل)، جواز سفر أو بطاقة هوية، وبطاقة ائتمان للضمان.'},
+  {id:2,qEn:'Is insurance included?',aEn:'Basic insurance is included in all plans. Full comprehensive insurance is included in Premium and Luxury plans.',qAr:'هل التأمين مضمّن؟',aAr:'التأمين الأساسي مضمّن في جميع الباقات. التأمين الشامل مضمّن في باقات بريميوم وفاخر.'},
+  {id:3,qEn:'Can I track my rented car?',aEn:"Yes! All our vehicles are equipped with GPS tracking. You'll receive a tracking link via WhatsApp.",qAr:'هل يمكنني تتبع السيارة المستأجرة؟',aAr:'نعم! جميع سياراتنا مجهزة بتتبع GPS. ستتلقى رابط تتبع عبر واتساب.'},
+  {id:4,qEn:'Do you deliver to airports?',aEn:'Yes, we offer free delivery to all major Moroccan airports.',qAr:'هل تسلمون في المطارات؟',aAr:'نعم، نقدم توصيل مجاني لجميع المطارات المغربية الرئيسية.'},
+  {id:5,qEn:'What is your cancellation policy?',aEn:'Free cancellation up to 24 hours before pickup. After that, a 50% fee applies.',qAr:'ما هي سياسة الإلغاء؟',aAr:'إلغاء مجاني حتى 24 ساعة قبل الاستلام. بعد ذلك تطبق رسوم 50%.'}
+];
+
+const defaultSettings = {whatsapp:'+212641750719',phone:'+212 641 750 719',email:'contact@drivo.ma',addrEn:'Casablanca, Morocco',addrAr:'الدار البيضاء، المغرب',siteTitle:'Boujlilcar — Premium Car Rental Morocco',siteDesc:'Premium car rental service in Morocco.',siteKw:'car rental morocco, location voiture maroc',password:'drivo2026'};
+
+// Load data
+let cars = DB.load('cars', defaultCars);
+let bookings = DB.load('bookings', defaultBookings);
+let gpsData = DB.load('gps', defaultGPS);
+let pricing = DB.load('pricing', defaultPricing);
+let slides = DB.load('slides', defaultSlides);
+let testimonials = DB.load('testimonials', defaultTestimonials);
+let faqItems = DB.load('faq', defaultFAQ);
+let settings = DB.load('settings', defaultSettings);
+
+let editingCarId = null;
+let editingTestiId = null;
+let editingFAQId = null;
+let currentBookingFilter = 'all';
+let currentTextTab = 'en';
+
+/* ===================== LOGIN ===================== */
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 15 * 60 * 1000;
+let lockTimer = null;
+
+function getLockState() {
+  const raw = localStorage.getItem('drivo_lock');
+  if(!raw) return null;
+  try { return JSON.parse(raw); } catch(e) { return null; }
+}
+function setLockState(obj) { localStorage.setItem('drivo_lock', JSON.stringify(obj)); }
+function clearLockState() { localStorage.removeItem('drivo_lock'); }
+
+function startLockCountdown(until) {
+  const el = document.getElementById('lockCountdown');
+  document.getElementById('loginLocked').style.display = 'block';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginUser').disabled = true;
+  document.getElementById('loginPass').disabled = true;
+  document.querySelector('.login-btn').disabled = true;
+  if(lockTimer) clearInterval(lockTimer);
+  lockTimer = setInterval(() => {
+    const rem = until - Date.now();
+    if(rem <= 0) {
+      clearInterval(lockTimer);
+      clearLockState();
+      document.getElementById('loginLocked').style.display = 'none';
+      document.getElementById('loginUser').disabled = false;
+      document.getElementById('loginPass').disabled = false;
+      document.querySelector('.login-btn').disabled = false;
+      return;
+    }
+    const m = String(Math.floor(rem/60000)).padStart(2,'0');
+    const s = String(Math.floor((rem%60000)/1000)).padStart(2,'0');
+    el.textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function doLogin() {
+  const lock = getLockState();
+  if(lock && Date.now() < lock.until) { startLockCountdown(lock.until); return; }
+  if(lock && Date.now() >= lock.until) clearLockState();
+
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  const s = DB.load('settings', defaultSettings);
+
+  if(user === 'admin' && pass === s.password) {
+    clearLockState();
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    if(s.twoFAEnabled && s.twoFASecret) {
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('twoFABox').style.display = 'block';
+      setTimeout(()=>document.getElementById('twoFACode').focus(), 100);
+    } else {
+      grantAccess();
+    }
+  } else {
+    const prev = getLockState() || {attempts:0};
+    const attempts = prev.attempts + 1;
+    if(attempts >= MAX_ATTEMPTS) {
+      const until = Date.now() + LOCKOUT_MS;
+      setLockState({attempts, until});
+      startLockCountdown(until);
+    } else {
+      setLockState({attempts, until: null});
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('loginError').textContent = `❌ Invalid credentials. (${MAX_ATTEMPTS - attempts} attempts left)`;
+    }
+  }
+}
+
+function grantAccess() {
+  sessionStorage.setItem('drivo_admin_logged','1');
+  sessionStorage.setItem('drivo_admin_time', Date.now().toString());
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  renderFleetTable(cars);
+  toast('Welcome back, Admin!','success');
+  startSessionTimeout();
+}
+
+/* ===================== 2FA / TOTP ===================== */
+const B32='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+function b32Encode(bytes){
+  let bits=0,val=0,out='';
+  for(let i=0;i<bytes.length;i++){val=(val<<8)|bytes[i];bits+=8;while(bits>=5){out+=B32[(val>>>(bits-5))&31];bits-=5;}}
+  if(bits>0)out+=B32[(val<<(5-bits))&31];
+  return out;
+}
+function b32Decode(str){
+  str=str.toUpperCase().replace(/[^A-Z2-7]/g,'');
+  let bits=0,val=0,out=[];
+  for(let i=0;i<str.length;i++){val=(val<<5)|B32.indexOf(str[i]);bits+=5;if(bits>=8){out.push((val>>>(bits-8))&255);bits-=8;}}
+  return new Uint8Array(out);
+}
+async function calcTOTP(secret,t){
+  const T=Math.floor((t||Date.now())/30000);
+  const key=b32Decode(secret);
+  const msg=new Uint8Array(8);
+  let v=T;
+  for(let i=7;i>=0;i--){msg[i]=v&0xff;v=Math.floor(v/256);}
+  const ck=await crypto.subtle.importKey('raw',key,{name:'HMAC',hash:'SHA-1'},false,['sign']);
+  const sig=new Uint8Array(await crypto.subtle.sign('HMAC',ck,msg));
+  const off=sig[19]&0xf;
+  const code=((sig[off]&0x7f)<<24)|(sig[off+1]<<16)|(sig[off+2]<<8)|sig[off+3];
+  return String(code%1000000).padStart(6,'0');
+}
+async function verifyTOTP(secret,token){
+  const now=Date.now();
+  for(let d=-1;d<=1;d++){if(await calcTOTP(secret,now+d*30000)===token)return true;}
+  return false;
+}
+function genSecret(){
+  const b=new Uint8Array(20);crypto.getRandomValues(b);return b32Encode(b);
+}
+
+async function verify2FA(){
+  const code=document.getElementById('twoFACode').value.trim();
+  const errEl=document.getElementById('twoFAError');
+  if(code.length!==6){errEl.style.display='block';return;}
+  const s=DB.load('settings',defaultSettings);
+  const ok=await verifyTOTP(s.twoFASecret,code);
+  if(ok){
+    document.getElementById('twoFACode').value='';
+    errEl.style.display='none';
+    grantAccess();
+  } else {
+    errEl.style.display='block';
+    document.getElementById('twoFACode').value='';
+    document.getElementById('twoFACode').focus();
+  }
+}
+function cancelTwoFA(){
+  document.getElementById('twoFABox').style.display='none';
+  document.getElementById('loginBox').style.display='block';
+  document.getElementById('twoFACode').value='';
+  document.getElementById('twoFAError').style.display='none';
+}
+
+let _setup2FASecret=null;
+function load2FASection(){
+  const s=DB.load('settings',defaultSettings);
+  const el=document.getElementById('twoFASection');
+  if(!el)return;
+  if(s.twoFAEnabled&&s.twoFASecret){
+    el.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span class="badge badge-green">● Enabled</span>
+        <span style="color:var(--text2);font-size:0.85rem">2FA is active on your account</span>
+      </div>
+      <div class="form-field"><label>Enter current 2FA code to disable</label>
+        <input type="text" id="disable2FACode" placeholder="000000" maxlength="6" inputmode="numeric" style="letter-spacing:6px;font-size:1.3rem;text-align:center"/>
+      </div>
+      <div class="form-actions"><button class="btn" style="background:var(--red);color:#fff" onclick="disable2FA()">🗑️ Disable 2FA</button></div>`;
+  } else {
+    if(!_setup2FASecret)_setup2FASecret=genSecret();
+    const issuer='Boujlilcar';
+    const uri=encodeURIComponent(`otpauth://totp/${issuer}:admin?secret=${_setup2FASecret}&issuer=${issuer}`);
+    const qr=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${uri}`;
+    el.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <span class="badge badge-red">● Disabled</span>
+        <span style="color:var(--text2);font-size:0.85rem">2FA is not active</span>
+      </div>
+      <p style="color:var(--text2);font-size:0.83rem;margin-bottom:16px;line-height:1.6">Scan this QR with <strong>Google Authenticator</strong> or any TOTP app, then enter the code to confirm.</p>
+      <img src="${qr}" class="twofa-qr"/>
+      <div class="twofa-secret">${_setup2FASecret}</div>
+      <div class="form-field"><label>Enter code from app to activate</label>
+        <input type="text" id="enable2FACode" placeholder="000000" maxlength="6" inputmode="numeric" style="letter-spacing:6px;font-size:1.3rem;text-align:center"/>
+      </div>
+      <div class="form-actions"><button class="btn btn-primary" onclick="enable2FA()">🔐 Enable 2FA</button></div>`;
+  }
+}
+async function enable2FA(){
+  const code=document.getElementById('enable2FACode').value.trim();
+  const ok=await verifyTOTP(_setup2FASecret,code);
+  if(!ok){toast('Code incorrect — check your authenticator app','error');return;}
+  settings.twoFAEnabled=true;
+  settings.twoFASecret=_setup2FASecret;
+  DB.save('settings',settings);
+  _setup2FASecret=null;
+  toast('2FA enabled successfully! 🔐','success');
+  load2FASection();
+}
+async function disable2FA(){
+  const code=document.getElementById('disable2FACode').value.trim();
+  const ok=await verifyTOTP(settings.twoFASecret,code);
+  if(!ok){toast('Code incorrect','error');return;}
+  settings.twoFAEnabled=false;
+  settings.twoFASecret=null;
+  DB.save('settings',settings);
+  toast('2FA disabled','success');
+  load2FASection();
+}
+
+let sessionTimeoutTimer = null;
+function startSessionTimeout() {
+  if(sessionTimeoutTimer) clearTimeout(sessionTimeoutTimer);
+  sessionTimeoutTimer = setTimeout(() => {
+    toast('Session expired. Please login again.', 'error');
+    setTimeout(logout, 1500);
+  }, 2 * 60 * 60 * 1000); // 2 hours
+}
+
+function logout() {
+  sessionStorage.removeItem('drivo_admin_logged');
+  sessionStorage.removeItem('drivo_admin_time');
+  if(sessionTimeoutTimer) clearTimeout(sessionTimeoutTimer);
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+/* ===================== NAVIGATION ===================== */
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  const titles = {dashboard:'📊 Dashboard',fleet:'🚗 Fleet Manager',bookings:'📅 Bookings',gps:'📍 GPS Tracking',clients:'👥 Clients',pricing:'💰 Pricing Plans',hero:'🖼️ Hero Slider',testimonials:'⭐ Testimonials',faq:'❓ FAQ Manager',texts:'✏️ Site Texts',featured:'🌟 Featured Cars',gpscontent:'🗺️ GPS Content',footer:'🦶 Footer & Contact',whatsapp:'💬 WhatsApp Config',ads:'📊 Ads & Analytics',settings:'⚙️ Settings'};
+  document.getElementById('topbarTitle').textContent = titles[id]||id;
+  if(id==='fleet') renderFleetTable(cars);
+  if(id==='bookings') renderBookingsTable(bookings);
+  if(id==='gps') renderGPSTable();
+  if(id==='clients') renderClientsTable(clients);
+  if(id==='pricing') renderPricingPanel();
+  if(id==='hero') renderSlides();
+  if(id==='testimonials') renderTestimonials();
+  if(id==='faq') renderFAQAdmin();
+  if(id==='texts') renderTextsPanel();
+  if(id==='featured') renderFeaturedCars();
+  if(id==='gpscontent') loadGPSContentPanel();
+  if(id==='footer') loadFooterPanel();
+  if(id==='whatsapp') loadWAConfigPanel();
+  if(id==='ads') loadAdsPanel();
+  if(id==='settings') loadSettings();
+}
+
+
+/* ===================== FLEET ===================== */
+function renderFleetTable(data) {
+  const statusBadge = s => s==='available'?'badge-green':s==='rented'?'badge-amber':'badge-red';
+  document.getElementById('fleetTableBody').innerHTML = data.map(car=>`
+    <tr>
+      <td><div class="avatar-cell"><div class="av" style="${(car.img&&(car.img.startsWith('data:')||car.img.startsWith('http')))?'padding:0;overflow:hidden':'font-size:1.1rem;background:none'}">${(car.img&&(car.img.startsWith('data:')||car.img.startsWith('http')))?`<img src="${car.img}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='🚗'"/>`:car.img}</div><div><div style="font-weight:600">${car.nameEn}</div><div style="font-size:0.75rem;color:var(--text3)">${car.nameAr}</div></div></div></td>
+      <td><span class="badge badge-blue">${car.catNameEn}</span></td>
+      <td style="font-weight:700;color:var(--accent)">${car.price} MAD</td>
+      <td>${car.fuel}</td>
+      <td>${car.seats}</td>
+      <td>${car.trans}</td>
+      <td><span class="badge ${statusBadge(car.status)}">${car.status}</span></td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" onclick="editCar(${car.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCar(${car.id})">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function searchCars(q) {
+  const filtered = cars.filter(c=>c.nameEn.toLowerCase().includes(q.toLowerCase())||c.nameAr.includes(q));
+  renderFleetTable(filtered);
+}
+
+function openCarModal(id=null) {
+  editingCarId = id;
+  document.getElementById('carModalTitle').textContent = id ? '✏️ Edit Car' : '🚗 Add New Car';
+  if(id) {
+    const car = cars.find(c=>c.id===id);
+    document.getElementById('car-name-en').value = car.nameEn;
+    document.getElementById('car-name-ar').value = car.nameAr;
+    document.getElementById('car-cat').value = car.cat;
+    document.getElementById('car-price').value = car.price;
+    document.getElementById('car-fuel').value = car.fuel;
+    document.getElementById('car-seats').value = car.seats;
+    document.getElementById('car-trans').value = car.trans;
+    document.getElementById('car-img').value = car.img;
+    document.getElementById('car-status').value = car.status;
+    setCarImgPreview(car.img);
+    document.getElementById('car-img-emoji').value = car.img.startsWith('data:') ? '' : car.img;
+  } else {
+    ['car-name-en','car-name-ar'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('car-price').value='';
+    document.getElementById('car-seats').value='5';
+    document.getElementById('car-status').value='available';
+    document.getElementById('car-img').value='🚗';
+    document.getElementById('car-img-emoji').value='';
+    setCarImgPreview('🚗');
+  }
+  openModal('carModal');
+}
+
+function editCar(id) { openCarModal(id); }
+
+function saveCar() {
+  const catMap = {'1':{en:'Economy',ar:'اقتصادية'},'2':{en:'SUV',ar:'SUV'},'3':{en:'Luxury',ar:'فاخرة'},'4':{en:'Sport',ar:'رياضية'},'5':{en:'Electric',ar:'كهربائية'}};
+  const catVal = document.getElementById('car-cat').value;
+  const car = {
+    id: editingCarId || Date.now(),
+    nameEn: document.getElementById('car-name-en').value,
+    nameAr: document.getElementById('car-name-ar').value,
+    cat: +catVal,
+    catNameEn: catMap[catVal].en,
+    catNameAr: catMap[catVal].ar,
+    price: +document.getElementById('car-price').value,
+    fuel: document.getElementById('car-fuel').value,
+    seats: +document.getElementById('car-seats').value,
+    trans: document.getElementById('car-trans').value,
+    img: document.getElementById('car-img').value || '🚗',
+    status: document.getElementById('car-status').value
+  };
+  if(editingCarId) {
+    cars = cars.map(c=>c.id===editingCarId?car:c);
+    toast('Car updated successfully! 🚗', 'success');
+  } else {
+    cars.push(car);
+    toast('Car added to fleet! 🚗', 'success');
+  }
+  DB.save('cars', cars);
+  closeModal('carModal');
+  renderFleetTable(cars);
+  saveToSite();
+}
+
+function deleteCar(id) {
+  if(!confirm('Delete this car?')) return;
+  cars = cars.filter(c=>c.id!==id);
+  DB.save('cars', cars);
+  renderFleetTable(cars);
+  toast('Car deleted.', 'info');
+  saveToSite();
+}
+
+/* ---- Car Image Upload ---- */
+function setCarImgPreview(val) {
+  const preview = document.getElementById('carImgPreview');
+  const content = document.getElementById('carImgPreviewContent');
+  if(!preview || !content) return;
+  if(val && (val.startsWith('data:') || val.startsWith('http') || val.startsWith('/'))) {
+    content.innerHTML = `<img src="${val}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" onerror="this.parentElement.innerHTML='<span style=font-size:4rem>🚗</span>'"/>`;
+  } else {
+    content.innerHTML = `<span style="font-size:4rem">${val || '🚗'}</span>`;
+  }
+}
+
+function handleCarImgUpload(input) {
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 2 * 1024 * 1024) { toast('Image too large (max 2MB)', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const base64 = e.target.result;
+    document.getElementById('car-img').value = base64;
+    document.getElementById('car-img-emoji').value = '';
+    setCarImgPreview(base64);
+    toast('Image uploaded! 📷', 'success');
+  };
+  reader.readAsDataURL(file);
+}
+
+function setCarImgEmoji(val) {
+  document.getElementById('car-img').value = val || '🚗';
+  setCarImgPreview(val || '🚗');
+}
+
+function clearCarImg() {
+  document.getElementById('car-img').value = '🚗';
+  document.getElementById('car-img-emoji').value = '';
+  document.getElementById('carImgFile').value = '';
+  setCarImgPreview('🚗');
+}
+
+/* ===================== BOOKINGS ===================== */
+function renderBookingsTable(data) {
+  const f = currentBookingFilter==='all'?data:data.filter(b=>b.status===currentBookingFilter);
+  const badgeClass = s=>s==='active'?'badge-green':s==='pending'?'badge-amber':s==='completed'?'badge-blue':'badge-red';
+  document.getElementById('bookingsTableBody').innerHTML = f.map(b=>`
+    <tr>
+      <td><div class="avatar-cell"><div class="av">${b.client[0]}</div><div><div style="font-weight:600">${b.client}</div><div style="font-size:0.75rem;color:var(--text3)">${b.phone}</div></div></div></td>
+      <td>${b.car}</td>
+      <td>${b.from}</td>
+      <td>${b.to}</td>
+      <td style="font-weight:700;color:var(--accent)">${b.total} MAD</td>
+      <td><span class="badge ${badgeClass(b.status)}">${b.status}</span></td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <a href="https://wa.me/${settings.whatsapp.replace(/\D/g,'')}" target="_blank" class="btn btn-success btn-sm">💬</a>
+          <button class="btn btn-ghost btn-sm" onclick="changeBookingStatus(${b.id})">🔄</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteBooking(${b.id})">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function filterBookings(f) {
+  currentBookingFilter = f;
+  document.querySelectorAll('[id^="bf-"]').forEach(b=>b.classList.remove('btn-primary'));
+  document.getElementById('bf-'+f)?.classList.add('btn-primary');
+  renderBookingsTable(bookings);
+}
+
+function openBookingModal() {
+  const carSel = document.getElementById('bk-car');
+  carSel.innerHTML = cars.map(c=>`<option>${c.nameEn}</option>`).join('');
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('bk-from').value = today;
+  openModal('bookingModal');
+}
+
+function saveBooking() {
+  const b = {
+    id: Date.now(),
+    client: document.getElementById('bk-client').value,
+    phone: document.getElementById('bk-phone').value,
+    car: document.getElementById('bk-car').value,
+    from: document.getElementById('bk-from').value,
+    to: document.getElementById('bk-to').value,
+    total: +document.getElementById('bk-total').value,
+    status: document.getElementById('bk-status').value,
+    pickup: document.getElementById('bk-pickup').value,
+    notes: document.getElementById('bk-notes').value
+  };
+  bookings.unshift(b);
+  DB.save('bookings', bookings);
+  closeModal('bookingModal');
+  renderBookingsTable(bookings);
+  toast('Booking saved! 📅', 'success');
+}
+
+function changeBookingStatus(id) {
+  const statuses = ['pending','active','completed','cancelled'];
+  const b = bookings.find(x=>x.id===id);
+  const next = statuses[(statuses.indexOf(b.status)+1)%statuses.length];
+  b.status = next;
+  DB.save('bookings', bookings);
+  renderBookingsTable(bookings);
+  toast(`Status → ${next}`, 'info');
+}
+
+function deleteBooking(id) {
+  if(!confirm('Delete this booking?')) return;
+  bookings = bookings.filter(b=>b.id!==id);
+  DB.save('bookings', bookings);
+  renderBookingsTable(bookings);
+  toast('Booking deleted.', 'info');
+}
+
+/* ===================== GPS ===================== */
+function renderGPSTable() {
+  document.getElementById('gpsTableBody').innerHTML = gpsData.map(v=>`
+    <tr>
+      <td><span style="font-family:monospace;font-size:0.82rem;color:var(--accent)">${v.id}</span></td>
+      <td style="font-weight:600">${v.car}</td>
+      <td><div style="display:flex;align-items:center;gap:8px"><span class="gps-dot ${v.status}"></span>${v.status}</div></td>
+      <td><span style="font-weight:700;color:${v.speed>0?'var(--accent)':'var(--text3)'}">${v.speed} km/h</span></td>
+      <td>📍 ${v.city}</td>
+      <td style="color:var(--text3);font-size:0.8rem">${v.updated}</td>
+      <td>
+        <select class="btn btn-ghost btn-sm" style="padding:4px 8px;cursor:pointer" onchange="updateGPSStatus('${v.id}',this.value)">
+          <option value="active" ${v.status==='active'?'selected':''}>🟢 Active</option>
+          <option value="parked" ${v.status==='parked'?'selected':''}>🟡 Parked</option>
+          <option value="maint" ${v.status==='maint'?'selected':''}>🔴 Maintenance</option>
+        </select>
+      </td>
+    </tr>`).join('');
+}
+
+function updateGPSStatus(id, status) {
+  const v = gpsData.find(x=>x.id===id);
+  if(v) { v.status=status; DB.save('gps',gpsData); toast(`${id} → ${status}`,'info'); }
+}
+
+/* ===================== PRICING ===================== */
+function renderPricingPanel() {
+  document.getElementById('pricingPanelContent').innerHTML = pricing.map((p,i)=>`
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <div class="card-title">${p.popular?'⭐':''} ${p.nameEn} / ${p.nameAr}</div>
+        <div class="card-actions">
+          <button class="btn ${p.popular?'btn-primary':'btn-ghost'} btn-sm" onclick="togglePopular(${i})">${p.popular?'★ Popular':'☆ Set Popular'}</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-field"><label>Plan Name (EN)</label><input type="text" value="${p.nameEn}" onchange="updatePlan(${i},'nameEn',this.value)"/></div>
+        <div class="form-field"><label>Plan Name (AR)</label><input type="text" value="${p.nameAr}" dir="rtl" onchange="updatePlan(${i},'nameAr',this.value)"/></div>
+        <div class="form-field"><label>💰 Daily Price (MAD)</label><input type="number" value="${p.daily}" onchange="updatePlan(${i},'daily',+this.value)"/></div>
+        <div class="form-field"><label>📅 Weekly Price (MAD)</label><input type="number" value="${p.weekly}" onchange="updatePlan(${i},'weekly',+this.value)"/></div>
+        <div class="form-field"><label>🗓️ Monthly Price (MAD)</label><input type="number" value="${p.monthly}" onchange="updatePlan(${i},'monthly',+this.value)"/></div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:0.78rem;font-weight:600;color:var(--text2);margin-bottom:8px">Features (EN) — one per line</div>
+        <textarea class="form-field" style="width:100%;padding:10px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;min-height:100px;outline:none" onchange="updatePlanFeatures(${i},'en',this.value)">${p.featuresEn.join('\n')}</textarea>
+        <div style="font-size:0.78rem;font-weight:600;color:var(--text2);margin:8px 0">Features (AR) — واحد في كل سطر</div>
+        <textarea class="form-field" dir="rtl" style="width:100%;padding:10px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;min-height:100px;outline:none;direction:rtl" onchange="updatePlanFeatures(${i},'ar',this.value)">${p.featuresAr.join('\n')}</textarea>
+      </div>
+      <div class="form-actions"><button class="btn btn-primary" onclick="savePricing()">💾 Save Plan</button></div>
+    </div>`).join('');
+}
+
+function updatePlan(i,key,val) { pricing[i][key]=val; }
+function updatePlanFeatures(i,lang,val) {
+  const feats = val.split('\n').filter(f=>f.trim());
+  if(lang==='en') pricing[i].featuresEn=feats; else pricing[i].featuresAr=feats;
+}
+function togglePopular(i) { pricing.forEach((p,j)=>p.popular=j===i); renderPricingPanel(); }
+function savePricing() { DB.save('pricing',pricing); toast('Pricing saved! 💰','success'); saveToSite(); }
+
+/* ===================== HERO SLIDES ===================== */
+function renderSlides() {
+  document.getElementById('slidesList').innerHTML = slides.map((s,i)=>`
+    <div style="display:flex;gap:16px;align-items:start;padding:20px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;margin-bottom:12px">
+      <div style="flex-shrink:0;text-align:center">
+        <img src="${s.url}" class="hero-thumb" style="width:120px;height:72px;object-fit:cover;border-radius:8px;border:2px solid var(--card-border)" onerror="this.style.background='rgba(99,102,241,0.2)';this.style.display='block'"/>
+        <div style="font-size:0.75rem;color:var(--text3);margin-top:4px">Slide ${i+1}</div>
+      </div>
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="form-field" style="grid-column:span 2"><label>Image URL</label><input type="text" value="${s.url}" oninput="slides[${i}].url=this.value;this.previousElementSibling?.previousElementSibling?.querySelector('img')?.setAttribute('src',this.value)" style="padding:8px 12px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;font-size:0.82rem;outline:none;width:100%"/></div>
+        <div class="form-field"><label>Caption EN</label><input type="text" value="${s.capEn}" oninput="slides[${i}].capEn=this.value" style="padding:8px 12px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;font-size:0.82rem;outline:none;width:100%"/></div>
+        <div class="form-field"><label>Caption AR</label><input type="text" value="${s.capAr}" dir="rtl" oninput="slides[${i}].capAr=this.value" style="padding:8px 12px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;font-size:0.82rem;outline:none;width:100%;direction:rtl"/></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <button class="btn btn-ghost btn-sm" onclick="moveSlide(${i},-1)" ${i===0?'disabled':''}>▲</button>
+        <button class="btn btn-ghost btn-sm" onclick="moveSlide(${i},1)" ${i===slides.length-1?'disabled':''}>▼</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteSlide(${i})">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+function addSlide() {
+  slides.push({url:'',capEn:'New Slide',capAr:'شريحة جديدة'});
+  renderSlides();
+}
+function moveSlide(i,d) {
+  const j=i+d; if(j<0||j>=slides.length) return;
+  [slides[i],slides[j]]=[slides[j],slides[i]]; renderSlides();
+}
+function deleteSlide(i) { slides.splice(i,1); renderSlides(); }
+function saveSlides() { DB.save('slides',slides); toast('Slides saved! 🖼️','success'); saveToSite(); }
+
+/* ===================== TESTIMONIALS ===================== */
+function renderTestimonials() {
+  document.getElementById('testiGrid').innerHTML = testimonials.map((t,i)=>`
+    <div style="background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:18px">
+      <div style="color:var(--accent3);font-size:1rem;margin-bottom:8px">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div>
+      <p style="font-size:0.85rem;color:var(--text2);font-style:italic;margin-bottom:12px">"${t.textEn}"</p>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:8px"><div class="av">${t.nameEn[0]}</div><div><div style="font-size:0.85rem;font-weight:600">${t.nameEn}</div><div style="font-size:0.75rem;color:var(--text3)">${t.roleEn}</div></div></div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" onclick="editTesti(${i})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteTesti(${i})">🗑️</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function openTestiModal(i=null) {
+  editingTestiId = i;
+  document.getElementById('testiModalTitle').textContent = i!==null?'✏️ Edit Review':'⭐ Add Review';
+  if(i!==null) {
+    const t=testimonials[i];
+    document.getElementById('ti-name-en').value=t.nameEn; document.getElementById('ti-name-ar').value=t.nameAr;
+    document.getElementById('ti-role-en').value=t.roleEn; document.getElementById('ti-role-ar').value=t.roleAr;
+    document.getElementById('ti-text-en').value=t.textEn; document.getElementById('ti-text-ar').value=t.textAr;
+    document.getElementById('ti-rating').value=t.rating;
+  } else {
+    ['ti-name-en','ti-name-ar','ti-role-en','ti-role-ar','ti-text-en','ti-text-ar'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('ti-rating').value=5;
+  }
+  openModal('testiModal');
+}
+function editTesti(i) { openTestiModal(i); }
+function saveTesti() {
+  const t={id:Date.now(),nameEn:document.getElementById('ti-name-en').value,nameAr:document.getElementById('ti-name-ar').value,roleEn:document.getElementById('ti-role-en').value,roleAr:document.getElementById('ti-role-ar').value,textEn:document.getElementById('ti-text-en').value,textAr:document.getElementById('ti-text-ar').value,rating:+document.getElementById('ti-rating').value};
+  if(editingTestiId!==null) testimonials[editingTestiId]=t; else testimonials.push(t);
+  DB.save('testimonials',testimonials);
+  closeModal('testiModal');
+  renderTestimonials();
+  toast('Review saved! ⭐','success');
+  saveToSite();
+}
+function deleteTesti(i) { testimonials.splice(i,1); DB.save('testimonials',testimonials); renderTestimonials(); toast('Deleted.','info'); saveToSite(); }
+
+/* ===================== FAQ ===================== */
+function renderFAQAdmin() {
+  document.getElementById('faqAdminList').innerHTML = faqItems.map((f,i)=>`
+    <div style="background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:start;gap:12px">
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:0.9rem;margin-bottom:4px">${f.qEn}</div>
+          <div style="font-size:0.8rem;color:var(--text3);direction:rtl;text-align:right">${f.qAr}</div>
+          <div style="font-size:0.82rem;color:var(--text2);margin-top:8px;padding-top:8px;border-top:1px solid var(--card-border)">${f.aEn}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="btn btn-ghost btn-sm" onclick="editFAQ(${i})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteFAQ(${i})">🗑️</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function openFAQModal(i=null) {
+  editingFAQId=i;
+  document.getElementById('faqModalTitle').textContent=i!==null?'✏️ Edit FAQ':'❓ Add FAQ';
+  if(i!==null){ const f=faqItems[i]; document.getElementById('faq-q-en').value=f.qEn; document.getElementById('faq-a-en').value=f.aEn; document.getElementById('faq-q-ar').value=f.qAr; document.getElementById('faq-a-ar').value=f.aAr; }
+  else { ['faq-q-en','faq-a-en','faq-q-ar','faq-a-ar'].forEach(id=>document.getElementById(id).value=''); }
+  openModal('faqModal');
+}
+function editFAQ(i){ openFAQModal(i); }
+function saveFAQ(){
+  const f={id:Date.now(),qEn:document.getElementById('faq-q-en').value,aEn:document.getElementById('faq-a-en').value,qAr:document.getElementById('faq-q-ar').value,aAr:document.getElementById('faq-a-ar').value};
+  if(editingFAQId!==null) faqItems[editingFAQId]=f; else faqItems.push(f);
+  DB.save('faq',faqItems); closeModal('faqModal'); renderFAQAdmin(); toast('FAQ saved! ❓','success'); saveToSite();
+}
+function deleteFAQ(i){ faqItems.splice(i,1); DB.save('faq',faqItems); renderFAQAdmin(); toast('Deleted.','info'); saveToSite(); }
+
+/* ===================== SITE TEXTS ===================== */
+const textFields = {
+  hero:{label:'Hero Section',fields:[
+    {key:'hero.badge',label:'Badge Text'},
+    {key:'hero.t1',label:'Title Line 1'},
+    {key:'hero.t2',label:'Title Line 2 (gradient)'},
+    {key:'hero.t3',label:'Title Line 3'},
+    {key:'hero.sub',label:'Subtitle',type:'textarea'},
+    {key:'hero.cta1',label:'WhatsApp Button'},
+    {key:'hero.cta2',label:'Browse Button'}
+  ]},
+  nav:{label:'Navigation',fields:[
+    {key:'nav.home',label:'Home'},{key:'nav.fleet',label:'Fleet'},
+    {key:'nav.pricing',label:'Pricing'},{key:'nav.gps',label:'GPS'},
+    {key:'nav.admin',label:'Admin'},{key:'nav.contact',label:'Contact'},
+    {key:'nav.book',label:'Book Now Button'}
+  ]},
+  cta:{label:'CTA Section',fields:[
+    {key:'cta.title',label:'CTA Title'},{key:'cta.sub',label:'CTA Subtitle',type:'textarea'},
+    {key:'cta.btn1',label:'WhatsApp Button'},{key:'cta.btn2',label:'Call Button'}
+  ]}
+};
+
+let siteTexts = DB.load('siteTexts', null);
+
+function getNestedVal(obj,path){return path.split('.').reduce((o,k)=>o?.[k],obj);}
+function setNestedVal(obj,path,val){const keys=path.split('.');let o=obj;keys.slice(0,-1).forEach(k=>{if(!o[k])o[k]={};o=o[k];});o[keys[keys.length-1]]=val;}
+
+function renderTextsPanel() {
+  // Load base translations
+  const lang = currentTextTab;
+  const defaultT = {en:{nav:{home:'Home',fleet:'Fleet',pricing:'Plans',gps:'GPS Tracking',admin:'Admin Panel',contact:'Contact',book:'Book Now'},hero:{badge:'🏆 Premium Car Rental Service',t1:'Drive Your',t2:'Dream Car',t3:'Today',sub:'Experience luxury & performance with our premium fleet.',cta1:'💬 Reserve via WhatsApp',cta2:'Browse Fleet →'},cta:{title:'Ready to Hit the Road?',sub:'Book your dream car now via WhatsApp — instant confirmation!',btn1:'💬 Book via WhatsApp',btn2:'Call Us'}},ar:{nav:{home:'الرئيسية',fleet:'الأسطول',pricing:'الباقات',gps:'تتبع GPS',admin:'لوحة التحكم',contact:'اتصل بنا',book:'احجز الآن'},hero:{badge:'🏆 خدمة تأجير سيارات متميزة',t1:'قُد سيارة',t2:'أحلامك',t3:'اليوم',sub:'اكتشف الفخامة والأداء مع أسطولنا المتميز.',cta1:'💬 احجز عبر واتساب',cta2:'تصفح الأسطول ←'},cta:{title:'مستعد للانطلاق؟',sub:'احجز سيارة أحلامك الآن عبر واتساب!',btn1:'💬 احجز عبر واتساب',btn2:'اتصل بنا'}}};
+  const saved = DB.load('siteTexts',{});
+  const base = {...defaultT[lang],...(saved[lang]||{})};
+
+  let html='';
+  Object.values(textFields).forEach(section=>{
+    html+=`<div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title">${section.label}</div></div><div class="form-grid">`;
+    section.fields.forEach(f=>{
+      const val = getNestedVal(base,f.key)||'';
+      const isRTL = lang==='ar';
+      html+=`<div class="form-field ${f.type==='textarea'?'span2':''}"><label>${f.label}</label>`;
+      if(f.type==='textarea') html+=`<textarea id="txt_${f.key}" ${isRTL?'dir="rtl"':''}>${val}</textarea>`;
+      else html+=`<input type="text" id="txt_${f.key}" value="${val.replace(/"/g,'&quot;')}" ${isRTL?'dir="rtl"':''}/>`;
+      html+='</div>';
+    });
+    html+='</div></div>';
+  });
+  html+=`<div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveTexts()">💾 Save All Texts</button></div>`;
+  document.getElementById('textsPanel').innerHTML = html;
+}
+
+function setTextTab(lang) {
+  currentTextTab=lang;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===(lang==='en'?0:1)));
+  renderTextsPanel();
+}
+
+function saveTexts() {
+  const lang = currentTextTab;
+  const saved = DB.load('siteTexts',{});
+  if(!saved[lang]) saved[lang]={};
+  Object.values(textFields).forEach(section=>{
+    section.fields.forEach(f=>{
+      const el=document.getElementById('txt_'+f.key);
+      if(el) setNestedVal(saved[lang],f.key,el.value||el.textContent);
+    });
+  });
+  DB.save('siteTexts',saved);
+  toast('Texts saved! ✏️','success');
+  saveToSite();
+}
+
+/* ===================== SETTINGS ===================== */
+function loadSettings() {
+  settings = DB.load('settings',defaultSettings);
+  document.getElementById('set-whatsapp').value=settings.whatsapp||'';
+  document.getElementById('set-phone').value=settings.phone||'';
+  document.getElementById('set-email').value=settings.email||'';
+  document.getElementById('set-addr-en').value=settings.addrEn||'';
+  document.getElementById('set-addr-ar').value=settings.addrAr||'';
+  document.getElementById('set-title').value=settings.siteTitle||'';
+  document.getElementById('set-desc').value=settings.siteDesc||'';
+  document.getElementById('set-kw').value=settings.siteKw||'';
+  load2FASection();
+}
+function saveContactSettings() {
+  settings.whatsapp=document.getElementById('set-whatsapp').value;
+  settings.phone=document.getElementById('set-phone').value;
+  settings.email=document.getElementById('set-email').value;
+  settings.addrEn=document.getElementById('set-addr-en').value;
+  settings.addrAr=document.getElementById('set-addr-ar').value;
+  DB.save('settings',settings);
+  toast('Contact info saved! 📞','success');
+  saveToSite();
+}
+function saveSEOSettings() {
+  settings.siteTitle=document.getElementById('set-title').value;
+  settings.siteDesc=document.getElementById('set-desc').value;
+  settings.siteKw=document.getElementById('set-kw').value;
+  DB.save('settings',settings);
+  toast('SEO settings saved! 🔍','success');
+}
+function changePassword() {
+  const old=document.getElementById('set-oldpw').value;
+  const nw=document.getElementById('set-newpw').value;
+  const cf=document.getElementById('set-confirmpw').value;
+  if(old!==settings.password){toast('Current password incorrect!','error');return;}
+  if(nw!==cf){toast('Passwords do not match!','error');return;}
+  if(nw.length<6){toast('Password must be at least 6 characters.','error');return;}
+  settings.password=nw; DB.save('settings',settings);
+  toast('Password changed! 🔒','success');
+  ['set-oldpw','set-newpw','set-confirmpw'].forEach(id=>document.getElementById(id).value='');
+}
+
+/* ===================== SAVE TO SITE ===================== */
+function saveToSite() {
+  DB.save('cars', cars);
+  DB.save('pricing', pricing);
+  DB.save('slides', slides);
+  DB.save('testimonials', testimonials);
+  DB.save('faq', faqItems);
+  DB.save('settings', settings);
+  DB.save('featuredCars', featuredCars);
+  DB.save('gpsContent', gpsContent);
+  DB.save('footerContent', footerContent);
+  DB.save('waConfig', waConfig);
+  DB.save('adsConfig', adsConfig);
+  document.title = settings.siteTitle || 'Boujlilcar Admin';
+}
+
+/* ===================== HELPERS ===================== */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function toast(msg, type='info') {
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div');
+  t.className=`toast toast-${type}`; t.innerHTML=`${type==='success'?'✅':type==='error'?'❌':'ℹ️'} ${msg}`;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(20px)';setTimeout(()=>t.remove(),300);},3000);
+}
+
+function toggleTheme() {
+  const html=document.documentElement;
+  const isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',isDark?'light':'dark');
+  const btn=document.querySelector('[onclick="toggleTheme()"]');
+  if(btn) btn.textContent=isDark?'🌙':'☀️';
+}
+
+/* Save slides button — add to hero panel */
+setTimeout(()=>{
+  const heroPanel=document.getElementById('panel-hero');
+  if(heroPanel){
+    const saveBtn=document.createElement('div');
+    saveBtn.style='display:flex;justify-content:flex-end;margin-top:12px';
+    saveBtn.innerHTML='<button class="btn btn-primary" onclick="saveSlides()">💾 Save Slides</button>';
+    heroPanel.appendChild(saveBtn);
+  }
+},100);
+
+/* ===================== NEW DATA ===================== */
+const defaultFeaturedCars = [
+  {id:1,nameEn:'Mercedes AMG GT',catEn:'Sport Luxury',price:'1,200',specs:'4.0L V8 · 585 HP · 0-100: 3.2s',img:'🏎️',waMsg:"I'm interested in the Mercedes AMG GT"},
+  {id:2,nameEn:'BMW X5 M Sport',catEn:'Premium SUV',price:'900',specs:'3.0L Inline-6 · 340 HP · xDrive AWD',img:'🚙',waMsg:"I'm interested in the BMW X5 M Sport"},
+  {id:3,nameEn:'Audi A6 Avant',catEn:'Executive',price:'750',specs:'2.0 TFSI · 265 HP · Quattro AWD',img:'🚙',waMsg:"I'm interested in the Audi A6 Avant"},
+  {id:4,nameEn:'Range Rover Sport',catEn:'Luxury SUV',price:'1,500',specs:'5.0L V8 · 525 HP · Terrain Response',img:'🏎️',waMsg:"I'm interested in the Range Rover Sport"},
+  {id:5,nameEn:'Porsche Cayenne',catEn:'Sport SUV',price:'1,800',specs:'4.0L V8 · 550 HP · Sport Chrono',img:'🏎️',waMsg:"I'm interested in the Porsche Cayenne"}
+];
+const defaultGPSContent = {
+  badgeEn:'LIVE TRACKING',badgeAr:'تتبع مباشر',
+  titleEn:'Live GPS Tracking',titleAr:'تتبع GPS مباشر',
+  subEn:'Monitor your entire fleet in real-time',subAr:'راقب أسطولك بالكامل في الوقت الحقيقي',
+  vehicles:[
+    {id:'MRC-001',nameEn:'Mercedes C200',nameAr:'مرسيدس C200',status:'Active',statusAr:'نشط',speed:'67',cityEn:'Casablanca',cityAr:'الدار البيضاء'},
+    {id:'MRC-002',nameEn:'BMW X5',nameAr:'بي ام دبليو X5',status:'Active',statusAr:'نشط',speed:'45',cityEn:'Rabat',cityAr:'الرباط'},
+    {id:'MRC-003',nameEn:'Audi A6',nameAr:'أودي A6',status:'Parked',statusAr:'متوقف',speed:'0',cityEn:'Marrakech',cityAr:'مراكش'},
+    {id:'MRC-004',nameEn:'Range Rover',nameAr:'رنج روفر',status:'Active',statusAr:'نشط',speed:'82',cityEn:'Tangier',cityAr:'طنجة'},
+    {id:'MRC-005',nameEn:'Porsche Cayenne',nameAr:'بورش كايين',status:'Maintenance',statusAr:'صيانة',speed:'0',cityEn:'Agadir',cityAr:'أكادير'}
+  ],
+  featsEn:[
+    {t:'Real-Time Location',d:'Track all vehicles on an interactive map with live updates every 10 seconds'},
+    {t:'Trip History',d:'Review complete route history, stops, speed, and mileage for any vehicle'},
+    {t:'Geofence Alerts',d:'Set virtual boundaries and get instant notifications when vehicles enter or exit zones'},
+    {t:'Speed Monitoring',d:'Real-time speed tracking with alerts for overspeeding and harsh driving events'}
+  ],
+  featsAr:[
+    {t:'موقع في الوقت الحقيقي',d:'تتبع جميع السيارات على خريطة تفاعلية مع تحديثات كل 10 ثوان'},
+    {t:'سجل الرحلات',d:'راجع سجل المسارات والتوقفات والسرعة والمسافة لأي سيارة'},
+    {t:'تنبيهات السياج الجغرافي',d:'ضع حدوداً افتراضية واحصل على إشعارات فورية'},
+    {t:'مراقبة السرعة',d:'تتبع السرعة في الوقت الحقيقي مع تنبيهات تجاوز السرعة'}
+  ]
+};
+const defaultFooterContent = {
+  descEn:'Premium car rental service in Morocco. GPS-tracked fleet, full insurance, and 24/7 WhatsApp support.',
+  descAr:'خدمة تأجير سيارات متميزة في المغرب. أسطول مُتتبع بـ GPS، تأمين شامل، ودعم واتساب 24/7.',
+  col0TitleEn:'Quick Links',col0TitleAr:'روابط سريعة',
+  col1TitleEn:'Services',col1TitleAr:'الخدمات',
+  col1LinksEn:'Daily Rental\nWeekly Rental\nMonthly Lease\nAirport Pickup\nCorporate Plans',
+  col1LinksAr:'إيجار يومي\nإيجار أسبوعي\nإيجار شهري\nاستقبال المطار\nباقات الشركات',
+  col2TitleEn:'Cities',col2TitleAr:'المدن',
+  col2LinksEn:'Casablanca\nRabat\nMarrakech\nTangier\nAgadir\nFes',
+  col2LinksAr:'الدار البيضاء\nالرباط\nمراكش\nطنجة\nأكادير\nفاس',
+  contactTitleEn:'Contact Us',contactTitleAr:'اتصل بنا',
+  copyrightEn:'© 2026 Boujlilcar. All rights reserved.',
+  copyrightAr:'© 2026 Boujlilcar لتأجير السيارات. جميع الحقوق محفوظة.',
+  legalLinksEn:'Privacy Policy\nTerms of Service\nCookie Policy',
+  legalLinksAr:'سياسة الخصوصية\nشروط الخدمة\nسياسة الكوكيز'
+};
+const defaultWAConfig = {
+  number:'+212641750719',
+  messages:{
+    hero:"Hello Boujlilcar! I'd like to reserve a car.",
+    fleet:'I want to book: ',
+    featured:"I'm interested in: ",
+    pricing:'I want the plan: ',
+    cta:'Hello Boujlilcar!',
+    footer:'Hello Boujlilcar!'
+  },
+  floatBtnShow:true
+};
+const defaultAdsConfig = {
+  ga4:'',gtm:'',googleAdsId:'',googleAdsConversion:'',metaPixelId:'',
+  enabledGA4:false,enabledGTM:false,enabledGoogleAds:false,enabledMeta:false
+};
+
+let featuredCars = DB.load('featuredCars', defaultFeaturedCars);
+let gpsContent = DB.load('gpsContent', defaultGPSContent);
+let footerContent = DB.load('footerContent', defaultFooterContent);
+let waConfig = DB.load('waConfig', defaultWAConfig);
+let adsConfig = DB.load('adsConfig', defaultAdsConfig);
+let clients = DB.load('clients', []);
+let editingClientId = null;
+
+/* ===================== FEATURED CARS ===================== */
+function renderFeaturedCars() {
+  document.getElementById('featuredCarsList').innerHTML = featuredCars.map((c,i) => {
+    const name = (c.nameEn||'').replace(/"/g,'&quot;');
+    const cat = (c.catEn||'').replace(/"/g,'&quot;');
+    const price = (c.price||'').replace(/"/g,'&quot;');
+    const img = (c.img||'🚗').replace(/"/g,'&quot;');
+    const specs = (c.specs||'').replace(/"/g,'&quot;');
+    const waMsg = (c.waMsg||'').replace(/"/g,'&quot;');
+    return `<div style="background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="font-size:2rem;width:48px;text-align:center">${c.img||'🚗'}</div>
+        <div style="flex:1;font-weight:700">${c.nameEn}</div>
+        <span class="badge badge-blue">${c.catEn}</span>
+        <button class="btn btn-danger btn-sm" onclick="removeFeaturedSlide(${i})">🗑️</button>
+      </div>
+      <div class="form-grid">
+        <div class="form-field"><label>Car Name</label><input type="text" value="${name}" onchange="featuredCars[${i}].nameEn=this.value"/></div>
+        <div class="form-field"><label>Category</label><input type="text" value="${cat}" onchange="featuredCars[${i}].catEn=this.value"/></div>
+        <div class="form-field"><label>Price (e.g. 1,200)</label><input type="text" value="${price}" onchange="featuredCars[${i}].price=this.value"/></div>
+        <div class="form-field"><label>Emoji / Image URL</label><input type="text" value="${img}" onchange="featuredCars[${i}].img=this.value"/></div>
+        <div class="form-field span2"><label>Specs (e.g. 4.0L V8 · 585 HP)</label><input type="text" value="${specs}" onchange="featuredCars[${i}].specs=this.value"/></div>
+        <div class="form-field span2"><label>WhatsApp Message (pre-filled for "Book Now")</label><input type="text" value="${waMsg}" onchange="featuredCars[${i}].waMsg=this.value"/></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function addFeaturedSlide() {
+  featuredCars.push({id:Date.now(),nameEn:'New Car',catEn:'Category',price:'500',specs:'',img:'🚗',waMsg:"I'm interested in a car"});
+  renderFeaturedCars();
+}
+function removeFeaturedSlide(i) { featuredCars.splice(i,1); renderFeaturedCars(); }
+function saveFeaturedCars() { DB.save('featuredCars',featuredCars); toast('Featured cars saved! 🌟','success'); saveToSite(); }
+
+/* ===================== GPS CONTENT ===================== */
+function loadGPSContentPanel() {
+  document.getElementById('gpsc-badge-en').value = gpsContent.badgeEn||'';
+  document.getElementById('gpsc-badge-ar').value = gpsContent.badgeAr||'';
+  document.getElementById('gpsc-title-en').value = gpsContent.titleEn||'';
+  document.getElementById('gpsc-title-ar').value = gpsContent.titleAr||'';
+  document.getElementById('gpsc-sub-en').value = gpsContent.subEn||'';
+  document.getElementById('gpsc-sub-ar').value = gpsContent.subAr||'';
+  renderGPSContentVehicles();
+  renderGPSContentFeats();
+}
+function renderGPSContentVehicles() {
+  const el = document.getElementById('gpsContentVehicles');
+  if(!el) return;
+  el.innerHTML = (gpsContent.vehicles||[]).map((v,i) => `
+    <div style="background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px">
+      <div class="form-grid col3">
+        <div class="form-field"><label>Vehicle ID</label><input type="text" value="${(v.id||'').replace(/"/g,'&quot;')}" onchange="gpsContent.vehicles[${i}].id=this.value"/></div>
+        <div class="form-field"><label>Name (EN)</label><input type="text" value="${(v.nameEn||'').replace(/"/g,'&quot;')}" onchange="gpsContent.vehicles[${i}].nameEn=this.value"/></div>
+        <div class="form-field"><label>Name (AR)</label><input type="text" value="${(v.nameAr||'').replace(/"/g,'&quot;')}" dir="rtl" onchange="gpsContent.vehicles[${i}].nameAr=this.value"/></div>
+        <div class="form-field"><label>Status</label><select onchange="gpsContent.vehicles[${i}].status=this.value"><option ${v.status==='Active'?'selected':''}>Active</option><option ${v.status==='Parked'?'selected':''}>Parked</option><option ${v.status==='Maintenance'?'selected':''}>Maintenance</option></select></div>
+        <div class="form-field"><label>Speed (km/h)</label><input type="text" value="${(v.speed||'0').replace(/"/g,'&quot;')}" onchange="gpsContent.vehicles[${i}].speed=this.value"/></div>
+        <div class="form-field"><label>City (EN)</label><input type="text" value="${(v.cityEn||'').replace(/"/g,'&quot;')}" onchange="gpsContent.vehicles[${i}].cityEn=this.value"/></div>
+      </div>
+      <div style="text-align:right;margin-top:6px"><button class="btn btn-danger btn-sm" onclick="removeGPSVehicle(${i})">🗑️ Remove</button></div>
+    </div>`).join('');
+}
+function addGPSVehicle() {
+  gpsContent.vehicles.push({id:'MRC-'+(Date.now()+'').slice(-3),nameEn:'New Vehicle',nameAr:'سيارة جديدة',status:'Active',statusAr:'نشط',speed:'0',cityEn:'Casablanca',cityAr:'الدار البيضاء'});
+  renderGPSContentVehicles();
+}
+function removeGPSVehicle(i) { gpsContent.vehicles.splice(i,1); renderGPSContentVehicles(); }
+function renderGPSContentFeats() {
+  const el = document.getElementById('gpsContentFeats');
+  if(!el) return;
+  const featsEn = gpsContent.featsEn||[];
+  const featsAr = gpsContent.featsAr||[];
+  el.innerHTML = featsEn.map((f,i) => {
+    const ar = featsAr[i]||{t:'',d:''};
+    return `<div style="background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px">
+      <div class="form-grid">
+        <div class="form-field"><label>Title (EN)</label><input type="text" id="gpsften${i}" value="${(f.t||'').replace(/"/g,'&quot;')}"/></div>
+        <div class="form-field"><label>Title (AR)</label><input type="text" id="gpsftar${i}" value="${(ar.t||'').replace(/"/g,'&quot;')}" dir="rtl"/></div>
+        <div class="form-field span2"><label>Description (EN)</label><textarea id="gpsfden${i}">${f.d||''}</textarea></div>
+        <div class="form-field span2"><label>Description (AR)</label><textarea id="gpsfdar${i}" dir="rtl">${ar.d||''}</textarea></div>
+      </div>
+      <div style="text-align:right;margin-top:6px"><button class="btn btn-danger btn-sm" onclick="removeGPSFeat(${i})">🗑️</button></div>
+    </div>`;
+  }).join('');
+}
+function addGPSFeat() {
+  gpsContent.featsEn.push({t:'New Feature',d:'Description here'});
+  gpsContent.featsAr.push({t:'ميزة جديدة',d:'الوصف هنا'});
+  renderGPSContentFeats();
+}
+function removeGPSFeat(i) { gpsContent.featsEn.splice(i,1); gpsContent.featsAr.splice(i,1); renderGPSContentFeats(); }
+function saveGPSContent() {
+  gpsContent.badgeEn = document.getElementById('gpsc-badge-en').value;
+  gpsContent.badgeAr = document.getElementById('gpsc-badge-ar').value;
+  gpsContent.titleEn = document.getElementById('gpsc-title-en').value;
+  gpsContent.titleAr = document.getElementById('gpsc-title-ar').value;
+  gpsContent.subEn = document.getElementById('gpsc-sub-en').value;
+  gpsContent.subAr = document.getElementById('gpsc-sub-ar').value;
+  (gpsContent.featsEn||[]).forEach((f,i) => {
+    const ten=document.getElementById('gpsften'+i),tar=document.getElementById('gpsftar'+i),den=document.getElementById('gpsfden'+i),dar=document.getElementById('gpsfdar'+i);
+    if(ten) gpsContent.featsEn[i]={t:ten.value,d:den?den.value:f.d};
+    if(!gpsContent.featsAr[i]) gpsContent.featsAr[i]={t:'',d:''};
+    if(tar) gpsContent.featsAr[i].t=tar.value;
+    if(dar) gpsContent.featsAr[i].d=dar.value;
+  });
+  DB.save('gpsContent',gpsContent);
+  toast('GPS content saved! 🗺️','success');
+  saveToSite();
+}
+
+/* ===================== FOOTER CONTENT ===================== */
+function loadFooterPanel() {
+  const f = footerContent;
+  document.getElementById('ftd-desc-en').value = f.descEn||'';
+  document.getElementById('ftd-desc-ar').value = f.descAr||'';
+  document.getElementById('ftd-copy-en').value = f.copyrightEn||'';
+  document.getElementById('ftd-copy-ar').value = f.copyrightAr||'';
+  document.getElementById('ftd-c0t-en').value = f.col0TitleEn||'';
+  document.getElementById('ftd-c0t-ar').value = f.col0TitleAr||'';
+  document.getElementById('ftd-c1t-en').value = f.col1TitleEn||'';
+  document.getElementById('ftd-c1t-ar').value = f.col1TitleAr||'';
+  document.getElementById('ftd-c1l-en').value = f.col1LinksEn||'';
+  document.getElementById('ftd-c1l-ar').value = f.col1LinksAr||'';
+  document.getElementById('ftd-c2t-en').value = f.col2TitleEn||'';
+  document.getElementById('ftd-c2t-ar').value = f.col2TitleAr||'';
+  document.getElementById('ftd-c2l-en').value = f.col2LinksEn||'';
+  document.getElementById('ftd-c2l-ar').value = f.col2LinksAr||'';
+  document.getElementById('ftd-ct-en').value = f.contactTitleEn||'';
+  document.getElementById('ftd-ct-ar').value = f.contactTitleAr||'';
+  document.getElementById('ftd-leg-en').value = f.legalLinksEn||'';
+  document.getElementById('ftd-leg-ar').value = f.legalLinksAr||'';
+}
+function saveFooterContent() {
+  const g = id => document.getElementById(id).value;
+  footerContent = {
+    descEn:g('ftd-desc-en'),descAr:g('ftd-desc-ar'),
+    copyrightEn:g('ftd-copy-en'),copyrightAr:g('ftd-copy-ar'),
+    col0TitleEn:g('ftd-c0t-en'),col0TitleAr:g('ftd-c0t-ar'),
+    col1TitleEn:g('ftd-c1t-en'),col1TitleAr:g('ftd-c1t-ar'),
+    col1LinksEn:g('ftd-c1l-en'),col1LinksAr:g('ftd-c1l-ar'),
+    col2TitleEn:g('ftd-c2t-en'),col2TitleAr:g('ftd-c2t-ar'),
+    col2LinksEn:g('ftd-c2l-en'),col2LinksAr:g('ftd-c2l-ar'),
+    contactTitleEn:g('ftd-ct-en'),contactTitleAr:g('ftd-ct-ar'),
+    legalLinksEn:g('ftd-leg-en'),legalLinksAr:g('ftd-leg-ar')
+  };
+  DB.save('footerContent',footerContent);
+  toast('Footer saved! 🦶','success');
+  saveToSite();
+}
+
+/* ===================== WHATSAPP CONFIG ===================== */
+function loadWAConfigPanel() {
+  document.getElementById('wa-number').value = waConfig.number||'';
+  document.getElementById('wa-float-enabled').checked = !!waConfig.floatBtnShow;
+  const m = waConfig.messages||{};
+  document.getElementById('wa-msg-hero').value = m.hero||'';
+  document.getElementById('wa-msg-fleet').value = m.fleet||'';
+  document.getElementById('wa-msg-featured').value = m.featured||'';
+  document.getElementById('wa-msg-pricing').value = m.pricing||'';
+  document.getElementById('wa-msg-cta').value = m.cta||'';
+  document.getElementById('wa-msg-footer').value = m.footer||'';
+}
+function saveWAConfig() {
+  const g = id => document.getElementById(id).value;
+  waConfig = {
+    number: g('wa-number'),
+    floatBtnShow: document.getElementById('wa-float-enabled').checked,
+    messages:{
+      hero:g('wa-msg-hero'),fleet:g('wa-msg-fleet'),
+      featured:g('wa-msg-featured'),pricing:g('wa-msg-pricing'),
+      cta:g('wa-msg-cta'),footer:g('wa-msg-footer')
+    }
+  };
+  // Also sync WhatsApp number to main settings
+  settings.whatsapp = waConfig.number;
+  DB.save('settings',settings);
+  DB.save('waConfig',waConfig);
+  toast('WhatsApp config saved! 💬','success');
+  saveToSite();
+}
+
+/* ===================== ADS & ANALYTICS ===================== */
+function loadAdsPanel() {
+  document.getElementById('ads-ga4').value = adsConfig.ga4||'';
+  document.getElementById('ads-ga4-on').checked = !!adsConfig.enabledGA4;
+  document.getElementById('ads-gtm').value = adsConfig.gtm||'';
+  document.getElementById('ads-gtm-on').checked = !!adsConfig.enabledGTM;
+  document.getElementById('ads-gads').value = adsConfig.googleAdsId||'';
+  document.getElementById('ads-gads-label').value = adsConfig.googleAdsConversion||'';
+  document.getElementById('ads-gads-on').checked = !!adsConfig.enabledGoogleAds;
+  document.getElementById('ads-meta').value = adsConfig.metaPixelId||'';
+  document.getElementById('ads-meta-on').checked = !!adsConfig.enabledMeta;
+}
+function saveAdsConfig() {
+  const g = id => document.getElementById(id).value;
+  const chk = id => document.getElementById(id).checked;
+  adsConfig = {
+    ga4:g('ads-ga4'),enabledGA4:chk('ads-ga4-on'),
+    gtm:g('ads-gtm'),enabledGTM:chk('ads-gtm-on'),
+    googleAdsId:g('ads-gads'),googleAdsConversion:g('ads-gads-label'),enabledGoogleAds:chk('ads-gads-on'),
+    metaPixelId:g('ads-meta'),enabledMeta:chk('ads-meta-on')
+  };
+  DB.save('adsConfig',adsConfig);
+  toast('Ads config saved! 📊','success');
+  saveToSite();
+}
+
+/* ===================== CLIENTS ===================== */
+function renderClientsTable(data) {
+  document.getElementById('clientsTableBody').innerHTML = (data||[]).map(c => `
+    <tr>
+      <td><div class="avatar-cell"><div class="av">${c.name?c.name[0]:'?'}</div><div><div style="font-weight:600">${c.name||''}</div><div style="font-size:0.75rem;color:var(--text3)">${c.notes||''}</div></div></div></td>
+      <td>${c.phone||'—'}</td>
+      <td>${c.email||'—'}</td>
+      <td style="text-align:center"><span class="badge badge-blue">${c.bookings||0}</span></td>
+      <td style="font-weight:700;color:var(--accent)">${(c.spent||0).toLocaleString()} MAD</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <a href="https://wa.me/${(settings.whatsapp||'').replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-success btn-sm" title="WhatsApp">💬</a>
+          <button class="btn btn-ghost btn-sm" onclick="editClient('${c.id}')">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteClient('${c.id}')">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+function searchClients(q) {
+  const filtered = clients.filter(c => (c.name||'').toLowerCase().includes(q.toLowerCase()) || (c.phone||'').includes(q) || (c.email||'').toLowerCase().includes(q.toLowerCase()));
+  renderClientsTable(filtered);
+}
+function openClientModal(id=null) {
+  editingClientId = id;
+  document.getElementById('clientModalTitle').textContent = id ? '✏️ Edit Client' : '👥 Add Client';
+  if(id) {
+    const c = clients.find(x => x.id===id);
+    if(c) {
+      document.getElementById('cl-name').value = c.name||'';
+      document.getElementById('cl-phone').value = c.phone||'';
+      document.getElementById('cl-email').value = c.email||'';
+      document.getElementById('cl-bookings').value = c.bookings||0;
+      document.getElementById('cl-spent').value = c.spent||0;
+      document.getElementById('cl-notes').value = c.notes||'';
+    }
+  } else {
+    ['cl-name','cl-phone','cl-email','cl-notes'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('cl-bookings').value='0';
+    document.getElementById('cl-spent').value='0';
+  }
+  openModal('clientModal');
+}
+function editClient(id) { openClientModal(id); }
+function saveClient() {
+  const c = {
+    id: editingClientId || 'cli_'+Date.now(),
+    name: document.getElementById('cl-name').value,
+    phone: document.getElementById('cl-phone').value,
+    email: document.getElementById('cl-email').value,
+    bookings: +document.getElementById('cl-bookings').value||0,
+    spent: +document.getElementById('cl-spent').value||0,
+    notes: document.getElementById('cl-notes').value
+  };
+  if(editingClientId) clients = clients.map(x => x.id===editingClientId?c:x);
+  else clients.push(c);
+  DB.save('clients',clients);
+  closeModal('clientModal');
+  renderClientsTable(clients);
+  toast('Client saved! 👥','success');
+}
+function deleteClient(id) {
+  if(!confirm('Delete this client?')) return;
+  clients = clients.filter(c => c.id!==id);
+  DB.save('clients',clients);
+  renderClientsTable(clients);
+  toast('Client deleted.','info');
+}
+
+// Init
+document.addEventListener('DOMContentLoaded',()=>{
+  // Check lockout on load
+  const lock = getLockState();
+  if(lock && lock.until && Date.now() < lock.until) startLockCountdown(lock.until);
+
+  // Check if already logged in (session valid for 2h)
+  const loggedIn = sessionStorage.getItem('drivo_admin_logged')==='1';
+  const loginTime = parseInt(sessionStorage.getItem('drivo_admin_time')||'0');
+  if(loggedIn && (Date.now() - loginTime) < 2*60*60*1000){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    renderFleetTable(cars);
+    startSessionTimeout();
+  } else {
+    sessionStorage.removeItem('drivo_admin_logged');
+    sessionStorage.removeItem('drivo_admin_time');
+  }
+});
+</script>
+</body>
+</html>

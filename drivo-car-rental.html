@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Boujlilcar — Premium Car Rental Morocco</title>
+<meta name="description" content="Premium car rental service in Morocco. GPS-tracked fleet, full insurance, 24/7 WhatsApp support. Casablanca, Rabat, Marrakech, Tangier, Agadir."/>
+<meta property="og:title" content="Boujlilcar — Premium Car Rental Morocco"/>
+<meta property="og:description" content="Experience luxury & performance with our GPS-tracked fleet across Morocco."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Readex+Pro:wght@300;400;500;600;700&family=Noto+Color+Emoji&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --glass-bg:rgba(255,255,255,0.07);
+  --glass-border:rgba(255,255,255,0.15);
+  --glass-blur:blur(18px) saturate(180%);
+  --glass-hover:rgba(255,255,255,0.12);
+  --glass-glow:rgba(99,102,241,0.15);
+  --accent:#6366f1;
+  --accent2:#06b6d4;
+  --accent3:#f59e0b;
+  --green:#22c55e;
+  --red:#ef4444;
+  --whatsapp:#25D366;
+  --radius:20px;
+  --radius-sm:12px;
+  --transition:all 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"]{
+  --bg-primary:#0a0a1a;
+  --bg-mesh1:#1a1a3e;
+  --bg-mesh2:#0d1b2a;
+  --bg-mesh3:#1b0a2e;
+  --text-primary:#ffffff;
+  --text-secondary:rgba(255,255,255,0.65);
+  --text-muted:rgba(255,255,255,0.4);
+  --glass-bg:rgba(255,255,255,0.06);
+  --glass-border:rgba(255,255,255,0.12);
+  --glass-hover:rgba(255,255,255,0.1);
+  --section-alt:rgba(255,255,255,0.02);
+}
+[data-theme="light"]{
+  --bg-primary:#f0f4ff;
+  --bg-mesh1:#e0e7ff;
+  --bg-mesh2:#dbeafe;
+  --bg-mesh3:#ede9fe;
+  --text-primary:#0f172a;
+  --text-secondary:rgba(15,23,42,0.7);
+  --text-muted:rgba(15,23,42,0.45);
+  --glass-bg:rgba(255,255,255,0.6);
+  --glass-border:rgba(255,255,255,0.8);
+  --glass-hover:rgba(255,255,255,0.75);
+  --section-alt:rgba(99,102,241,0.03);
+  --glass-glow:rgba(99,102,241,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Montserrat','Noto Color Emoji','Segoe UI Emoji','Apple Color Emoji',sans-serif;background:var(--bg-primary);color:var(--text-primary);overflow-x:hidden;}
+[dir="rtl"] body,[dir="rtl"]{font-family:'Readex Pro','Montserrat','Noto Color Emoji','Segoe UI Emoji','Apple Color Emoji',sans-serif;}
+.mesh-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 10% 20%,var(--bg-mesh1) 0%,transparent 60%),
+  radial-gradient(ellipse 60% 80% at 90% 80%,var(--bg-mesh2) 0%,transparent 60%),
+  radial-gradient(ellipse 50% 50% at 50% 50%,var(--bg-mesh3) 0%,transparent 70%),
+  var(--bg-primary);}
+.anim-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.glass{background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--radius);}
+.glass-sm{border-radius:var(--radius-sm);}
+.glass:hover{background:var(--glass-hover);}
+.glass-card{background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px;transition:var(--transition);}
+.glass-card:hover{background:var(--glass-hover);transform:translateY(-4px) scale(1.01);box-shadow:0 8px 40px var(--glass-glow);border-color:rgba(99,102,241,0.3);}
+.section{position:relative;z-index:1;padding:100px 24px;}
+.section-alt{background:var(--section-alt);}
+.container{max-width:1280px;margin:0 auto;width:100%;}
+.section-header{text-align:center;margin-bottom:64px;}
+.section-title{font-size:clamp(2rem,4vw,3rem);font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;}
+.section-sub{color:var(--text-secondary);font-size:1.1rem;max-width:600px;margin:0 auto;font-weight:400;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:50px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:600;font-size:1rem;border:none;cursor:pointer;transition:var(--transition);text-decoration:none;font-family:inherit;}
+.btn-primary:hover{transform:translateY(-2px) scale(1.04);filter:brightness(1.15);box-shadow:0 8px 30px rgba(99,102,241,0.35);}
+.btn-whatsapp{background:linear-gradient(135deg,var(--whatsapp),#128C7E);padding:16px 36px;font-size:1.05rem;}
+.btn-whatsapp:hover{box-shadow:0 8px 30px rgba(37,211,102,0.35);}
+.btn-glass{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:50px;background:var(--glass-bg);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);color:var(--text-primary);font-weight:600;font-size:1rem;cursor:pointer;transition:var(--transition);text-decoration:none;font-family:inherit;}
+.btn-glass:hover{background:var(--glass-hover);transform:translateY(-2px);}
+.badge{display:inline-block;padding:6px 16px;border-radius:50px;font-size:0.8rem;font-weight:600;letter-spacing:1px;background:rgba(99,102,241,0.15);color:var(--accent);border:1px solid rgba(99,102,241,0.25);}
+.badge-green{background:rgba(34,197,94,0.15);color:var(--green);border-color:rgba(34,197,94,0.25);}
+.badge-red{background:rgba(239,68,68,0.15);color:var(--red);border-color:rgba(239,68,68,0.25);}
+.badge-amber{background:rgba(245,158,11,0.15);color:var(--accent3);border-color:rgba(245,158,11,0.25);}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;background:var(--glass-bg);backdrop-filter:var(--glass-blur);border-bottom:1px solid var(--glass-border);transition:var(--transition);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-size:1.6rem;font-weight:900;letter-spacing:3px;cursor:pointer;text-decoration:none;color:var(--text-primary);}
+.nav-logo span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:32px;align-items:center;list-style:none;}
+.nav-links a{color:var(--text-secondary);text-decoration:none;font-weight:500;font-size:0.9rem;transition:var(--transition);}
+.nav-links a:hover{color:var(--text-primary);}
+.nav-controls{display:flex;align-items:center;gap:12px;}
+.nav-toggle{width:42px;height:42px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);font-size:1.1rem;color:var(--text-primary);}
+.nav-toggle:hover{background:var(--glass-hover);transform:scale(1.08);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:200;background:none;border:none;padding:4px;}
+.hamburger span{width:24px;height:2px;background:var(--text-primary);transition:var(--transition);display:block;border-radius:2px;}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+/* HERO SLIDER */
+.hero-slider{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.hero-slide-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition-property:opacity,transform,filter;transition-timing-function:cubic-bezier(0.4,0,0.2,1);}
+.hero-slide-img.active{opacity:1;}
+.hero-slider[data-transition="fade"] .hero-slide-img{transition-duration:1s;}
+.hero-slider[data-transition="slide"] .hero-slide-img{transition-duration:0.8s;transform:translateX(100%);}
+.hero-slider[data-transition="slide"] .hero-slide-img.active{transform:translateX(0);}
+.hero-slider[data-transition="slide"] .hero-slide-img.prev{transform:translateX(-100%);opacity:1;}
+.hero-slider[data-transition="zoom"] .hero-slide-img{transition-duration:1.2s;transform:scale(1.3);}
+.hero-slider[data-transition="zoom"] .hero-slide-img.active{transform:scale(1);}
+.hero-slider[data-transition="blur"] .hero-slide-img{transition-duration:1s;filter:blur(30px);transform:scale(1.1);}
+.hero-slider[data-transition="blur"] .hero-slide-img.active{filter:blur(0px);transform:scale(1);}
+.hero-slider[data-transition="flip"] .hero-slide-img{transition-duration:0.9s;transform:perspective(1200px) rotateY(90deg);}
+.hero-slider[data-transition="flip"] .hero-slide-img.active{transform:perspective(1200px) rotateY(0deg);}
+.hero-slide-img.kenburns.active{animation:kenburns 12s ease-in-out infinite alternate;}
+@keyframes kenburns{0%{transform:scale(1) translate(0,0);}25%{transform:scale(1.08) translate(-1%,1%);}50%{transform:scale(1.12) translate(1%,-1%);}75%{transform:scale(1.06) translate(-0.5%,-0.5%);}100%{transform:scale(1.1) translate(0.5%,0.5%);}}
+.hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;}
+.hero-overlay-gradient{background:linear-gradient(135deg,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 40%,rgba(0,0,0,0.5) 100%),linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 50%);}
+.hero-slider-counter{position:absolute;bottom:24px;right:24px;z-index:5;font-size:0.8rem;color:rgba(255,255,255,0.5);font-weight:600;letter-spacing:2px;}
+[dir="rtl"] .hero-slider-counter{right:auto;left:24px;}
+.hero-slider-caption{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:5;font-size:1rem;color:rgba(255,255,255,0.6);font-weight:500;letter-spacing:3px;text-transform:uppercase;opacity:0;transition:all 0.6s ease 0.3s;}
+.hero-slider-caption.show{opacity:1;}
+.hero-dots-overlay{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:5;display:flex;gap:10px;}
+.hero-dot-btn{width:36px;height:4px;border-radius:2px;border:none;background:rgba(255,255,255,0.3);cursor:pointer;transition:var(--transition);overflow:hidden;position:relative;}
+.hero-dot-btn.active{background:rgba(255,255,255,0.7);}
+.hero-dot-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);border-radius:2px;}
+.hero-dot-btn.active .hero-dot-fill{animation:dotFill var(--dot-dur) linear forwards;}
+@keyframes dotFill{0%{width:0;}100%{width:100%;}}
+.hero-slider-arrows{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:0 20px;pointer-events:none;}
+.hero-slider-arrows button{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:1.3rem;cursor:pointer;pointer-events:all;transition:var(--transition);display:flex;align-items:center;justify-content:center;}
+.hero-slider-arrows button:hover{background:rgba(255,255,255,0.18);transform:scale(1.1);}
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 24px 80px;position:relative;z-index:1;}
+.hero-content{max-width:1280px;margin:0 auto;width:100%;}
+.hero-badge{margin-bottom:24px;}
+.hero-title{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:24px;}
+.hero-title .gradient{background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{color:rgba(255,255,255,0.85);font-size:1.2rem;max-width:550px;margin-bottom:40px;line-height:1.7;}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:64px;}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:700px;}
+.stat-item{text-align:center;}
+.stat-item .num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-item .label{color:var(--text-muted);font-size:0.85rem;margin-top:4px;}
+/* FEATURED SLIDER */
+.slider-wrap{position:relative;overflow:hidden;border-radius:var(--radius);}
+.slider-track{display:flex;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);}
+.slide{min-width:100%;padding:48px;display:flex;align-items:center;gap:48px;background:var(--glass-bg);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);}
+.slide-visual{flex:1;min-height:280px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(6,182,212,0.15));display:flex;align-items:center;justify-content:center;font-size:6rem;}
+.slide-info{flex:1;}
+.slide-cat{color:var(--accent);font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;}
+.slide-name{font-size:2rem;font-weight:800;margin-bottom:12px;}
+.slide-price{font-size:1.5rem;font-weight:700;color:var(--accent2);margin-bottom:20px;}
+.slide-price small{font-size:0.85rem;color:var(--text-muted);font-weight:400;}
+.slide-specs{display:flex;gap:12px;flex-wrap:wrap;}
+.slide-spec{padding:6px 14px;border-radius:50px;background:var(--glass-bg);border:1px solid var(--glass-border);font-size:0.8rem;color:var(--text-secondary);}
+.slider-controls{display:flex;justify-content:center;gap:12px;margin-top:24px;}
+.slider-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--glass-border);background:transparent;cursor:pointer;transition:var(--transition);}
+.slider-dot.active{background:var(--accent);border-color:var(--accent);width:32px;border-radius:6px;}
+.slider-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:48px;height:48px;border-radius:50%;background:var(--glass-bg);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);color:var(--text-primary);font-size:1.2rem;}
+.slider-arrow:hover{background:var(--glass-hover);transform:translateY(-50%) scale(1.1);}
+.slider-arrow.prev{left:16px;}
+.slider-arrow.next{right:16px;}
+/* FLEET */
+.fleet-filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;}
+.filter-btn{padding:10px 24px;border-radius:50px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--text-secondary);cursor:pointer;transition:var(--transition);font-family:inherit;font-size:0.9rem;}
+.filter-btn:hover,.filter-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent;}
+.fleet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;}
+.car-card{overflow:hidden;}
+.car-visual{height:160px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(6,182,212,0.1));font-size:4rem;border-radius:var(--radius) var(--radius) 0 0;margin:-28px -28px 20px;overflow:hidden;position:relative;}
+.car-cat{font-size:0.75rem;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.car-name{font-size:1.15rem;font-weight:700;margin-bottom:14px;}
+.car-specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+.car-spec{font-size:0.8rem;color:var(--text-secondary);display:flex;align-items:center;gap:6px;}
+.car-bottom{display:flex;flex-direction:column;gap:12px;padding-top:16px;border-top:1px solid var(--glass-border);}
+.car-bottom-row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.car-price{font-size:1.3rem;font-weight:800;color:var(--accent);}
+.car-price small{font-size:0.75rem;color:var(--text-muted);font-weight:400;}
+.car-detail-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:50px;background:var(--glass-bg);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);color:var(--text-primary);font-weight:600;font-size:0.82rem;cursor:pointer;transition:var(--transition);font-family:inherit;}
+.car-detail-btn:hover{background:var(--glass-hover);border-color:rgba(99,102,241,0.4);transform:translateY(-1px);}
+/* CAR DETAIL MODAL */
+.car-modal-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+.car-modal-overlay.open{opacity:1;pointer-events:all;}
+.car-modal{background:var(--glass-bg);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);
+  border:1px solid var(--glass-border);border-radius:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;
+  transform:translateY(40px) scale(0.95);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 40px 80px rgba(0,0,0,0.5),0 0 60px rgba(99,102,241,0.08);}
+.car-modal-overlay.open .car-modal{transform:translateY(0) scale(1);}
+.car-modal-hero{height:200px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(6,182,212,0.1),rgba(245,158,11,0.08));
+  border-radius:28px 28px 0 0;position:relative;overflow:hidden;}
+.car-modal-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 50%,var(--glass-bg));pointer-events:none;z-index:2;}
+.car-modal-emoji{font-size:7rem;line-height:1;filter:drop-shadow(0 8px 24px rgba(99,102,241,0.4));animation:carFloat 3s ease-in-out infinite;}
+@keyframes carFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.car-modal-body{padding:28px 32px 32px;}
+.car-modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;}
+.car-modal-close{width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-border);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;color:var(--text-secondary);
+  transition:var(--transition);flex-shrink:0;}
+.car-modal-close:hover{background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);color:var(--red);}
+.car-modal-name{font-size:1.6rem;font-weight:800;line-height:1.2;}
+.car-modal-cat{font-size:0.75rem;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;}
+.car-modal-price-box{background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(6,182,212,0.08));
+  border:1px solid rgba(99,102,241,0.2);border-radius:16px;padding:18px 20px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;}
+.car-modal-price-val{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.car-modal-price-label{font-size:0.8rem;color:var(--text-muted);}
+.car-modal-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.car-modal-specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px;}
+.car-modal-spec{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px;}
+.car-modal-spec-icon{font-size:1.3rem;flex-shrink:0;}
+.car-modal-spec-label{font-size:0.7rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+.car-modal-spec-val{font-size:0.92rem;font-weight:700;margin-top:2px;}
+.car-modal-section-title{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:12px;}
+.car-modal-features{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
+.car-modal-feature{display:flex;align-items:center;gap:10px;font-size:0.88rem;color:var(--text-secondary);}
+.car-modal-feature::before{content:'✓';width:20px;height:20px;border-radius:6px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.25);color:var(--green);font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.car-modal-actions{display:flex;gap:12px;}
+.car-modal-actions .btn-primary{flex:1;justify-content:center;padding:14px 20px;font-size:0.95rem;}
+/* BOOKING FORM */
+.booking-form{margin-top:20px;border-top:1px solid var(--glass-border);padding-top:20px;}
+.booking-form-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:14px;}
+.booking-field{margin-bottom:12px;}
+.booking-field label{display:block;font-size:0.72rem;font-weight:600;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.3px;text-transform:uppercase;}
+.booking-input{width:100%;padding:11px 14px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);color:var(--text-primary);font-family:'Montserrat',sans-serif;font-size:0.88rem;outline:none;transition:var(--transition);-webkit-appearance:none;}
+.booking-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,0.12);}
+.booking-input::placeholder{color:var(--text-muted);}
+.booking-input[type="date"]::-webkit-calendar-picker-indicator,.booking-input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(0.6);cursor:pointer;}
+[data-theme="dark"] .booking-input[type="date"]::-webkit-calendar-picker-indicator,[data-theme="dark"] .booking-input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(0.8);}
+.booking-input option{background:var(--bg-primary,#0a0a1a);color:var(--text-primary,#fff);}
+.booking-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.booking-btn{width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-weight:700;font-size:0.97rem;border:none;cursor:pointer;transition:var(--transition);font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;letter-spacing:0.3px;}
+.booking-btn:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 6px 24px rgba(37,211,102,0.4);}
+.booking-close-btn{width:100%;padding:11px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text-secondary);font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:var(--transition);margin-top:8px;}
+.booking-close-btn:hover{background:var(--glass-hover);}
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px;}
+.feature-icon{font-size:2.5rem;margin-bottom:16px;}
+.feature-title{font-size:1.15rem;font-weight:700;margin-bottom:8px;}
+.feature-desc{color:var(--text-secondary);font-size:0.9rem;line-height:1.6;}
+/* GPS */
+.gps-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;}
+.gps-map{border-radius:var(--radius);overflow:hidden;min-height:400px;position:relative;background:linear-gradient(135deg,#0c1428,#1a1a3e);border:1px solid var(--glass-border);}
+.map-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.map-grid{width:90%;height:90%;position:relative;background-image:radial-gradient(circle,rgba(99,102,241,0.15) 1px,transparent 1px);background-size:30px 30px;}
+.map-dot{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--green);box-shadow:0 0 20px var(--green);animation:pulse 2s infinite;}
+.map-dot.parked{background:var(--accent3);box-shadow:0 0 20px var(--accent3);}
+.map-dot.maint{background:var(--red);box-shadow:0 0 20px var(--red);}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:0.6;}}
+.gps-list{display:flex;flex-direction:column;gap:12px;}
+.gps-vehicle{display:flex;align-items:center;gap:16px;padding:16px;transition:var(--transition);}
+.gps-vehicle:hover{background:var(--glass-hover);}
+.gps-v-status{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.gps-v-status.active{background:var(--green);box-shadow:0 0 10px var(--green);}
+.gps-v-status.parked{background:var(--accent3);box-shadow:0 0 10px var(--accent3);}
+.gps-v-status.maint{background:var(--red);box-shadow:0 0 10px var(--red);}
+.gps-v-info{flex:1;}
+.gps-v-name{font-weight:600;font-size:0.95rem;}
+.gps-v-id{font-size:0.75rem;color:var(--text-muted);}
+.gps-v-meta{text-align:right;}
+.gps-v-speed{font-weight:700;color:var(--accent);}
+.gps-v-city{font-size:0.8rem;color:var(--text-secondary);}
+/* PRICING */
+.pricing-toggle{display:flex;justify-content:center;gap:4px;margin-bottom:48px;padding:4px;border-radius:50px;background:var(--glass-bg);border:1px solid var(--glass-border);max-width:360px;margin-left:auto;margin-right:auto;}
+.pricing-toggle button{padding:10px 28px;border-radius:50px;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:600;transition:var(--transition);}
+.pricing-toggle button.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start;}
+.plan-card{text-align:center;}
+.plan-card.popular{border-color:var(--accent);box-shadow:0 0 40px rgba(99,102,241,0.2);transform:scale(1.03);}
+.plan-card.popular:hover{transform:scale(1.06)!important;}
+.plan-name{font-size:1.3rem;font-weight:700;margin-bottom:8px;}
+.plan-price{font-size:3rem;font-weight:900;margin-bottom:4px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.plan-currency{font-size:0.9rem;color:var(--text-muted);margin-bottom:24px;display:block;}
+.plan-features{list-style:none;text-align:start;margin-bottom:28px;}
+.plan-features li{padding:10px 0;border-bottom:1px solid var(--glass-border);font-size:0.9rem;color:var(--text-secondary);display:flex;align-items:center;gap:10px;}
+.plan-features li::before{content:"✓";color:var(--green);font-weight:700;}
+/* ADMIN SECTION */
+.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.admin-card{cursor:pointer;}
+.admin-icon{font-size:2rem;margin-bottom:12px;}
+.admin-title{font-weight:700;font-size:1rem;margin-bottom:6px;}
+.admin-desc{color:var(--text-secondary);font-size:0.85rem;line-height:1.5;}
+.settings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px;}
+.setting-card{padding:20px;display:flex;gap:14px;align-items:start;}
+.setting-icon{font-size:1.5rem;flex-shrink:0;}
+.setting-title{font-weight:600;font-size:0.9rem;margin-bottom:4px;}
+.setting-desc{font-size:0.78rem;color:var(--text-muted);line-height:1.4;}
+/* SEO */
+.seo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+/* TESTIMONIALS */
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.test-stars{color:var(--accent3);font-size:1rem;margin-bottom:12px;}
+.test-text{color:var(--text-secondary);font-size:0.95rem;line-height:1.7;margin-bottom:20px;font-style:italic;}
+.test-author{display:flex;align-items:center;gap:12px;}
+.test-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:1rem;}
+.test-name{font-weight:600;font-size:0.9rem;}
+.test-role{font-size:0.8rem;color:var(--text-muted);}
+/* FAQ */
+.faq-list{max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+.faq-item{cursor:pointer;overflow:hidden;}
+.faq-q{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:1rem;}
+.faq-a{color:var(--text-secondary);font-size:0.9rem;line-height:1.7;max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.4s ease;padding-top:0;}
+.faq-item.open .faq-a{max-height:200px;padding-top:14px;}
+.faq-arrow{transition:var(--transition);font-size:1.2rem;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+/* CTA */
+.cta-banner{text-align:center;padding:80px 40px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(6,182,212,0.15));border:1px solid var(--glass-border);}
+.cta-title{font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:800;margin-bottom:16px;}
+.cta-sub{color:var(--text-secondary);font-size:1.1rem;margin-bottom:32px;}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+/* FOOTER */
+.footer{position:relative;z-index:1;padding:80px 24px 32px;background:rgba(0,0,0,0.2);border-top:1px solid var(--glass-border);}
+.footer-grid{display:grid;grid-template-columns:1.5fr repeat(3,1fr) 1.2fr;gap:40px;max-width:1280px;margin:0 auto;}
+.footer-logo{font-size:1.5rem;font-weight:900;letter-spacing:3px;margin-bottom:12px;}
+.footer-logo span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-desc{color:var(--text-muted);font-size:0.85rem;line-height:1.7;}
+.footer-col-title{font-weight:700;font-size:0.95rem;margin-bottom:16px;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.footer-links a{color:var(--text-muted);font-size:0.85rem;text-decoration:none;transition:var(--transition);}
+.footer-links a:hover{color:var(--text-primary);}
+.footer-contact p{color:var(--text-muted);font-size:0.85rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.footer-bottom{max-width:1280px;margin:40px auto 0;padding-top:24px;border-top:1px solid var(--glass-border);display:flex;justify-content:space-between;align-items:center;color:var(--text-muted);font-size:0.8rem;}
+.footer-legal{display:flex;gap:20px;}
+.footer-legal a{color:var(--text-muted);text-decoration:none;transition:var(--transition);}
+.footer-legal a:hover{color:var(--text-primary);}
+.footer-social{display:flex;gap:12px;margin-top:20px;}
+.social-icon{width:38px;height:38px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:var(--transition);}
+.social-icon:hover{background:var(--glass-hover);transform:translateY(-2px);}
+/* WHATSAPP FLOAT */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:99;width:60px;height:60px;border-radius:50%;background:var(--whatsapp);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.8rem;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:var(--transition);text-decoration:none;animation:float 3s ease-in-out infinite;font-family:'Noto Color Emoji','Segoe UI Emoji','Apple Color Emoji',sans-serif;}
+[dir="rtl"] .wa-float{right:auto;left:28px;}
+.wa-float:hover{transform:scale(1.1)!important;box-shadow:0 6px 30px rgba(37,211,102,0.5);}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+/* ADMIN PANEL OVERLAY */
+.admin-overlay{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all 0.4s ease;}
+.admin-overlay.open{opacity:1;pointer-events:all;}
+.admin-panel{width:90%;max-width:900px;max-height:85vh;overflow-y:auto;background:var(--glass-bg);backdrop-filter:blur(30px) saturate(200%);border:1px solid var(--glass-border);border-radius:24px;padding:40px;transform:scale(0.9) translateY(20px);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
+.admin-overlay.open .admin-panel{transform:scale(1) translateY(0);}
+.admin-panel::-webkit-scrollbar{width:6px;}
+.admin-panel::-webkit-scrollbar-track{background:transparent;}
+.admin-panel::-webkit-scrollbar-thumb{background:var(--glass-border);border-radius:3px;}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;}
+.admin-close{width:40px;height:40px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text-primary);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
+.admin-close:hover{background:rgba(239,68,68,0.2);border-color:var(--red);}
+.ctrl-section{margin-bottom:28px;}
+.ctrl-section-title{font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.ctrl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+.ctrl-item{padding:16px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);}
+.ctrl-label{font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;display:flex;justify-content:space-between;}
+.ctrl-label span{color:var(--accent);font-weight:600;}
+.ctrl-input{width:100%;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);color:var(--text-primary);font-family:inherit;font-size:0.9rem;outline:none;transition:var(--transition);}
+.ctrl-input:focus{border-color:var(--accent);box-shadow:0 0 15px rgba(99,102,241,0.2);}
+.ctrl-range{width:100%;height:6px;border-radius:3px;-webkit-appearance:none;appearance:none;background:var(--glass-border);outline:none;cursor:pointer;}
+.ctrl-range::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));cursor:pointer;box-shadow:0 0 10px rgba(99,102,241,0.4);}
+.ctrl-color{width:100%;height:40px;border-radius:10px;border:1px solid var(--glass-border);cursor:pointer;background:transparent;padding:2px;}
+.ctrl-color::-webkit-color-swatch-wrapper{padding:0;}
+.ctrl-color::-webkit-color-swatch{border:none;border-radius:8px;}
+.ctrl-select{width:100%;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);color:var(--text-primary);font-family:inherit;font-size:0.9rem;outline:none;cursor:pointer;}
+.ctrl-select option{background:#1a1a3e;color:#fff;}
+.ctrl-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.ctrl-toggle-track{width:48px;height:26px;border-radius:13px;padding:3px;background:rgba(255,255,255,0.1);border:1px solid var(--glass-border);transition:var(--transition);position:relative;}
+.ctrl-toggle-track.on{background:var(--accent);border-color:var(--accent);}
+.ctrl-toggle-thumb{width:20px;height:20px;border-radius:50%;background:#fff;transition:var(--transition);transform:translateX(0);}
+.ctrl-toggle-track.on .ctrl-toggle-thumb{transform:translateX(22px);}
+.ctrl-toggle-label{font-size:0.85rem;color:var(--text-secondary);}
+.ctrl-presets{display:flex;gap:8px;flex-wrap:wrap;}
+.ctrl-preset{padding:8px 16px;border-radius:50px;font-size:0.8rem;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text-secondary);cursor:pointer;transition:var(--transition);font-family:inherit;}
+.ctrl-preset:hover,.ctrl-preset.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent;}
+.admin-fab{position:fixed;bottom:100px;right:28px;z-index:98;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 20px rgba(99,102,241,0.35);display:flex;align-items:center;justify-content:center;transition:var(--transition);font-family:'Noto Color Emoji','Segoe UI Emoji','Apple Color Emoji',sans-serif;}
+[dir="rtl"] .admin-fab{right:auto;left:28px;}
+.admin-fab:hover{transform:scale(1.1) rotate(30deg);}
+/* MOBILE MENU */
+.mobile-menu{position:fixed;inset:0;z-index:150;background:rgba(10,10,26,0.97);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;pointer-events:none;transition:var(--transition);}
+.mobile-menu.open{opacity:1;pointer-events:all;}
+.mobile-menu a{color:var(--text-primary);text-decoration:none;font-size:1.5rem;font-weight:700;transition:var(--transition);}
+.mobile-menu a:hover{color:var(--accent);}
+/* FADE UP ANIMATION */
+.fade-up{opacity:0;transform:translateY(30px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+/* SLIDE IMAGE MANAGEMENT */
+.slide-img-row{display:flex;gap:12px;align-items:start;padding:14px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);margin-bottom:10px;}
+.slide-thumb{width:100px;height:60px;border-radius:10px;overflow:hidden;flex-shrink:0;border:2px solid var(--glass-border);cursor:pointer;position:relative;}
+.slide-thumb.active-thumb{border-color:var(--accent);}
+.slide-thumb img{width:100%;height:100%;object-fit:cover;}
+.slide-thumb-num{position:absolute;top:4px;left:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:6px;font-weight:700;}
+.slide-thumb-num.active-num{background:var(--accent);}
+.slide-fields{flex:1;display:flex;flex-direction:column;gap:6px;}
+.slide-reorder{display:flex;flex-direction:column;gap:4px;}
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .gps-layout,.pricing-grid,.admin-grid,.test-grid,.seo-grid{grid-template-columns:1fr;}
+  .pricing-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+  .plan-card.popular{transform:none;}
+  .admin-grid,.settings-grid{grid-template-columns:repeat(2,1fr);}
+  .footer-grid{grid-template-columns:repeat(2,1fr);}
+  .slide{flex-direction:column;padding:32px;}
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .features-grid,.fleet-grid{grid-template-columns:1fr;}
+  .admin-grid,.settings-grid,.test-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .footer-bottom{flex-direction:column;gap:12px;text-align:center;}
+  .section{padding:60px 16px;}
+  .hero{padding:100px 16px 60px;}
+  .hero-btns{flex-direction:column;}
+  .cta-btns{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="animCanvas" class="anim-canvas"></canvas>
+<div class="mesh-bg"></div>
+<button class="admin-fab" id="adminFab">&#9881;&#65039;</button>
+<a href="https://wa.me/212641750719?text=Hello" class="wa-float" target="_blank" rel="noopener">&#128172;</a>
+
+<!-- CAR DETAIL MODAL -->
+<div class="car-modal-overlay" id="carModalOverlay" onclick="if(event.target===this)closeCarModal()">
+  <div class="car-modal" id="carModal">
+    <div class="car-modal-hero" id="cmHero">
+      <div class="car-modal-emoji" id="cmEmoji">🚗</div>
+    </div>
+    <div class="car-modal-body">
+      <div class="car-modal-header">
+        <div>
+          <div class="car-modal-name" id="cmName">Car Name</div>
+          <div class="car-modal-cat" id="cmCat">Category</div>
+        </div>
+        <button class="car-modal-close" onclick="closeCarModal()">✕</button>
+      </div>
+      <div class="car-modal-price-box">
+        <div>
+          <div class="car-modal-price-label" id="cmPriceLabel">Starting from</div>
+          <div class="car-modal-price-val"><span id="cmPrice">250</span> <span id="cmCurrency" style="font-size:1rem;font-weight:600">MAD</span></div>
+        </div>
+        <div style="text-align:right">
+          <div class="car-modal-price-label" id="cmPeriod">per day</div>
+          <div id="cmBadge" class="badge" style="margin-top:4px">Available</div>
+        </div>
+      </div>
+      <div class="car-modal-specs-grid" id="cmSpecsGrid"></div>
+      <div class="car-modal-section-title" id="cmFeatTitle">Included Features</div>
+      <div class="car-modal-features" id="cmFeatures"></div>
+      <!-- BOOKING FORM -->
+      <div class="booking-form">
+        <div class="booking-form-title" id="cmBookFormTitle">Quick Booking</div>
+        <div class="booking-field">
+          <label id="cmCityLabel">Pickup city</label>
+          <select class="booking-input" id="cmCity">
+            <option>Casablanca</option>
+            <option>Rabat</option>
+            <option>Marrakech</option>
+            <option>Tangier</option>
+            <option>Agadir</option>
+            <option>Fes</option>
+          </select>
+        </div>
+        <div class="booking-field">
+          <label id="cmPickupLabel">Pickup date &amp; time</label>
+          <div class="booking-row">
+            <input type="date" class="booking-input" id="cmPickupDate"/>
+            <input type="time" class="booking-input" id="cmPickupTime" value="10:00"/>
+          </div>
+        </div>
+        <div class="booking-field">
+          <label id="cmReturnLabel">Return date &amp; time</label>
+          <div class="booking-row">
+            <input type="date" class="booking-input" id="cmReturnDate"/>
+            <input type="time" class="booking-input" id="cmReturnTime" value="10:00"/>
+          </div>
+        </div>
+        <div class="booking-field">
+          <label id="cmNameLabel">Your name</label>
+          <input type="text" class="booking-input" id="cmClientName" id="cmClientName" placeholder="Full name"/>
+        </div>
+        <div class="booking-field">
+          <label id="cmPhoneLabel">Phone</label>
+          <input type="tel" class="booking-input" id="cmClientPhone" placeholder="06..."/>
+        </div>
+        <button class="booking-btn" onclick="bookNowWhatsApp()">
+          💬 <span id="cmBookBtnLabel">Book on WhatsApp</span>
+        </button>
+        <button class="booking-close-btn" onclick="closeCarModal()">✕ <span id="cmCloseBtn">Close</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#s0" onclick="closeMobile()"><span id="mn-home">Home</span></a>
+  <a href="#s1" onclick="closeMobile()"><span id="mn-fleet">Fleet</span></a>
+  <a href="#s2" onclick="closeMobile()"><span id="mn-pricing">Plans</span></a>
+  <a href="#s3" onclick="closeMobile()"><span id="mn-gps">GPS Tracking</span></a>
+  <a href="#s4" onclick="closeMobile()"><span id="mn-admin">Admin Panel</span></a>
+  <a href="#s5" onclick="closeMobile()"><span id="mn-contact">Contact</span></a>
+  <a href="https://wa.me/212641750719" class="btn-primary btn-whatsapp" style="margin-top:20px" id="mn-book">Book Now</a>
+</div>
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#s0" class="nav-logo"><span>Boujlil</span>car</a>
+    <ul class="nav-links">
+      <li><a href="#s0" id="nl-home">Home</a></li>
+      <li><a href="#s1" id="nl-fleet">Fleet</a></li>
+      <li><a href="#s2" id="nl-pricing">Plans</a></li>
+      <li><a href="#s3" id="nl-gps">GPS Tracking</a></li>
+      <li><a href="#s4" id="nl-admin">Admin Panel</a></li>
+      <li><a href="#s5" id="nl-contact">Contact</a></li>
+    </ul>
+    <div class="nav-controls">
+      <button class="nav-toggle" id="langBtn">&#1593;</button>
+      <button class="nav-toggle" id="themeBtn">&#9728;&#65039;</button>
+      <button class="hamburger" id="hamburger" onclick="toggleMobile()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="s0">
+  <div class="hero-slider" id="heroSlider" data-transition="fade">
+    <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=80" alt="Sports Car" class="hero-slide-img active kenburns" id="hslide0" loading="eager"/>
+    <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80" alt="Premium Sedan" class="hero-slide-img" id="hslide1" loading="eager"/>
+    <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1920&q=80" alt="Sport SUV" class="hero-slide-img" id="hslide2" loading="lazy"/>
+    <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1920&q=80" alt="Classic Luxury" class="hero-slide-img" id="hslide3" loading="lazy"/>
+    <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80" alt="Red Supercar" class="hero-slide-img" id="hslide4" loading="lazy"/>
+    <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1920&q=80" alt="Night Drive" class="hero-slide-img" id="hslide5" loading="lazy"/>
+    <div class="hero-overlay hero-overlay-gradient" id="heroOverlay" style="opacity:0.55"></div>
+    <div class="hero-slider-arrows" id="heroArrows">
+      <button onclick="heroNav(-1)">&#9664;</button>
+      <button onclick="heroNav(1)">&#9654;</button>
+    </div>
+    <div class="hero-dots-overlay" id="heroDots" style="--dot-dur:5000ms">
+      <button class="hero-dot-btn active" onclick="heroGo(0)"><div class="hero-dot-fill"></div></button>
+      <button class="hero-dot-btn" onclick="heroGo(1)"><div class="hero-dot-fill"></div></button>
+      <button class="hero-dot-btn" onclick="heroGo(2)"><div class="hero-dot-fill"></div></button>
+      <button class="hero-dot-btn" onclick="heroGo(3)"><div class="hero-dot-fill"></div></button>
+      <button class="hero-dot-btn" onclick="heroGo(4)"><div class="hero-dot-fill"></div></button>
+      <button class="hero-dot-btn" onclick="heroGo(5)"><div class="hero-dot-fill"></div></button>
+    </div>
+    <div class="hero-slider-counter" id="heroCounter">01 / 06</div>
+    <div class="hero-slider-caption show" id="heroCaption">Feel the Power</div>
+  </div>
+  <div class="hero-content" style="position:relative;z-index:5">
+    <div class="hero-badge fade-up"><span class="badge" id="heroBadge">&#127942; Premium Car Rental Service</span></div>
+    <h1 class="hero-title fade-up">
+      <span id="heroT1">Drive Your</span> <span class="gradient" id="heroT2">Dream Car</span><br/><span id="heroT3">Today</span>
+    </h1>
+    <p class="hero-sub fade-up" id="heroSub">Experience luxury &amp; performance with our premium fleet. GPS-tracked vehicles across Morocco.</p>
+    <div class="hero-btns fade-up">
+      <a href="https://wa.me/212641750719?text=Hello%20Boujlilcar!%20I'd%20like%20to%20reserve%20a%20car." class="btn-primary btn-whatsapp" id="heroCta1">&#128172; Reserve via WhatsApp</a>
+      <a href="#s1" class="btn-glass" id="heroCta2">Browse Fleet &#8594;</a>
+    </div>
+    <div class="hero-stats fade-up">
+      <div class="stat-item glass glass-sm" style="padding:20px 12px"><div class="num">150+</div><div class="label" id="stat0">Premium Cars</div></div>
+      <div class="stat-item glass glass-sm" style="padding:20px 12px"><div class="num">12K+</div><div class="label" id="stat1">Happy Clients</div></div>
+      <div class="stat-item glass glass-sm" style="padding:20px 12px"><div class="num">24/7</div><div class="label" id="stat2">Support</div></div>
+      <div class="stat-item glass glass-sm" style="padding:20px 12px"><div class="num">15+</div><div class="label" id="stat3">Cities</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED SLIDER -->
+<section class="section" id="featuredSlider">
+  <div class="container">
+    <div class="section-header fade-up">
+      <h2 class="section-title" id="sliderTitle">Featured Vehicles</h2>
+      <p class="section-sub" id="sliderSub">Explore our handpicked selection of premium cars</p>
+    </div>
+    <div class="slider-wrap fade-up" style="position:relative">
+      <div class="slider-track" id="featSliderTrack">
+        <div class="slide"><div class="slide-visual">&#127950;&#65039;</div><div class="slide-info"><div class="slide-cat" id="fsc0">Sport Luxury</div><div class="slide-name" id="fsn0">Mercedes AMG GT</div><div class="slide-price" id="fsp0">1,200 <small>MAD/day</small></div><div class="slide-specs"><span class="slide-spec">4.0L V8 Biturbo</span><span class="slide-spec">585 HP</span><span class="slide-spec">0-100: 3.2s</span></div><a href="https://wa.me/212641750719?text=Mercedes%20AMG%20GT" class="btn-primary btn-whatsapp" style="margin-top:20px;padding:12px 24px;font-size:0.9rem">&#128172; <span id="fsbtn0">Book Now</span></a></div></div>
+        <div class="slide"><div class="slide-visual">&#128665;</div><div class="slide-info"><div class="slide-cat" id="fsc1">Premium SUV</div><div class="slide-name" id="fsn1">BMW X5 M Sport</div><div class="slide-price" id="fsp1">900 <small>MAD/day</small></div><div class="slide-specs"><span class="slide-spec">3.0L Inline-6</span><span class="slide-spec">340 HP</span><span class="slide-spec">xDrive AWD</span></div><a href="https://wa.me/212641750719?text=BMW%20X5" class="btn-primary btn-whatsapp" style="margin-top:20px;padding:12px 24px;font-size:0.9rem">&#128172; <span id="fsbtn1">Book Now</span></a></div></div>
+        <div class="slide"><div class="slide-visual">&#128661;</div><div class="slide-info"><div class="slide-cat" id="fsc2">Executive</div><div class="slide-name" id="fsn2">Audi A6 Avant</div><div class="slide-price" id="fsp2">750 <small>MAD/day</small></div><div class="slide-specs"><span class="slide-spec">2.0 TFSI</span><span class="slide-spec">265 HP</span><span class="slide-spec">Quattro AWD</span></div><a href="https://wa.me/212641750719?text=Audi%20A6" class="btn-primary btn-whatsapp" style="margin-top:20px;padding:12px 24px;font-size:0.9rem">&#128172; <span id="fsbtn2">Book Now</span></a></div></div>
+        <div class="slide"><div class="slide-visual">&#128665;</div><div class="slide-info"><div class="slide-cat" id="fsc3">Luxury SUV</div><div class="slide-name" id="fsn3">Range Rover Sport</div><div class="slide-price" id="fsp3">1,500 <small>MAD/day</small></div><div class="slide-specs"><span class="slide-spec">5.0L V8</span><span class="slide-spec">525 HP</span><span class="slide-spec">Terrain Response</span></div><a href="https://wa.me/212641750719?text=Range%20Rover" class="btn-primary btn-whatsapp" style="margin-top:20px;padding:12px 24px;font-size:0.9rem">&#128172; <span id="fsbtn3">Book Now</span></a></div></div>
+        <div class="slide"><div class="slide-visual">&#127950;&#65039;</div><div class="slide-info"><div class="slide-cat" id="fsc4">Sport SUV</div><div class="slide-name" id="fsn4">Porsche Cayenne</div><div class="slide-price" id="fsp4">1,800 <small>MAD/day</small></div><div class="slide-specs"><span class="slide-spec">4.0L V8</span><span class="slide-spec">550 HP</span><span class="slide-spec">Sport Chrono</span></div><a href="https://wa.me/212641750719?text=Porsche%20Cayenne" class="btn-primary btn-whatsapp" style="margin-top:20px;padding:12px 24px;font-size:0.9rem">&#128172; <span id="fsbtn4">Book Now</span></a></div></div>
+      </div>
+      <button class="slider-arrow prev" onclick="featNav(-1)">&#9664;</button>
+      <button class="slider-arrow next" onclick="featNav(1)">&#9654;</button>
+    </div>
+    <div class="slider-controls">
+      <button class="slider-dot active" onclick="featGo(0)"></button>
+      <button class="slider-dot" onclick="featGo(1)"></button>
+      <button class="slider-dot" onclick="featGo(2)"></button>
+      <button class="slider-dot" onclick="featGo(3)"></button>
+      <button class="slider-dot" onclick="featGo(4)"></button>
+    </div>
+  </div>
+</section>
+
+<!-- FLEET -->
+<section class="section section-alt" id="s1">
+  <div class="container">
+    <div class="section-header fade-up"><h2 class="section-title" id="fleetTitle">Our Fleet</h2><p class="section-sub" id="fleetSub">Choose from our diverse collection of vehicles</p></div>
+    <div class="fleet-filters fade-up" id="fleetFilters">
+      <button class="filter-btn active" onclick="filterFleet(0)"><span id="ff0">All</span></button>
+      <button class="filter-btn" onclick="filterFleet(1)"><span id="ff1">Economy</span></button>
+      <button class="filter-btn" onclick="filterFleet(2)"><span id="ff2">SUV</span></button>
+      <button class="filter-btn" onclick="filterFleet(3)"><span id="ff3">Luxury</span></button>
+      <button class="filter-btn" onclick="filterFleet(4)"><span id="ff4">Sport</span></button>
+      <button class="filter-btn" onclick="filterFleet(5)"><span id="ff5">Electric</span></button>
+    </div>
+    <div class="fleet-grid" id="fleetGrid"></div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header fade-up"><h2 class="section-title" id="featTitle">Why Choose Us</h2><p class="section-sub" id="featSub">Experience the difference with our premium services</p></div>
+    <div class="features-grid" id="featuresGrid"></div>
+  </div>
+</section>
+
+<!-- GPS TRACKING -->
+<section class="section section-alt" id="s3">
+  <div class="container">
+    <div class="section-header fade-up">
+      <span class="badge badge-green" style="margin-bottom:16px;display:inline-block" id="gpsBadge">LIVE TRACKING</span>
+      <h2 class="section-title" id="gpsTitle">Live GPS Tracking</h2>
+      <p class="section-sub" id="gpsSub">Monitor your entire fleet in real-time</p>
+    </div>
+    <div class="gps-layout fade-up">
+      <div class="gps-map">
+        <div class="map-overlay"><div class="map-grid">
+          <div class="map-dot" style="top:30%;left:25%"></div>
+          <div class="map-dot" style="top:20%;left:45%"></div>
+          <div class="map-dot parked" style="top:55%;left:60%"></div>
+          <div class="map-dot" style="top:15%;left:75%"></div>
+          <div class="map-dot maint" style="top:70%;left:35%"></div>
+          <svg style="position:absolute;inset:0;width:100%;height:100%">
+            <path d="M 10% 50% Q 30% 20%, 50% 40% T 90% 30%" stroke="rgba(99,102,241,0.2)" stroke-width="2" fill="none"/>
+            <path d="M 20% 80% Q 40% 50%, 60% 70% T 85% 60%" stroke="rgba(6,182,212,0.15)" stroke-width="2" fill="none"/>
+          </svg>
+        </div></div>
+      </div>
+      <div>
+        <div class="gps-list" id="gpsList"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px" id="gpsFeatGrid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="s2">
+  <div class="container">
+    <div class="section-header fade-up"><h2 class="section-title" id="priceTitle">Rental Plans</h2><p class="section-sub" id="priceSub">Choose the perfect plan for your needs</p></div>
+    <div class="pricing-toggle fade-up" style="margin-bottom:48px">
+      <button class="active" onclick="setPeriod(0)" id="pt0">Daily</button>
+      <button onclick="setPeriod(1)" id="pt1">Weekly</button>
+      <button onclick="setPeriod(2)" id="pt2">Monthly</button>
+    </div>
+    <div class="pricing-grid fade-up" id="pricingGrid"></div>
+  </div>
+</section>
+
+<!-- ADMIN SECTION -->
+<section class="section section-alt" id="s4">
+  <div class="container">
+    <div class="section-header fade-up">
+      <span class="badge" style="margin-bottom:16px;display:inline-block" id="adminBadge">ADMIN PANEL</span>
+      <h2 class="section-title" id="adminTitle">Admin Dashboard</h2>
+      <p class="section-sub" id="adminSub">Complete control panel for managing your fleet and business</p>
+    </div>
+    <div class="admin-grid fade-up" id="adminModules"></div>
+    <div class="fade-up" style="margin-top:64px">
+      <h3 style="text-align:center;font-size:1.5rem;font-weight:700;margin-bottom:8px" id="settingsTitle">&#9881;&#65039; Settings Modules</h3>
+      <p style="text-align:center;color:var(--text-muted);font-size:0.9rem;margin-bottom:32px" id="settingsSub">Control every aspect of your website from one place</p>
+      <div class="settings-grid" id="settingsGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEO -->
+<section class="section" id="seo">
+  <div class="container">
+    <div class="section-header fade-up"><h2 class="section-title" id="seoTitle">SEO &amp; Marketing</h2><p class="section-sub" id="seoSub">Built-in tools for maximum visibility</p></div>
+    <div class="seo-grid fade-up" id="seoGrid"></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section section-alt" id="testimonials">
+  <div class="container">
+    <div class="section-header fade-up"><h2 class="section-title" id="testTitle">Client Reviews</h2><p class="section-sub" id="testSub">What our customers say about us</p></div>
+    <div class="test-grid fade-up" id="testGrid"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-header fade-up"><h2 class="section-title" id="faqTitle">FAQ</h2><p class="section-sub" id="faqSub">Common questions answered</p></div>
+    <div class="faq-list fade-up" id="faqList"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" id="s5">
+  <div class="container">
+    <div class="cta-banner fade-up">
+      <h2 class="cta-title" id="ctaTitle">Ready to Hit the Road?</h2>
+      <p class="cta-sub" id="ctaSub">Book your dream car now via WhatsApp &mdash; instant confirmation!</p>
+      <div class="cta-btns">
+        <a href="https://wa.me/212641750719?text=Hello%20Boujlilcar!" class="btn-primary btn-whatsapp" style="font-size:1.1rem;padding:18px 40px" id="ctaBtn1">&#128172; Book via WhatsApp</a>
+        <a href="tel:+212641750719" class="btn-glass" id="ctaBtn2">Call Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo"><span>Boujlil</span>car</div>
+      <p class="footer-desc" id="footerDesc">Premium car rental service in Morocco. GPS-tracked fleet, full insurance, and 24/7 WhatsApp support.</p>
+      <div class="footer-social">
+        <span class="social-icon">&#128248;</span><span class="social-icon">&#128247;</span><span class="social-icon">&#128038;</span><span class="social-icon">&#9654;&#65039;</span>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title" id="fCol0Title">Quick Links</div>
+      <ul class="footer-links"><li><a href="#s0" id="fl00">Home</a></li><li><a href="#s1" id="fl01">Fleet</a></li><li><a href="#s2" id="fl02">Pricing</a></li><li><a href="#s3" id="fl03">GPS Tracking</a></li><li><a href="#s5" id="fl04">Contact</a></li></ul>
+    </div>
+    <div>
+      <div class="footer-col-title" id="fCol1Title">Services</div>
+      <ul class="footer-links"><li><a href="#" id="fl10">Daily Rental</a></li><li><a href="#" id="fl11">Weekly Rental</a></li><li><a href="#" id="fl12">Monthly Lease</a></li><li><a href="#" id="fl13">Airport Pickup</a></li><li><a href="#" id="fl14">Corporate Plans</a></li></ul>
+    </div>
+    <div>
+      <div class="footer-col-title" id="fCol2Title">Cities</div>
+      <ul class="footer-links"><li><a href="#">Casablanca</a></li><li><a href="#">Rabat</a></li><li><a href="#">Marrakech</a></li><li><a href="#">Tangier</a></li><li><a href="#">Agadir</a></li><li><a href="#">Fes</a></li></ul>
+    </div>
+    <div>
+      <div class="footer-col-title" id="fContactTitle">Contact Us</div>
+      <div class="footer-contact">
+        <p>&#128222; +212 641 750 719</p><p>&#9993;&#65039; contact@drivo.ma</p><p>&#128205; <span id="fAddr">Casablanca, Morocco</span></p>
+      </div>
+      <a href="https://wa.me/212641750719" class="btn-primary btn-whatsapp" style="margin-top:16px;padding:10px 20px;font-size:0.85rem;width:100%;justify-content:center;display:inline-flex">&#128172; WhatsApp</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span id="footerCopy">&#169; 2026 Boujlilcar Car Rental. All rights reserved.</span>
+    <div class="footer-legal"><a href="#" id="flegal0">Privacy Policy</a><a href="#" id="flegal1">Terms of Service</a><a href="#" id="flegal2">Cookie Policy</a></div>
+  </div>
+</footer>
+
+<!-- ADMIN PANEL OVERLAY -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-panel">
+    <div class="admin-header">
+      <div>
+        <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:4px" id="apTitle">&#127917; Background Animation Control</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem" id="apSub">Customize the animated background in real-time</p>
+      </div>
+      <button class="admin-close" id="adminClose">&#10005;</button>
+    </div>
+    <div style="display:flex;gap:4px;padding:4px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:50px;margin-bottom:28px">
+      <button class="ctrl-preset active" id="tabBgBtn" onclick="setAdminTab('bg')" style="flex:1;text-align:center">&#127916; Background Animation</button>
+      <button class="ctrl-preset" id="tabSliderBtn" onclick="setAdminTab('slider')" style="flex:1;text-align:center">&#128444;&#65039; Hero Slider</button>
+    </div>
+    <div id="bgTab">
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#127916; Animation Type</div>
+        <div class="ctrl-presets" id="animTypePresets">
+          <button class="ctrl-preset active" onclick="setAnimType('particles')">&#10024; Particles</button>
+          <button class="ctrl-preset" onclick="setAnimType('orbs')">&#128302; Light Orbs</button>
+          <button class="ctrl-preset" onclick="setAnimType('waves')">&#127754; Waves</button>
+          <button class="ctrl-preset" onclick="setAnimType('aurora')">&#127756; Aurora</button>
+          <button class="ctrl-preset" onclick="setAnimType('matrix')">&#128187; Matrix</button>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#9889; Animation Settings</div>
+        <div class="ctrl-grid">
+          <div class="ctrl-item"><div class="ctrl-label">Speed <span id="speedVal">1.0x</span></div><input type="range" class="ctrl-range" min="0.1" max="3" step="0.1" value="1" oninput="setBg('speed',+this.value);document.getElementById('speedVal').textContent=parseFloat(this.value).toFixed(1)+'x';updatePreview()"/></div>
+          <div class="ctrl-item"><div class="ctrl-label">Particle Count <span id="pcountVal">60</span></div><input type="range" class="ctrl-range" min="10" max="200" step="5" value="60" oninput="setBg('particleCount',+this.value);document.getElementById('pcountVal').textContent=this.value;updatePreview()"/></div>
+          <div class="ctrl-item"><div class="ctrl-label">Opacity <span id="opacVal">70%</span></div><input type="range" class="ctrl-range" min="0.1" max="1" step="0.05" value="0.7" oninput="setBg('opacity',+this.value);document.getElementById('opacVal').textContent=Math.round(this.value*100)+'%'"/></div>
+          <div class="ctrl-item"><div class="ctrl-label">Glow Intensity <span id="glowVal">15px</span></div><input type="range" class="ctrl-range" min="0" max="40" step="1" value="15" oninput="setBg('glowIntensity',+this.value);document.getElementById('glowVal').textContent=this.value+'px'"/></div>
+          <div class="ctrl-item"><div class="ctrl-label">Trail Effect <span id="trailVal">92%</span></div><input type="range" class="ctrl-range" min="0.8" max="0.99" step="0.01" value="0.92" oninput="setBg('trailLength',+this.value);document.getElementById('trailVal').textContent=Math.round(this.value*100)+'%'"/></div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#127912; Color Palette</div>
+        <div class="ctrl-grid">
+          <div class="ctrl-item"><div class="ctrl-label">Primary <span id="c1val">#6366f1</span></div><input type="color" class="ctrl-color" value="#6366f1" id="cpick1" oninput="setBg('color1',this.value);document.getElementById('c1val').textContent=this.value;updatePreview()"/></div>
+          <div class="ctrl-item"><div class="ctrl-label">Secondary <span id="c2val">#06b6d4</span></div><input type="color" class="ctrl-color" value="#06b6d4" id="cpick2" oninput="setBg('color2',this.value);document.getElementById('c2val').textContent=this.value;updatePreview()"/></div>
+          <div class="ctrl-item"><div class="ctrl-label">Accent <span id="c3val">#f59e0b</span></div><input type="color" class="ctrl-color" value="#f59e0b" id="cpick3" oninput="setBg('color3',this.value);document.getElementById('c3val').textContent=this.value;updatePreview()"/></div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#127917; Color Presets</div>
+        <div class="ctrl-presets">
+          <button class="ctrl-preset" onclick="applyColors('#6366f1','#06b6d4','#f59e0b')">&#128302; Cosmic</button>
+          <button class="ctrl-preset" onclick="applyColors('#0ea5e9','#06b6d4','#14b8a6')">&#127754; Ocean</button>
+          <button class="ctrl-preset" onclick="applyColors('#ef4444','#f97316','#fbbf24')">&#128293; Fire</button>
+          <button class="ctrl-preset" onclick="applyColors('#22c55e','#10b981','#06b6d4')">&#127807; Forest</button>
+          <button class="ctrl-preset" onclick="applyColors('#a855f7','#ec4899','#6366f1')">&#128156; Purple</button>
+          <button class="ctrl-preset" onclick="applyColors('#f59e0b','#d97706','#92400e')">&#129351; Gold</button>
+          <button class="ctrl-preset" onclick="applyColors('#67e8f9','#a5f3fc','#e0f2fe')">&#10052;&#65039; Ice</button>
+          <button class="ctrl-preset" onclick="applyColors('#1e3a5f','#3b82f6','#93c5fd')">&#127769; Midnight</button>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#128295; Options</div>
+        <div class="ctrl-grid">
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleBg('interactive')"><div class="ctrl-toggle-track on" id="tgInteractive"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Mouse Interactive</div></div></div>
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleBg('enabled')"><div class="ctrl-toggle-track on" id="tgEnabled"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Animation Enabled</div></div></div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#9889; Performance Presets</div>
+        <div class="ctrl-presets">
+          <button class="ctrl-preset" onclick="applyPerf(20,5,0.95)">&#128267; Battery Saver</button>
+          <button class="ctrl-preset" onclick="applyPerf(60,15,0.92)">&#9878;&#65039; Balanced</button>
+          <button class="ctrl-preset" onclick="applyPerf(150,30,0.88)">&#128640; Maximum</button>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#128065;&#65039; Live Preview</div>
+        <div style="padding:16px;border-radius:var(--radius-sm);background:rgba(0,0,0,0.3);border:1px solid var(--glass-border);display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;gap:4px" id="previewDots">
+            <div id="pd1" style="width:30px;height:30px;border-radius:8px;background:#6366f1;box-shadow:0 0 15px #6366f1"></div>
+            <div id="pd2" style="width:30px;height:30px;border-radius:8px;background:#06b6d4;box-shadow:0 0 15px #06b6d4"></div>
+            <div id="pd3" style="width:30px;height:30px;border-radius:8px;background:#f59e0b;box-shadow:0 0 15px #f59e0b"></div>
+          </div>
+          <span style="color:var(--text-muted);font-size:0.8rem" id="previewLabel">particles &#8226; 60 particles &#8226; 1x</span>
+        </div>
+      </div>
+    </div>
+    <!-- SLIDER TAB -->
+    <div id="sliderTab" style="display:none">
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#9889; Slider Controls</div>
+        <div class="ctrl-grid">
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleSl('enabled')"><div class="ctrl-toggle-track on" id="tgSlEnabled"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Slider Enabled</div></div></div>
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleSl('autoplay')"><div class="ctrl-toggle-track on" id="tgAutoplay"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Autoplay</div></div></div>
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleSl('kenBurns')"><div class="ctrl-toggle-track on" id="tgKenBurns"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Ken Burns Effect</div></div></div>
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleSl('pauseOnHover')"><div class="ctrl-toggle-track on" id="tgPauseHover"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Pause on Hover</div></div></div>
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleSl('showDots')"><div class="ctrl-toggle-track on" id="tgShowDots"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Show Dots</div></div></div>
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleSl('showArrows')"><div class="ctrl-toggle-track on" id="tgShowArrows"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Show Arrows</div></div></div>
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleSl('showCounter')"><div class="ctrl-toggle-track on" id="tgShowCounter"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Show Counter</div></div></div>
+          <div class="ctrl-item"><div class="ctrl-toggle" onclick="toggleSl('overlayGradient')"><div class="ctrl-toggle-track on" id="tgOverlayGrad"><div class="ctrl-toggle-thumb"></div></div><div class="ctrl-toggle-label">Gradient Overlay</div></div></div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#127916; Transition Effect</div>
+        <div class="ctrl-presets" id="transPresets">
+          <button class="ctrl-preset active" onclick="setTrans('fade')">&#10024; Fade</button>
+          <button class="ctrl-preset" onclick="setTrans('slide')">&#10145;&#65039; Slide</button>
+          <button class="ctrl-preset" onclick="setTrans('zoom')">&#128269; Zoom</button>
+          <button class="ctrl-preset" onclick="setTrans('blur')">&#128161; Blur</button>
+          <button class="ctrl-preset" onclick="setTrans('flip')">&#128260; Flip</button>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#9203; Timing</div>
+        <div class="ctrl-grid">
+          <div class="ctrl-item"><div class="ctrl-label">Slide Duration <span id="durVal">5.0s</span></div><input type="range" class="ctrl-range" min="2000" max="15000" step="500" value="5000" id="durRange" oninput="slSettings.duration=+this.value;document.getElementById('durVal').textContent=(this.value/1000).toFixed(1)+'s';document.getElementById('heroDots').style.setProperty('--dot-dur',this.value+'ms');restartHeroTimer()"/></div>
+          <div class="ctrl-item"><div class="ctrl-label">Transition Speed <span id="transSpeedVal">1000ms</span></div><input type="range" class="ctrl-range" min="300" max="3000" step="100" value="1000" oninput="slSettings.transitionSpeed=+this.value;document.getElementById('transSpeedVal').textContent=this.value+'ms'"/></div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#127912; Overlay Settings</div>
+        <div class="ctrl-grid">
+          <div class="ctrl-item"><div class="ctrl-label">Opacity <span id="ovOpacVal">55%</span></div><input type="range" class="ctrl-range" min="0" max="0.9" step="0.05" value="0.55" oninput="document.getElementById('heroOverlay').style.opacity=this.value;document.getElementById('ovOpacVal').textContent=Math.round(this.value*100)+'%'"/></div>
+          <div class="ctrl-item"><div class="ctrl-label">Color</div><input type="color" class="ctrl-color" value="#000000" oninput="setOverlayColor(this.value)"/></div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#128444;&#65039; Slide Images</div>
+        <div id="slideImgMgr"></div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#128065;&#65039; Quick Preview</div>
+        <div style="display:flex;gap:8px;overflow-x:auto;padding:8px 0" id="quickPreview"></div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-section-title">&#128640; Presets</div>
+        <div class="ctrl-presets">
+          <button class="ctrl-preset" onclick="applySlPreset('fade',5000,1000,true,0.55)">&#127916; Cinematic</button>
+          <button class="ctrl-preset" onclick="applySlPreset('slide',3000,600,false,0.4)">&#9889; Fast &amp; Clean</button>
+          <button class="ctrl-preset" onclick="applySlPreset('zoom',8000,1500,true,0.6)">&#127910; Dramatic</button>
+          <button class="ctrl-preset" onclick="applySlPreset('blur',6000,1200,false,0.5)">&#127775; Dreamy</button>
+          <button class="ctrl-preset" onclick="applySlPreset('fade',4000,800,false,0.35)">&#9728;&#65039; Bright &amp; Bold</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============= TRANSLATIONS ============= */
+const T = {
+  en: {
+    dir:'ltr', lang:'en',
+    nav:{home:'Home',fleet:'Fleet',pricing:'Plans',gps:'GPS Tracking',admin:'Admin Panel',contact:'Contact',book:'Book Now'},
+    hero:{badge:'🏆 Premium Car Rental Service',t1:'Drive Your',t2:'Dream Car',t3:'Today',sub:'Experience luxury & performance with our premium fleet. GPS-tracked vehicles across Morocco.',cta1:'💬 Reserve via WhatsApp',cta2:'Browse Fleet →',stats:['Premium Cars','Happy Clients','Support','Cities']},
+    slider:{title:'Featured Vehicles',sub:'Explore our handpicked selection of premium cars',bookBtn:'Book Now'},
+    fleet:{title:'Our Fleet',sub:'Choose from our diverse collection of vehicles',cats:['All','Economy','SUV','Luxury','Sport','Electric'],day:'/day',bookBtn:'Book Now',details:'Details'},
+    features:{title:'Why Choose Us',sub:'Experience the difference with our premium services',items:[
+      {icon:'📍',t:'GPS Tracked Fleet',d:'Real-time tracking on all vehicles. Know exactly where your car is, anytime.'},
+      {icon:'🛡️',t:'Full Insurance',d:'Comprehensive coverage included. Drive worry-free across Morocco.'},
+      {icon:'🚗',t:'Free Delivery',d:'We deliver to airports, hotels, and any location in the city.'},
+      {icon:'💬',t:'WhatsApp Support',d:'24/7 instant support via WhatsApp. Book, ask, or get help anytime.'},
+      {icon:'🔧',t:'Roadside Assistance',d:'Breakdown? We\'re there within 30 minutes, guaranteed.'},
+      {icon:'💳',t:'Flexible Payment',d:'Pay with card, cash, or bank transfer. Monthly plans available.'}
+    ]},
+    gps:{badge:'LIVE TRACKING',title:'Live GPS Tracking',sub:'Monitor your entire fleet in real-time',vehicles:[
+      {id:'MRC-001',name:'Mercedes C200',status:'Active',speed:'67',city:'Casablanca'},
+      {id:'MRC-002',name:'BMW X5',status:'Active',speed:'45',city:'Rabat'},
+      {id:'MRC-003',name:'Audi A6',status:'Parked',speed:'0',city:'Marrakech'},
+      {id:'MRC-004',name:'Range Rover',status:'Active',speed:'82',city:'Tangier'},
+      {id:'MRC-005',name:'Porsche Cayenne',status:'Maintenance',speed:'0',city:'Agadir'}
+    ],feats:[
+      {t:'Real-Time Location',d:'Track all vehicles on an interactive map with live updates every 10 seconds'},
+      {t:'Trip History',d:'Review complete route history, stops, speed, and mileage for any vehicle'},
+      {t:'Geofence Alerts',d:'Set virtual boundaries and get instant notifications when vehicles enter or exit zones'},
+      {t:'Speed Monitoring',d:'Real-time speed tracking with alerts for overspeeding and harsh driving events'}
+    ]},
+    pricing:{title:'Rental Plans',sub:'Choose the perfect plan for your needs',periods:['Daily','Weekly','Monthly'],plans:[
+      {name:'Economy',prices:['250','1,500','5,000'],currency:'MAD',features:['Dacia Logan or similar','Basic insurance','150km/day limit','Manual transmission','WhatsApp support'],popular:false,cta:'Select Plan'},
+      {name:'Premium',prices:['600','3,500','12,000'],currency:'MAD',features:['BMW 3 or Mercedes C','Full insurance','Unlimited km','Automatic','GPS tracking','Free delivery','Priority support'],popular:true,cta:'Most Popular'},
+      {name:'Luxury',prices:['1,500','9,000','30,000'],currency:'MAD',features:['Porsche / Range Rover','VIP insurance','Unlimited km','Personal driver option','GPS + dashcam','Airport VIP pickup','24/7 concierge'],popular:false,cta:'Select Plan'}
+    ]},
+    admin:{badge:'ADMIN PANEL',title:'Admin Dashboard',sub:'Complete control panel for managing your fleet and business',settingsTitle:'Settings Modules',settingsSub:'Control every aspect of your website from one place',modules:[
+      {icon:'📊',t:'Analytics Dashboard',d:'Revenue, bookings, fleet utilization, customer metrics — all in real-time'},
+      {icon:'🚗',t:'Fleet Management',d:'Add, edit, track all vehicles. Maintenance schedules and availability'},
+      {icon:'📅',t:'Booking Manager',d:'View, approve, modify reservations. Calendar view and conflict detection'},
+      {icon:'👥',t:'Customer CRM',d:'Customer profiles, rental history, loyalty points, and communication'},
+      {icon:'⚙️',t:'Site Settings',d:'Theme, slider images, SEO meta tags, content — all from one panel'},
+      {icon:'💰',t:'Financial Reports',d:'Revenue reports, invoices, payment tracking, expense management'}
+    ],settings:[
+      {icon:'🎨',t:'Theme Manager',d:'Dark/Light mode, colors, fonts, glassmorphism intensity'},
+      {icon:'🖼️',t:'Slider Manager',d:'Upload images, set order, duration, overlay text'},
+      {icon:'🔍',t:'SEO & Meta Tags',d:'Title, description, OG tags, structured data, ads meta'},
+      {icon:'📍',t:'GPS Settings',d:'Tracking intervals, geofences, alert rules, map provider'},
+      {icon:'💬',t:'WhatsApp Config',d:'Number, auto-replies, booking notifications, templates'},
+      {icon:'🌐',t:'Language & RTL',d:'Arabic/English toggle, RTL layout, translation keys'}
+    ]},
+    seo:{title:'SEO & Marketing',sub:'Built-in tools for maximum visibility',items:[
+      {icon:'🔍',t:'Meta Tags Manager',d:'Custom title, description, and keywords for every page'},
+      {icon:'📱',t:'Social Media OG',d:'Open Graph tags for Facebook, Twitter, and WhatsApp sharing'},
+      {icon:'📊',t:'Google Ads Ready',d:'Pre-configured conversion tracking and remarketing pixels'},
+      {icon:'🗺️',t:'Structured Data',d:'JSON-LD schema for cars, pricing, reviews — rich snippets ready'}
+    ]},
+    testimonials:{title:'Client Reviews',sub:'What our customers say about us',items:[
+      {name:'Ahmed B.',role:'Business Traveler',text:'Excellent service! The GPS tracking gave me peace of mind. The car was spotless and delivered on time to my hotel.',rating:5},
+      {name:'Sophie M.',role:'Tourist from France',text:'Best car rental experience in Morocco. The WhatsApp support was incredibly responsive. Will definitely use again!',rating:5},
+      {name:'Karim L.',role:'Local Entrepreneur',text:'I use their monthly plan for my business. Great fleet, competitive pricing, and the admin panel makes everything easy.',rating:4}
+    ]},
+    faq:{title:'FAQ',sub:'Common questions answered',items:[
+      {q:"What documents do I need to rent?",a:"A valid driver's license (held for at least 1 year), passport or national ID, and a credit card for the deposit."},
+      {q:"Is insurance included?",a:"Basic insurance is included in all plans. Full comprehensive insurance is included in Premium and Luxury plans."},
+      {q:"Can I track my rented car?",a:"Yes! All our vehicles are equipped with GPS tracking. You'll receive a tracking link via WhatsApp."},
+      {q:"Do you deliver to airports?",a:"Yes, we offer free delivery to all major Moroccan airports: Casablanca, Marrakech, Rabat, Tangier, Agadir, and Fes."},
+      {q:"What is your cancellation policy?",a:"Free cancellation up to 24 hours before pickup. After that, a 50% fee applies."}
+    ]},
+    cta:{title:'Ready to Hit the Road?',sub:'Book your dream car now via WhatsApp — instant confirmation!',btn1:'💬 Book via WhatsApp',btn2:'Call Us'},
+    footer:{desc:'Premium car rental service in Morocco. GPS-tracked fleet, full insurance, and 24/7 WhatsApp support.',cols:[['Quick Links','Fleet','Pricing','GPS Tracking','Contact'],['Services','Daily Rental','Weekly Rental','Monthly Lease','Airport Pickup','Corporate Plans'],['Cities','Casablanca','Rabat','Marrakech','Tangier','Agadir','Fes']],contact:'Contact Us',addr:'Casablanca, Morocco',copy:'© 2026 Boujlilcar Car Rental. All rights reserved.',legal:['Privacy Policy','Terms of Service','Cookie Policy']}
+  },
+  ar: {
+    dir:'rtl', lang:'ar',
+    nav:{home:'الرئيسية',fleet:'الأسطول',pricing:'الباقات',gps:'تتبع GPS',admin:'لوحة التحكم',contact:'اتصل بنا',book:'احجز الآن'},
+    hero:{badge:'🏆 خدمة تأجير سيارات متميزة',t1:'قُد سيارة',t2:'أحلامك',t3:'اليوم',sub:'اكتشف الفخامة والأداء مع أسطولنا المتميز. سيارات مُتتبعة بـ GPS عبر المغرب.',cta1:'💬 احجز عبر واتساب',cta2:'تصفح الأسطول ←',stats:['سيارة فاخرة','عميل سعيد','دعم متواصل','مدينة']},
+    slider:{title:'سيارات مميزة',sub:'اكتشف مجموعتنا المختارة من السيارات الفاخرة',bookBtn:'احجز الآن'},
+    fleet:{title:'أسطولنا',sub:'اختر من مجموعتنا المتنوعة من السيارات',cats:['الكل','اقتصادية','SUV','فاخرة','رياضية','كهربائية'],day:'/يوم',bookBtn:'احجز الآن',details:'التفاصيل'},
+    features:{title:'لماذا نحن',sub:'اكتشف الفرق مع خدماتنا المتميزة',items:[
+      {icon:'📍',t:'أسطول مُتتبع بـ GPS',d:'تتبع في الوقت الحقيقي لجميع السيارات. اعرف موقع سيارتك في أي وقت.'},
+      {icon:'🛡️',t:'تأمين شامل',d:'تغطية شاملة مضمنة. قُد براحة بال عبر المغرب.'},
+      {icon:'🚗',t:'توصيل مجاني',d:'نوصل للمطارات والفنادق وأي موقع في المدينة.'},
+      {icon:'💬',t:'دعم واتساب',d:'دعم فوري 24/7 عبر واتساب. احجز واسأل واحصل على مساعدة.'},
+      {icon:'🔧',t:'مساعدة على الطريق',d:'عطل؟ نكونو عندك في أقل من 30 دقيقة.'},
+      {icon:'💳',t:'دفع مرن',d:'ادفع بالبطاقة أو نقداً أو تحويل بنكي. باقات شهرية متاحة.'}
+    ]},
+    gps:{badge:'تتبع مباشر',title:'تتبع GPS مباشر',sub:'راقب أسطولك بالكامل في الوقت الحقيقي',vehicles:[
+      {id:'MRC-001',name:'مرسيدس C200',status:'نشط',speed:'67',city:'الدار البيضاء'},
+      {id:'MRC-002',name:'بي ام دبليو X5',status:'نشط',speed:'45',city:'الرباط'},
+      {id:'MRC-003',name:'أودي A6',status:'متوقف',speed:'0',city:'مراكش'},
+      {id:'MRC-004',name:'رنج روفر',status:'نشط',speed:'82',city:'طنجة'},
+      {id:'MRC-005',name:'بورش كايين',status:'صيانة',speed:'0',city:'أكادير'}
+    ],feats:[
+      {t:'موقع في الوقت الحقيقي',d:'تتبع جميع السيارات على خريطة تفاعلية مع تحديثات كل 10 ثوان'},
+      {t:'سجل الرحلات',d:'راجع سجل المسارات والتوقفات والسرعة والمسافة لأي سيارة'},
+      {t:'تنبيهات السياج الجغرافي',d:'ضع حدوداً افتراضية واحصل على إشعارات فورية'},
+      {t:'مراقبة السرعة',d:'تتبع السرعة في الوقت الحقيقي مع تنبيهات تجاوز السرعة'}
+    ]},
+    pricing:{title:'باقات الإيجار',sub:'اختر الباقة المثالية لاحتياجاتك',periods:['يومي','أسبوعي','شهري'],plans:[
+      {name:'اقتصادي',prices:['250','1,500','5,000'],currency:'درهم',features:['داسيا لوغان أو مماثلة','تأمين أساسي','150 كم/يوم','ناقل يدوي','دعم واتساب'],popular:false,cta:'اختر الباقة'},
+      {name:'بريميوم',prices:['600','3,500','12,000'],currency:'درهم',features:['BMW 3 أو مرسيدس C','تأمين شامل','كيلومترات غير محدودة','أوتوماتيك','تتبع GPS','توصيل مجاني','دعم أولوية'],popular:true,cta:'الأكثر شعبية'},
+      {name:'فاخر',prices:['1,500','9,000','30,000'],currency:'درهم',features:['بورش / رنج روفر','تأمين VIP','كيلومترات غير محدودة','خيار سائق خاص','GPS + كاميرا','استقبال VIP بالمطار','كونسيرج 24/7'],popular:false,cta:'اختر الباقة'}
+    ]},
+    admin:{badge:'لوحة الإدارة',title:'لوحة التحكم',sub:'تحكم كامل في إدارة أسطولك وأعمالك',settingsTitle:'وحدات الإعدادات',settingsSub:'تحكم في كل جانب من موقعك من مكان واحد',modules:[
+      {icon:'📊',t:'لوحة التحليلات',d:'الإيرادات والحجوزات واستخدام الأسطول — كل شيء في الوقت الحقيقي'},
+      {icon:'🚗',t:'إدارة الأسطول',d:'إضافة وتعديل وتتبع جميع السيارات. جداول الصيانة والتوفر'},
+      {icon:'📅',t:'مدير الحجوزات',d:'عرض والموافقة وتعديل الحجوزات. عرض تقويمي وكشف التعارضات'},
+      {icon:'👥',t:'إدارة العملاء',d:'ملفات العملاء وسجل الإيجارات ونقاط الولاء والتواصل'},
+      {icon:'⚙️',t:'إعدادات الموقع',d:'الثيم والسلايدر وعلامات SEO والمحتوى — كل شيء من لوحة واحدة'},
+      {icon:'💰',t:'التقارير المالية',d:'تقارير الإيرادات والفواتير وتتبع المدفوعات وإدارة المصاريف'}
+    ],settings:[
+      {icon:'🎨',t:'مدير الثيم',d:'الوضع الداكن/الفاتح والألوان والخطوط وشدة الزجاج'},
+      {icon:'🖼️',t:'مدير السلايدر',d:'رفع الصور وترتيبها ومدتها ونص التراكب'},
+      {icon:'🔍',t:'SEO والعلامات الوصفية',d:'العنوان والوصف وعلامات OG والبيانات المنظمة'},
+      {icon:'📍',t:'إعدادات GPS',d:'فترات التتبع والسياج الجغرافي وقواعد التنبيه'},
+      {icon:'💬',t:'إعدادات واتساب',d:'الرقم والردود التلقائية وإشعارات الحجز والقوالب'},
+      {icon:'🌐',t:'اللغة و RTL',d:'تبديل عربي/إنجليزي وتخطيط RTL ومفاتيح الترجمة'}
+    ]},
+    seo:{title:'SEO والتسويق',sub:'أدوات مدمجة لأقصى ظهور',items:[
+      {icon:'🔍',t:'مدير العلامات الوصفية',d:'عنوان ووصف وكلمات مفتاحية مخصصة لكل صفحة'},
+      {icon:'📱',t:'OG للتواصل الاجتماعي',d:'علامات Open Graph للفيسبوك وتويتر وواتساب'},
+      {icon:'📊',t:'جاهز لإعلانات جوجل',d:'تتبع التحويلات وبكسل إعادة الاستهداف مُعد مسبقاً'},
+      {icon:'🗺️',t:'بيانات منظمة',d:'JSON-LD للسيارات والأسعار والمراجعات — جاهز للنتائج الغنية'}
+    ]},
+    testimonials:{title:'آراء العملاء',sub:'ماذا يقول عملاؤنا عنا',items:[
+      {name:'أحمد ب.',role:'مسافر أعمال',text:'خدمة ممتازة! تتبع GPS أعطاني راحة بال. السيارة كانت نظيفة وتم تسليمها في الوقت المحدد.',rating:5},
+      {name:'صوفي م.',role:'سائحة من فرنسا',text:'أفضل تجربة تأجير سيارات في المغرب. دعم واتساب كان سريع الاستجابة بشكل لا يصدق!',rating:5},
+      {name:'كريم ل.',role:'رائد أعمال محلي',text:'أستخدم باقتهم الشهرية لأعمالي. أسطول رائع وأسعار تنافسية ولوحة التحكم تسهل كل شيء.',rating:4}
+    ]},
+    faq:{title:'أسئلة شائعة',sub:'إجابات على الأسئلة المتكررة',items:[
+      {q:'ما الوثائق المطلوبة للإيجار؟',a:'رخصة قيادة سارية (سنة واحدة على الأقل)، جواز سفر أو بطاقة هوية، وبطاقة ائتمان للضمان.'},
+      {q:'هل التأمين مضمّن؟',a:'التأمين الأساسي مضمّن في جميع الباقات. التأمين الشامل مضمّن في باقات بريميوم وفاخر.'},
+      {q:'هل يمكنني تتبع السيارة المستأجرة؟',a:'نعم! جميع سياراتنا مجهزة بتتبع GPS. ستتلقى رابط تتبع عبر واتساب.'},
+      {q:'هل تسلمون في المطارات؟',a:'نعم، نقدم توصيل مجاني لجميع المطارات المغربية الرئيسية.'},
+      {q:'ما هي سياسة الإلغاء؟',a:'إلغاء مجاني حتى 24 ساعة قبل الاستلام. بعد ذلك تطبق رسوم 50%.'}
+    ]},
+    cta:{title:'مستعد للانطلاق؟',sub:'احجز سيارة أحلامك الآن عبر واتساب — تأكيد فوري!',btn1:'💬 احجز عبر واتساب',btn2:'اتصل بنا'},
+    footer:{desc:'خدمة تأجير سيارات متميزة في المغرب. أسطول مُتتبع بـ GPS، تأمين شامل، ودعم واتساب 24/7.',cols:[['روابط سريعة','الأسطول','الباقات','تتبع GPS','اتصل بنا'],['الخدمات','إيجار يومي','إيجار أسبوعي','إيجار شهري','استقبال المطار','باقات الشركات'],['المدن','الدار البيضاء','الرباط','مراكش','طنجة','أكادير','فاس']],contact:'اتصل بنا',addr:'الدار البيضاء، المغرب',copy:'© 2026 Boujlilcar لتأجير السيارات. جميع الحقوق محفوظة.',legal:['سياسة الخصوصية','شروط الخدمة','سياسة الكوكيز']}
+  }
+};
+
+/* ============= FLEET DATA ============= */
+const CARS = {
+  en:[
+    {name:'Dacia Logan',cat:'Economy',catKey:1,price:'250',fuel:'Diesel',seats:'5',trans:'Manual',img:'🚗'},
+    {name:'Renault Clio',cat:'Economy',catKey:1,price:'300',fuel:'Petrol',seats:'5',trans:'Auto',img:'🚙'},
+    {name:'Hyundai Tucson',cat:'SUV',catKey:2,price:'550',fuel:'Diesel',seats:'5',trans:'Auto',img:'🚙'},
+    {name:'Toyota Land Cruiser',cat:'SUV',catKey:2,price:'1,200',fuel:'Diesel',seats:'7',trans:'Auto',img:'🚙'},
+    {name:'Mercedes C-Class',cat:'Luxury',catKey:3,price:'800',fuel:'Petrol',seats:'5',trans:'Auto',img:'🏎️'},
+    {name:'BMW 5 Series',cat:'Luxury',catKey:3,price:'900',fuel:'Petrol',seats:'5',trans:'Auto',img:'🏎️'},
+    {name:'Porsche 911',cat:'Sport',catKey:4,price:'2,000',fuel:'Petrol',seats:'2',trans:'Auto',img:'🏎️'},
+    {name:'Tesla Model 3',cat:'Electric',catKey:5,price:'700',fuel:'Electric',seats:'5',trans:'Auto',img:'⚡'}
+  ],
+  ar:[
+    {name:'داسيا لوغان',cat:'اقتصادية',catKey:1,price:'250',fuel:'ديزل',seats:'5',trans:'يدوي',img:'🚗'},
+    {name:'رينو كليو',cat:'اقتصادية',catKey:1,price:'300',fuel:'بنزين',seats:'5',trans:'أوتو',img:'🚙'},
+    {name:'هيونداي توسان',cat:'SUV',catKey:2,price:'550',fuel:'ديزل',seats:'5',trans:'أوتو',img:'🚙'},
+    {name:'تويوتا لاند كروزر',cat:'SUV',catKey:2,price:'1,200',fuel:'ديزل',seats:'7',trans:'أوتو',img:'🚙'},
+    {name:'مرسيدس C-Class',cat:'فاخرة',catKey:3,price:'800',fuel:'بنزين',seats:'5',trans:'أوتو',img:'🏎️'},
+    {name:'بي ام دبليو الفئة 5',cat:'فاخرة',catKey:3,price:'900',fuel:'بنزين',seats:'5',trans:'أوتو',img:'🏎️'},
+    {name:'بورش 911',cat:'رياضية',catKey:4,price:'2,000',fuel:'بنزين',seats:'2',trans:'أوتو',img:'🏎️'},
+    {name:'تسلا موديل 3',cat:'كهربائية',catKey:5,price:'700',fuel:'كهرباء',seats:'5',trans:'أوتو',img:'⚡'}
+  ]
+};
+
+/* ============= SLIDE DATA ============= */
+const SLIDES = [
+  {url:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=80',capEn:'Feel the Power',capAr:'اشعر بالقوة'},
+  {url:'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80',capEn:'Elegance in Motion',capAr:'الأناقة في الحركة'},
+  {url:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1920&q=80',capEn:'Adventure Awaits',capAr:'المغامرة تنتظرك'},
+  {url:'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1920&q=80',capEn:'Timeless Class',capAr:'فخامة خالدة'},
+  {url:'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80',capEn:'Born to Drive',capAr:'صُنعت للقيادة'},
+  {url:'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1920&q=80',capEn:'Own the Night',capAr:'امتلك الليل'}
+];
+
+/* ============= LOAD FROM ADMIN ============= */
+function loadFromAdmin() {
+  const load = (key, def) => { try { const v=localStorage.getItem('drivo_'+key); return v?JSON.parse(v):def; } catch(e){return def;} };
+
+  // Cars
+  const savedCars = load('cars', null);
+  if(savedCars && savedCars.length) {
+    CARS.en.splice(0);
+    CARS.ar.splice(0);
+    savedCars.forEach(c => {
+      const fp = (c.fuel||'').split(' / ');
+      CARS.en.push({name:c.nameEn,cat:c.catNameEn,catKey:c.cat,price:String(c.price),fuel:fp[0]||c.fuel,seats:String(c.seats),trans:c.trans,img:c.img||'🚗'});
+      CARS.ar.push({name:c.nameAr,cat:c.catNameAr,catKey:c.cat,price:String(c.price),fuel:fp[1]||fp[0]||c.fuel,seats:String(c.seats),trans:c.trans,img:c.img||'🚗'});
+    });
+  }
+
+  // Slides
+  const savedSlides = load('slides', null);
+  if(savedSlides && savedSlides.length) {
+    SLIDES.splice(0, SLIDES.length, ...savedSlides);
+  }
+
+  // Testimonials
+  const savedTesti = load('testimonials', null);
+  if(savedTesti && savedTesti.length) {
+    T.en.testimonials.items.splice(0, T.en.testimonials.items.length,
+      ...savedTesti.map(t=>({name:t.nameEn,role:t.roleEn,text:t.textEn,rating:t.rating})));
+    T.ar.testimonials.items.splice(0, T.ar.testimonials.items.length,
+      ...savedTesti.map(t=>({name:t.nameAr,role:t.roleAr,text:t.textAr,rating:t.rating})));
+  }
+
+  // FAQ
+  const savedFAQ = load('faq', null);
+  if(savedFAQ && savedFAQ.length) {
+    T.en.faq.items.splice(0, T.en.faq.items.length, ...savedFAQ.map(f=>({q:f.qEn,a:f.aEn})));
+    T.ar.faq.items.splice(0, T.ar.faq.items.length, ...savedFAQ.map(f=>({q:f.qAr,a:f.aAr})));
+  }
+
+  // Pricing plans
+  const savedPricing = load('pricing', null);
+  if(savedPricing && savedPricing.length) {
+    const fmt = n => Number(n).toLocaleString();
+    T.en.pricing.plans.splice(0, T.en.pricing.plans.length, ...savedPricing.map(p=>({
+      name:p.nameEn, prices:[fmt(p.daily),fmt(p.weekly),fmt(p.monthly)],
+      currency:'MAD', features:p.featuresEn||[], popular:!!p.popular,
+      cta:p.popular?'Most Popular':'Select Plan'
+    })));
+    T.ar.pricing.plans.splice(0, T.ar.pricing.plans.length, ...savedPricing.map(p=>({
+      name:p.nameAr, prices:[fmt(p.daily),fmt(p.weekly),fmt(p.monthly)],
+      currency:'درهم', features:p.featuresAr||[], popular:!!p.popular,
+      cta:p.popular?'الأكثر شعبية':'اختر الباقة'
+    })));
+  }
+
+  // Site texts (nav / hero / cta)
+  const savedTexts = load('siteTexts', null);
+  if(savedTexts) {
+    ['en','ar'].forEach(lang => {
+      if(!savedTexts[lang]) return;
+      const st = savedTexts[lang];
+      if(st.nav) Object.keys(st.nav).forEach(k=>{ if(T[lang].nav[k]!==undefined) T[lang].nav[k]=st.nav[k]; });
+      if(st.hero) Object.keys(st.hero).forEach(k=>{ if(T[lang].hero[k]!==undefined) T[lang].hero[k]=st.hero[k]; });
+      if(st.cta) Object.keys(st.cta).forEach(k=>{ if(T[lang].cta[k]!==undefined) T[lang].cta[k]=st.cta[k]; });
+    });
+  }
+
+  // Settings (address / WhatsApp number)
+  const savedSettings = load('settings', null);
+  if(savedSettings) {
+    if(savedSettings.addrEn) T.en.footer.addr = savedSettings.addrEn;
+    if(savedSettings.addrAr) T.ar.footer.addr = savedSettings.addrAr;
+    if(savedSettings.whatsapp) WA_NUM = savedSettings.whatsapp.replace(/[^0-9]/g,'');
+  }
+
+  // WhatsApp config (messages + float button)
+  const savedWA = load('waConfig', null);
+  if(savedWA) {
+    if(savedWA.number) WA_NUM = savedWA.number.replace(/[^0-9]/g,'');
+    if(savedWA.messages) window._waMsgs = savedWA.messages;
+    const waFloat = document.querySelector('.wa-float');
+    if(waFloat && savedWA.floatBtnShow === false) waFloat.style.display='none';
+    else if(waFloat && savedWA.floatBtnShow !== false) waFloat.style.display='';
+    // Update hero WhatsApp CTA href
+    const heroWA = document.getElementById('heroCta1');
+    if(heroWA && savedWA.messages && savedWA.messages.hero) {
+      heroWA.href = 'https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(savedWA.messages.hero);
+    }
+    // Update CTA section button
+    const ctaBtn = document.getElementById('ctaBtn1');
+    if(ctaBtn && savedWA.messages && savedWA.messages.cta) {
+      ctaBtn.href = 'https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(savedWA.messages.cta);
+    }
+  }
+
+  // Footer content
+  const savedFooter = load('footerContent', null);
+  if(savedFooter) {
+    if(savedFooter.descEn) T.en.footer.desc = savedFooter.descEn;
+    if(savedFooter.descAr) T.ar.footer.desc = savedFooter.descAr;
+    if(savedFooter.col0TitleEn) T.en.footer.cols[0][0] = savedFooter.col0TitleEn;
+    if(savedFooter.col0TitleAr) T.ar.footer.cols[0][0] = savedFooter.col0TitleAr;
+    if(savedFooter.col1TitleEn) T.en.footer.cols[1][0] = savedFooter.col1TitleEn;
+    if(savedFooter.col1TitleAr) T.ar.footer.cols[1][0] = savedFooter.col1TitleAr;
+    if(savedFooter.col1LinksEn) {
+      const arr = savedFooter.col1LinksEn.split('\n').filter(s=>s.trim());
+      T.en.footer.cols[1].splice(1, T.en.footer.cols[1].length-1, ...arr);
+    }
+    if(savedFooter.col1LinksAr) {
+      const arr = savedFooter.col1LinksAr.split('\n').filter(s=>s.trim());
+      T.ar.footer.cols[1].splice(1, T.ar.footer.cols[1].length-1, ...arr);
+    }
+    if(savedFooter.col2TitleEn) T.en.footer.cols[2][0] = savedFooter.col2TitleEn;
+    if(savedFooter.col2TitleAr) T.ar.footer.cols[2][0] = savedFooter.col2TitleAr;
+    if(savedFooter.col2LinksEn) {
+      const arr = savedFooter.col2LinksEn.split('\n').filter(s=>s.trim());
+      T.en.footer.cols[2].splice(1, T.en.footer.cols[2].length-1, ...arr);
+    }
+    if(savedFooter.col2LinksAr) {
+      const arr = savedFooter.col2LinksAr.split('\n').filter(s=>s.trim());
+      T.ar.footer.cols[2].splice(1, T.ar.footer.cols[2].length-1, ...arr);
+    }
+    if(savedFooter.contactTitleEn) T.en.footer.contact = savedFooter.contactTitleEn;
+    if(savedFooter.contactTitleAr) T.ar.footer.contact = savedFooter.contactTitleAr;
+    if(savedFooter.copyrightEn) T.en.footer.copy = savedFooter.copyrightEn;
+    if(savedFooter.copyrightAr) T.ar.footer.copy = savedFooter.copyrightAr;
+    if(savedFooter.legalLinksEn) {
+      T.en.footer.legal = savedFooter.legalLinksEn.split('\n').filter(s=>s.trim());
+    }
+    if(savedFooter.legalLinksAr) {
+      T.ar.footer.legal = savedFooter.legalLinksAr.split('\n').filter(s=>s.trim());
+    }
+  }
+
+  // GPS Content
+  const savedGPS = load('gpsContent', null);
+  if(savedGPS) {
+    if(savedGPS.badgeEn) T.en.gps.badge = savedGPS.badgeEn;
+    if(savedGPS.badgeAr) T.ar.gps.badge = savedGPS.badgeAr;
+    if(savedGPS.titleEn) T.en.gps.title = savedGPS.titleEn;
+    if(savedGPS.titleAr) T.ar.gps.title = savedGPS.titleAr;
+    if(savedGPS.subEn) T.en.gps.sub = savedGPS.subEn;
+    if(savedGPS.subAr) T.ar.gps.sub = savedGPS.subAr;
+    if(savedGPS.vehicles && savedGPS.vehicles.length) {
+      T.en.gps.vehicles = savedGPS.vehicles.map(v=>({id:v.id,name:v.nameEn,status:v.status,speed:v.speed,city:v.cityEn}));
+      T.ar.gps.vehicles = savedGPS.vehicles.map(v=>({id:v.id,name:v.nameAr,status:v.statusAr||v.status,speed:v.speed,city:v.cityAr||v.cityEn}));
+    }
+    if(savedGPS.featsEn && savedGPS.featsEn.length) T.en.gps.feats = savedGPS.featsEn;
+    if(savedGPS.featsAr && savedGPS.featsAr.length) T.ar.gps.feats = savedGPS.featsAr;
+  }
+
+  // Featured Cars — update the featured slider
+  const savedFeatured = load('featuredCars', null);
+  if(savedFeatured && savedFeatured.length) {
+    window._featuredCars = savedFeatured;
+    renderFeaturedSliderFromAdmin(savedFeatured);
+  }
+
+  // Ads & Analytics — inject tracking scripts
+  const savedAds = load('adsConfig', null);
+  if(savedAds) {
+    if(savedAds.enabledGA4 && savedAds.ga4 && !document.getElementById('_drivo_ga4')) {
+      const s=document.createElement('script'); s.id='_drivo_ga4'; s.async=true;
+      s.src='https://www.googletagmanager.com/gtag/js?id='+savedAds.ga4;
+      document.head.appendChild(s);
+      const s2=document.createElement('script'); s2.id='_drivo_ga4_init';
+      s2.textContent="window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','"+savedAds.ga4+"');";
+      document.head.appendChild(s2);
+    }
+    if(savedAds.enabledGTM && savedAds.gtm && !document.getElementById('_drivo_gtm')) {
+      const s=document.createElement('script'); s.id='_drivo_gtm';
+      s.textContent="(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','"+savedAds.gtm+"');";
+      document.head.appendChild(s);
+    }
+    if(savedAds.enabledGoogleAds && savedAds.googleAdsId && !document.getElementById('_drivo_gads')) {
+      const s=document.createElement('script'); s.id='_drivo_gads'; s.async=true;
+      s.src='https://www.googletagmanager.com/gtag/js?id='+savedAds.googleAdsId;
+      document.head.appendChild(s);
+      const s2=document.createElement('script'); s2.id='_drivo_gads_init';
+      s2.textContent="window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','"+savedAds.googleAdsId+"');";
+      document.head.appendChild(s2);
+    }
+    if(savedAds.enabledMeta && savedAds.metaPixelId && !document.getElementById('_drivo_meta')) {
+      const s=document.createElement('script'); s.id='_drivo_meta';
+      s.textContent="!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','"+savedAds.metaPixelId+"');fbq('track','PageView');";
+      document.head.appendChild(s);
+    }
+  }
+}
+
+/* ============= FEATURED SLIDER FROM ADMIN ============= */
+function renderFeaturedSliderFromAdmin(featuredCars) {
+  const track = document.getElementById('featSliderTrack');
+  if(!track || !featuredCars || !featuredCars.length) return;
+  const waNum = WA_NUM || '212641750719';
+  const waMsgs = window._waMsgs || {};
+  const prefix = waMsgs.featured || "I'm interested in: ";
+  track.innerHTML = featuredCars.map((c, i) => {
+    const specsArr = (c.specs||'').split('·').map(s=>s.trim()).filter(Boolean);
+    const specsHtml = specsArr.map(s=>`<span class="slide-spec">${s}</span>`).join('');
+    const waMsg = c.waMsg || (prefix + c.nameEn);
+    const imgHtml = (c.img&&(c.img.startsWith('data:')||c.img.startsWith('http')))
+      ? `<img src="${c.img}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" onerror="this.outerHTML='<span style=font-size:6rem>🏎️</span>'"/>`
+      : `<span style="font-size:6rem">${c.img||'🏎️'}</span>`;
+    return `<div class="slide">
+      <div class="slide-visual">${imgHtml}</div>
+      <div class="slide-info">
+        <div class="slide-cat" id="fsc${i}">${c.catEn||''}</div>
+        <div class="slide-name" id="fsn${i}">${c.nameEn||''}</div>
+        <div class="slide-price" id="fsp${i}">${c.price||''} <small>MAD/day</small></div>
+        <div class="slide-specs">${specsHtml}</div>
+        <a href="https://wa.me/${waNum}?text=${encodeURIComponent(waMsg)}" class="btn-primary btn-whatsapp" style="margin-top:20px;padding:12px 24px;font-size:0.9rem">💬 <span id="fsbtn${i}">Book Now</span></a>
+      </div>
+    </div>`;
+  }).join('');
+  // Update dots
+  const controls = document.querySelector('.slider-controls');
+  if(controls) {
+    controls.innerHTML = featuredCars.map((_,i) => `<button class="slider-dot ${i===0?'active':''}" onclick="featGo(${i})"></button>`).join('');
+  }
+}
+
+/* ============= STATE ============= */
+let WA_NUM = '212641750719';
+let currentLang = 'en';
+let currentTheme = 'dark';
+let heroIdx = 0;
+let heroTimer = null;
+let featIdx = 0;
+let featTimer = null;
+let pricePeriod = 0;
+let openFaq = null;
+let activeFilter = 0;
+
+const bgSettings = {animType:'particles',speed:1,particleCount:60,opacity:0.7,color1:'#6366f1',color2:'#06b6d4',color3:'#f59e0b',glowIntensity:15,trailLength:0.92,interactive:true,enabled:true};
+const bgRef = {current: bgSettings};
+const slSettings = {enabled:true,autoplay:true,duration:5000,transitionSpeed:1000,transition:'fade',kenBurns:true,pauseOnHover:true,showDots:true,showArrows:true,showCounter:true,overlayGradient:true};
+
+/* ============= INIT ============= */
+document.addEventListener('DOMContentLoaded', () => {
+  loadFromAdmin();
+  initSlideImgMgr();
+  renderAll();
+  startHeroTimer();
+  startFeatTimer();
+  initCanvas();
+  initIntersectionObserver();
+  document.getElementById('adminFab').addEventListener('click', openAdmin);
+  document.getElementById('adminClose').addEventListener('click', closeAdmin);
+  document.getElementById('adminOverlay').addEventListener('click', function(e){ if(e.target===this) closeAdmin(); });
+  document.getElementById('langBtn').addEventListener('click', toggleLang);
+  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+
+  // ESC to close car modal
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeCarModal(); });
+
+  // Live sync: reload when admin saves in another tab
+  window.addEventListener('storage', e => {
+    if(e.key && e.key.startsWith('drivo_')) {
+      loadFromAdmin();
+      renderAll();
+      initSlideImgMgr();
+    }
+  });
+});
+
+/* ============= RENDER ALL ============= */
+function renderAll() {
+  const t = T[currentLang];
+  document.documentElement.setAttribute('dir', t.dir);
+  document.documentElement.setAttribute('lang', t.lang);
+
+  // Nav
+  document.getElementById('nl-home').textContent = t.nav.home;
+  document.getElementById('nl-fleet').textContent = t.nav.fleet;
+  document.getElementById('nl-pricing').textContent = t.nav.pricing;
+  document.getElementById('nl-gps').textContent = t.nav.gps;
+  document.getElementById('nl-admin').textContent = t.nav.admin;
+  document.getElementById('nl-contact').textContent = t.nav.contact;
+  document.getElementById('mn-home').textContent = t.nav.home;
+  document.getElementById('mn-fleet').textContent = t.nav.fleet;
+  document.getElementById('mn-pricing').textContent = t.nav.pricing;
+  document.getElementById('mn-gps').textContent = t.nav.gps;
+  document.getElementById('mn-admin').textContent = t.nav.admin;
+  document.getElementById('mn-contact').textContent = t.nav.contact;
+  document.getElementById('mn-book').textContent = t.nav.book;
+  document.getElementById('langBtn').textContent = currentLang === 'en' ? 'ع' : 'EN';
+
+  // Hero
+  document.getElementById('heroBadge').textContent = t.hero.badge;
+  document.getElementById('heroT1').textContent = t.hero.t1;
+  document.getElementById('heroT2').textContent = t.hero.t2;
+  document.getElementById('heroT3').textContent = t.hero.t3;
+  document.getElementById('heroSub').textContent = t.hero.sub;
+  document.getElementById('heroCta1').textContent = t.hero.cta1;
+  document.getElementById('heroCta2').textContent = t.hero.cta2;
+  t.hero.stats.forEach((s,i) => { const el=document.getElementById('stat'+i); if(el) el.textContent=s; });
+  updateHeroCaption();
+
+  // Featured slider
+  document.getElementById('sliderTitle').textContent = t.slider.title;
+  document.getElementById('sliderSub').textContent = t.slider.sub;
+  for(let i=0;i<5;i++) {
+    const btn = document.getElementById('fsbtn'+i);
+    if(btn) btn.textContent = t.slider.bookBtn;
+  }
+  // Update featured slider direction
+  const track = document.getElementById('featSliderTrack');
+  if(track) track.style.transform = `translateX(${currentLang==='ar' ? featIdx*100 : -featIdx*100}%)`;
+
+  // Fleet
+  document.getElementById('fleetTitle').textContent = t.fleet.title;
+  document.getElementById('fleetSub').textContent = t.fleet.sub;
+  t.fleet.cats.forEach((c,i)=>{ const el=document.getElementById('ff'+i); if(el) el.textContent=c; });
+  renderFleet();
+
+  // Features
+  document.getElementById('featTitle').textContent = t.features.title;
+  document.getElementById('featSub').textContent = t.features.sub;
+  renderFeatures();
+
+  // GPS
+  document.getElementById('gpsBadge').textContent = t.gps.badge;
+  document.getElementById('gpsTitle').textContent = t.gps.title;
+  document.getElementById('gpsSub').textContent = t.gps.sub;
+  renderGPS();
+
+  // Pricing
+  document.getElementById('priceTitle').textContent = t.pricing.title;
+  document.getElementById('priceSub').textContent = t.pricing.sub;
+  document.getElementById('pt0').textContent = t.pricing.periods[0];
+  document.getElementById('pt1').textContent = t.pricing.periods[1];
+  document.getElementById('pt2').textContent = t.pricing.periods[2];
+  renderPricing();
+
+  // Admin section
+  document.getElementById('adminBadge').textContent = t.admin.badge;
+  document.getElementById('adminTitle').textContent = t.admin.title;
+  document.getElementById('adminSub').textContent = t.admin.sub;
+  document.getElementById('settingsTitle').textContent = '⚙️ ' + t.admin.settingsTitle;
+  document.getElementById('settingsSub').textContent = t.admin.settingsSub;
+  renderAdminSection();
+
+  // SEO
+  document.getElementById('seoTitle').textContent = t.seo.title;
+  document.getElementById('seoSub').textContent = t.seo.sub;
+  renderSEO();
+
+  // Testimonials
+  document.getElementById('testTitle').textContent = t.testimonials.title;
+  document.getElementById('testSub').textContent = t.testimonials.sub;
+  renderTestimonials();
+
+  // FAQ
+  document.getElementById('faqTitle').textContent = t.faq.title;
+  document.getElementById('faqSub').textContent = t.faq.sub;
+  renderFAQ();
+
+  // CTA
+  document.getElementById('ctaTitle').textContent = t.cta.title;
+  document.getElementById('ctaSub').textContent = t.cta.sub;
+  document.getElementById('ctaBtn1').textContent = t.cta.btn1;
+  document.getElementById('ctaBtn2').textContent = t.cta.btn2;
+
+  // Footer
+  document.getElementById('footerDesc').textContent = t.footer.desc;
+  document.getElementById('fCol0Title').textContent = t.footer.cols[0][0];
+  document.getElementById('fCol1Title').textContent = t.footer.cols[1][0];
+  document.getElementById('fCol2Title').textContent = t.footer.cols[2][0];
+  ['fl00','fl01','fl02','fl03','fl04'].forEach((id,i)=>{ const el=document.getElementById(id); if(el&&t.footer.cols[0][i+1]) el.textContent=t.footer.cols[0][i+1]; });
+  ['fl10','fl11','fl12','fl13','fl14'].forEach((id,i)=>{ const el=document.getElementById(id); if(el&&t.footer.cols[1][i+1]) el.textContent=t.footer.cols[1][i+1]; });
+  document.getElementById('fContactTitle').textContent = t.footer.contact;
+  document.getElementById('fAddr').textContent = t.footer.addr;
+  document.getElementById('footerCopy').textContent = t.footer.copy;
+  ['flegal0','flegal1','flegal2'].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.textContent=t.footer.legal[i]; });
+}
+
+/* ============= RENDER FLEET ============= */
+function renderFleet() {
+  const t = T[currentLang];
+  const cars = CARS[currentLang];
+  const grid = document.getElementById('fleetGrid');
+  const filtered = activeFilter === 0 ? cars : cars.filter(c => c.catKey === activeFilter);
+  grid.innerHTML = filtered.map((car, idx) => {
+    const realIdx = activeFilter === 0 ? idx : CARS[currentLang].indexOf(car);
+    return `
+    <div class="glass-card car-card fade-up" style="cursor:pointer" onclick="openCarModal(${realIdx})">
+      <div class="car-visual">${(car.img&&(car.img.startsWith('data:')||car.img.startsWith('http')))?`<img src="${car.img}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" onerror="this.outerHTML='<span style=font-size:4rem>🚗</span>'"/>`:car.img}</div>
+      <div class="car-cat">${car.cat}</div>
+      <div class="car-name">${car.name}</div>
+      <div class="car-specs">
+        <span class="car-spec">⛽ ${car.fuel}</span>
+        <span class="car-spec">👤 ${car.seats}</span>
+        <span class="car-spec">⚙️ ${car.trans}</span>
+      </div>
+      <div class="car-bottom">
+        <div class="car-price">${car.price} <small>${currentLang==='en'?'MAD':'درهم'}${t.fleet.day}</small></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="car-detail-btn" onclick="event.stopPropagation();openCarModal(${realIdx})">🔍 ${t.fleet.details}</button>
+          <a href="https://wa.me/${WA_NUM}?text=${encodeURIComponent('I want to book: '+car.name)}" class="btn-primary" style="padding:10px 20px;font-size:0.85rem" onclick="event.stopPropagation()">${t.fleet.bookBtn}</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  reObserve();
+}
+
+function filterFleet(idx) {
+  activeFilter = idx;
+  document.querySelectorAll('.filter-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  renderFleet();
+}
+
+/* ============= CAR DETAIL MODAL ============= */
+const CAR_FEATURES = {
+  1: {en:['Basic insurance included','150 km/day','WhatsApp support','GPS tracking','Free city delivery'],ar:['تأمين أساسي مضمّن','150 كم/يوم','دعم واتساب','تتبع GPS','توصيل مجاني بالمدينة']},
+  2: {en:['Full insurance','Unlimited km','GPS tracking','4WD capability','Free airport delivery','Roadside assistance'],ar:['تأمين شامل','كيلومترات غير محدودة','تتبع GPS','دفع رباعي','توصيل مطار مجاني','مساعدة على الطريق']},
+  3: {en:['VIP full insurance','Unlimited km','GPS + dashcam','Free delivery anywhere','Priority WhatsApp','Luxury amenities'],ar:['تأمين VIP شامل','كيلومترات غير محدودة','GPS + كاميرا','توصيل مجاني لأي مكان','واتساب أولوية','وسائل راحة فاخرة']},
+  4: {en:['Full sport insurance','Unlimited km','GPS tracking','Performance tires','Track-ready setup','Free delivery'],ar:['تأمين رياضي شامل','كيلومترات غير محدودة','تتبع GPS','إطارات رياضية','إعداد حلبة السباق','توصيل مجاني']},
+  5: {en:['Full insurance','Unlimited km','Free charging','GPS tracking','Supercharger access','Silent & eco-friendly'],ar:['تأمين شامل','كيلومترات غير محدودة','شحن مجاني','تتبع GPS','وصول لمحطات الشحن','هادئة وصديقة للبيئة']}
+};
+
+function openCarModal(idx) {
+  const car = CARS[currentLang][idx];
+  if(!car) return;
+  const t = T[currentLang];
+  const isAr = currentLang === 'ar';
+  const currency = isAr ? 'درهم' : 'MAD';
+
+  const cmHero = document.getElementById('cmHero');
+  const cmEmoji = document.getElementById('cmEmoji');
+  // Remove any previously injected image
+  const prevImg = cmHero.querySelector('.cm-hero-img');
+  if(prevImg) prevImg.remove();
+
+  if(car.img && (car.img.startsWith('data:') || car.img.startsWith('http'))) {
+    cmEmoji.style.display = 'none';
+    const img = document.createElement('img');
+    img.className = 'cm-hero-img';
+    img.src = car.img;
+    img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:28px 28px 0 0;z-index:1';
+    img.onerror = () => { img.remove(); cmEmoji.style.display=''; cmEmoji.textContent='🚗'; };
+    cmHero.insertBefore(img, cmHero.firstChild);
+  } else {
+    cmEmoji.style.display = '';
+    cmEmoji.textContent = car.img || '🚗';
+  }
+  document.getElementById('cmName').textContent = car.name;
+  document.getElementById('cmCat').textContent = car.cat;
+  document.getElementById('cmPrice').textContent = car.price;
+  document.getElementById('cmCurrency').textContent = currency;
+  document.getElementById('cmPriceLabel').textContent = isAr ? 'ابتداءً من' : 'Starting from';
+  document.getElementById('cmPeriod').textContent = isAr ? 'في اليوم' : 'per day';
+  document.getElementById('cmBadge').textContent = isAr ? '✅ متوفرة' : '✅ Available';
+  document.getElementById('cmFeatTitle').textContent = isAr ? 'ما يشمله الإيجار' : 'Included in Rental';
+  document.getElementById('cmCloseBtn').textContent = isAr ? 'إغلاق' : 'Close';
+  // Booking form labels
+  document.getElementById('cmBookFormTitle').textContent = isAr ? 'حجز سريع' : 'Quick Booking';
+  document.getElementById('cmCityLabel').textContent = isAr ? 'مدينة الاستلام' : 'Pickup city';
+  document.getElementById('cmPickupLabel').textContent = isAr ? 'تاريخ ووقت الاستلام' : 'Pickup date & time';
+  document.getElementById('cmReturnLabel').textContent = isAr ? 'تاريخ ووقت الإرجاع' : 'Return date & time';
+  document.getElementById('cmNameLabel').textContent = isAr ? 'اسمك' : 'Your name';
+  document.getElementById('cmPhoneLabel').textContent = isAr ? 'الهاتف' : 'Phone';
+  document.getElementById('cmBookBtnLabel').textContent = isAr ? 'احجز عبر واتساب' : 'Book on WhatsApp';
+  document.getElementById('cmClientName').placeholder = isAr ? 'الاسم الكامل' : 'Full name';
+  document.getElementById('cmClientPhone').placeholder = isAr ? '06...' : '06...';
+  // Update city options in Arabic if needed
+  const cityEl = document.getElementById('cmCity');
+  const cities = isAr
+    ? ['الدار البيضاء','الرباط','مراكش','طنجة','أكادير','فاس']
+    : ['Casablanca','Rabat','Marrakech','Tangier','Agadir','Fes'];
+  cityEl.innerHTML = cities.map(c=>`<option>${c}</option>`).join('');
+  // Set default dates
+  const today = new Date();
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate()+1);
+  const fmt = d => d.toISOString().split('T')[0];
+  document.getElementById('cmPickupDate').value = fmt(today);
+  document.getElementById('cmReturnDate').value = fmt(tomorrow);
+  document.getElementById('cmPickupDate').min = fmt(today);
+  document.getElementById('cmReturnDate').min = fmt(tomorrow);
+  // Store car info for bookNowWhatsApp()
+  window._cmCarName = car.name;
+  window._cmCarPrice = car.price;
+  window._cmIsAr = isAr;
+
+  // Specs grid
+  const specs = [
+    {icon:'⛽', label: isAr?'الوقود':'Fuel', val: car.fuel},
+    {icon:'👤', label: isAr?'المقاعد':'Seats', val: car.seats + (isAr?' مقاعد':' seats')},
+    {icon:'⚙️', label: isAr?'ناقل الحركة':'Transmission', val: car.trans},
+    {icon:'💰', label: isAr?'السعر اليومي':'Daily Rate', val: car.price + ' ' + currency}
+  ];
+  document.getElementById('cmSpecsGrid').innerHTML = specs.map(s => `
+    <div class="car-modal-spec">
+      <div class="car-modal-spec-icon">${s.icon}</div>
+      <div>
+        <div class="car-modal-spec-label">${s.label}</div>
+        <div class="car-modal-spec-val">${s.val}</div>
+      </div>
+    </div>`).join('');
+
+  // Features
+  const feats = (CAR_FEATURES[car.catKey] || CAR_FEATURES[1])[currentLang];
+  document.getElementById('cmFeatures').innerHTML = feats.map(f => `
+    <div class="car-modal-feature">${f}</div>`).join('');
+
+  // Open modal
+  const overlay = document.getElementById('carModalOverlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCarModal() {
+  document.getElementById('carModalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function bookNowWhatsApp() {
+  const isAr = window._cmIsAr;
+  const carName = window._cmCarName || '';
+  const carPrice = window._cmCarPrice || '';
+  const city = document.getElementById('cmCity').value;
+  const pickupDate = document.getElementById('cmPickupDate').value;
+  const pickupTime = document.getElementById('cmPickupTime').value;
+  const returnDate = document.getElementById('cmReturnDate').value;
+  const returnTime = document.getElementById('cmReturnTime').value;
+  const clientName = document.getElementById('cmClientName').value.trim();
+  const clientPhone = document.getElementById('cmClientPhone').value.trim();
+
+  // Validate required fields
+  if(!pickupDate || !returnDate) {
+    alert(isAr ? 'الرجاء اختيار تواريخ الاستلام والإرجاع' : 'Please select pickup and return dates');
+    return;
+  }
+
+  let msg;
+  if(isAr) {
+    msg = `مرحباً Boujlilcar!\n\nأريد حجز: ${carName}\n💰 السعر: ${carPrice} درهم/يوم\n\n📍 مدينة الاستلام: ${city}\n📅 الاستلام: ${pickupDate} الساعة ${pickupTime}\n📅 الإرجاع: ${returnDate} الساعة ${returnTime}`;
+    if(clientName) msg += `\n\n👤 الاسم: ${clientName}`;
+    if(clientPhone) msg += `\n📱 الهاتف: ${clientPhone}`;
+  } else {
+    msg = `Hello Boujlilcar!\n\nI'd like to book: ${carName}\n💰 Price: ${carPrice} MAD/day\n\n📍 Pickup city: ${city}\n📅 Pickup: ${pickupDate} at ${pickupTime}\n📅 Return: ${returnDate} at ${returnTime}`;
+    if(clientName) msg += `\n\n👤 Name: ${clientName}`;
+    if(clientPhone) msg += `\n📱 Phone: ${clientPhone}`;
+  }
+
+  const waNum = WA_NUM || '212641750719';
+  window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+/* ============= RENDER FEATURES ============= */
+function renderFeatures() {
+  const t = T[currentLang];
+  document.getElementById('featuresGrid').innerHTML = t.features.items.map(f => `
+    <div class="glass-card fade-up">
+      <div class="feature-icon">${f.icon}</div>
+      <div class="feature-title">${f.t}</div>
+      <div class="feature-desc">${f.d}</div>
+    </div>`).join('');
+  reObserve();
+}
+
+/* ============= RENDER GPS ============= */
+function renderGPS() {
+  const t = T[currentLang];
+  const statusClass = s => {
+    const l = s.toLowerCase();
+    if(['active','نشط'].includes(l)) return 'active';
+    if(['parked','متوقف'].includes(l)) return 'parked';
+    return 'maint';
+  };
+  document.getElementById('gpsList').innerHTML = t.gps.vehicles.map(v => `
+    <div class="glass-card gps-vehicle" style="padding:14px 18px">
+      <div class="gps-v-status ${statusClass(v.status)}"></div>
+      <div class="gps-v-info"><div class="gps-v-name">${v.name}</div><div class="gps-v-id">${v.id} • ${v.status}</div></div>
+      <div class="gps-v-meta"><div class="gps-v-speed">${v.speed} km/h</div><div class="gps-v-city">${v.city}</div></div>
+    </div>`).join('');
+  document.getElementById('gpsFeatGrid').innerHTML = t.gps.feats.map(f => `
+    <div class="glass-card" style="padding:16px">
+      <div style="font-weight:600;font-size:0.85rem;margin-bottom:4px">${f.t}</div>
+      <div style="font-size:0.75rem;color:var(--text-muted);line-height:1.4">${f.d}</div>
+    </div>`).join('');
+}
+
+/* ============= RENDER PRICING ============= */
+function renderPricing() {
+  const t = T[currentLang];
+  document.getElementById('pricingGrid').innerHTML = t.pricing.plans.map(p => `
+    <div class="glass-card plan-card ${p.popular?'popular':''}">
+      ${p.popular ? `<span class="badge" style="margin-bottom:16px">⭐ ${p.cta}</span>` : ''}
+      <div class="plan-name">${p.name}</div>
+      <div class="plan-price">${p.prices[pricePeriod]}</div>
+      <span class="plan-currency">${p.currency} / ${t.pricing.periods[pricePeriod]}</span>
+      <ul class="plan-features">${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+      <a href="https://wa.me/${WA_NUM}?text=${encodeURIComponent('Interested in the '+p.name+' plan')}" class="btn-primary btn-whatsapp" style="width:100%;justify-content:center">💬 ${t.fleet.bookBtn}</a>
+    </div>`).join('');
+}
+
+function setPeriod(i) {
+  pricePeriod = i;
+  document.querySelectorAll('.pricing-toggle button').forEach((b,j)=>b.classList.toggle('active',j===i));
+  renderPricing();
+}
+
+/* ============= RENDER ADMIN SECTION ============= */
+function renderAdminSection() {
+  const t = T[currentLang];
+  document.getElementById('adminModules').innerHTML = t.admin.modules.map(m=>`
+    <div class="glass-card admin-card">
+      <div class="admin-icon">${m.icon}</div>
+      <div class="admin-title">${m.t}</div>
+      <div class="admin-desc">${m.d}</div>
+    </div>`).join('');
+  document.getElementById('settingsGrid').innerHTML = t.admin.settings.map(s=>`
+    <div class="glass-card setting-card" style="padding:18px">
+      <div class="setting-icon">${s.icon}</div>
+      <div><div class="setting-title">${s.t}</div><div class="setting-desc">${s.d}</div></div>
+    </div>`).join('');
+}
+
+/* ============= RENDER SEO ============= */
+function renderSEO() {
+  const t = T[currentLang];
+  document.getElementById('seoGrid').innerHTML = t.seo.items.map(f=>`
+    <div class="glass-card">
+      <div style="font-size:2rem;margin-bottom:12px">${f.icon}</div>
+      <div style="font-weight:700;margin-bottom:6px">${f.t}</div>
+      <div style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6">${f.d}</div>
+    </div>`).join('');
+}
+
+/* ============= RENDER TESTIMONIALS ============= */
+function renderTestimonials() {
+  const t = T[currentLang];
+  document.getElementById('testGrid').innerHTML = t.testimonials.items.map(r=>`
+    <div class="glass-card">
+      <div class="test-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+      <div class="test-text">"${r.text}"</div>
+      <div class="test-author">
+        <div class="test-avatar">${r.name[0]}</div>
+        <div><div class="test-name">${r.name}</div><div class="test-role">${r.role}</div></div>
+      </div>
+    </div>`).join('');
+}
+
+/* ============= RENDER FAQ ============= */
+function renderFAQ() {
+  const t = T[currentLang];
+  document.getElementById('faqList').innerHTML = t.faq.items.map((f,i)=>`
+    <div class="glass-card faq-item ${openFaq===i?'open':''}" style="padding:20px 24px;cursor:pointer" onclick="toggleFaq(${i})">
+      <div class="faq-q">${f.q}<span class="faq-arrow">▼</span></div>
+      <div class="faq-a">${f.a}</div>
+    </div>`).join('');
+}
+
+function toggleFaq(i) {
+  openFaq = openFaq === i ? null : i;
+  renderFAQ();
+}
+
+/* ============= HERO SLIDER ============= */
+function heroNav(dir) { heroGo((heroIdx + dir + SLIDES.length) % SLIDES.length); }
+
+function heroGo(i) {
+  const imgs = document.querySelectorAll('.hero-slide-img');
+  const prevIdx = heroIdx;
+  heroIdx = i;
+  imgs.forEach((img, j) => {
+    img.classList.remove('active', 'prev', 'kenburns');
+    if(j === i) { img.classList.add('active'); if(slSettings.kenBurns) img.classList.add('kenburns'); }
+    if(j === prevIdx && prevIdx !== i) img.classList.add('prev');
+  });
+  // Dots
+  document.querySelectorAll('.hero-dot-btn').forEach((d,j) => {
+    d.classList.toggle('active', j===i);
+    const fill = d.querySelector('.hero-dot-fill');
+    if(fill) { fill.style.animation='none'; fill.offsetHeight; if(j===i) fill.style.animation=''; }
+  });
+  document.getElementById('heroCounter').textContent = String(i+1).padStart(2,'0')+' / 06';
+  updateHeroCaption();
+  restartHeroTimer();
+}
+
+function updateHeroCaption() {
+  const cap = document.getElementById('heroCaption');
+  if(cap) cap.textContent = currentLang==='ar' ? SLIDES[heroIdx].capAr : SLIDES[heroIdx].capEn;
+}
+
+function startHeroTimer() {
+  clearInterval(heroTimer);
+  if(slSettings.autoplay && slSettings.enabled) {
+    heroTimer = setInterval(() => heroGo((heroIdx+1)%SLIDES.length), slSettings.duration);
+  }
+}
+
+function restartHeroTimer() { startHeroTimer(); }
+
+/* ============= FEATURED SLIDER ============= */
+function featNav(dir) { featGo((featIdx + dir + 5) % 5); }
+function featGo(i) {
+  featIdx = i;
+  const track = document.getElementById('featSliderTrack');
+  if(track) track.style.transform = `translateX(${currentLang==='ar' ? i*100 : -i*100}%)`;
+  document.querySelectorAll('#featuredSlider .slider-dot').forEach((d,j)=>d.classList.toggle('active',j===i));
+}
+function startFeatTimer() {
+  clearInterval(featTimer);
+  featTimer = setInterval(()=>featGo((featIdx+1)%5), 5000);
+}
+
+/* ============= THEME / LANG ============= */
+function toggleTheme() {
+  currentTheme = currentTheme==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  document.getElementById('themeBtn').textContent = currentTheme==='dark'?'☀️':'🌙';
+}
+
+function toggleLang() {
+  currentLang = currentLang==='en'?'ar':'en';
+  renderAll();
+  // Update hero slider direction
+  const slider = document.getElementById('heroSlider');
+  if(slider) slider.setAttribute('data-transition', slSettings.transition);
+}
+
+/* ============= MOBILE MENU ============= */
+function toggleMobile() {
+  const menu = document.getElementById('mobileMenu');
+  const ham = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  ham.classList.toggle('open');
+}
+function closeMobile() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+/* ============= ADMIN PANEL ============= */
+function openAdmin() { document.getElementById('adminOverlay').classList.add('open'); }
+function closeAdmin() { document.getElementById('adminOverlay').classList.remove('open'); }
+
+function setAdminTab(tab) {
+  document.getElementById('bgTab').style.display = tab==='bg'?'':'none';
+  document.getElementById('sliderTab').style.display = tab==='slider'?'':'none';
+  document.getElementById('tabBgBtn').classList.toggle('active', tab==='bg');
+  document.getElementById('tabSliderBtn').classList.toggle('active', tab==='slider');
+}
+
+/* BG Controls */
+function setBg(key, val) { bgSettings[key]=val; bgRef.current=bgSettings; }
+function toggleBg(key) {
+  bgSettings[key] = !bgSettings[key];
+  const ids = {interactive:'tgInteractive',enabled:'tgEnabled'};
+  const el = document.getElementById(ids[key]);
+  if(el) el.classList.toggle('on', bgSettings[key]);
+}
+function applyColors(c1,c2,c3) {
+  bgSettings.color1=c1; bgSettings.color2=c2; bgSettings.color3=c3;
+  document.getElementById('cpick1').value=c1;
+  document.getElementById('cpick2').value=c2;
+  document.getElementById('cpick3').value=c3;
+  document.getElementById('c1val').textContent=c1;
+  document.getElementById('c2val').textContent=c2;
+  document.getElementById('c3val').textContent=c3;
+  updatePreview();
+}
+function applyPerf(pc,glow,trail) {
+  bgSettings.particleCount=pc; bgSettings.glowIntensity=glow; bgSettings.trailLength=trail;
+  document.getElementById('pcountVal').textContent=pc;
+  document.getElementById('glowVal').textContent=glow+'px';
+  document.getElementById('trailVal').textContent=Math.round(trail*100)+'%';
+  updatePreview();
+}
+function setAnimType(type) {
+  bgSettings.animType = type;
+  document.querySelectorAll('#animTypePresets .ctrl-preset').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  updatePreview();
+  // Reset matrix cols
+  const c = document.getElementById('animCanvas');
+  if(c) { c._cols=null; c._drops=null; }
+}
+function updatePreview() {
+  const {color1,color2,color3,animType,particleCount,speed} = bgSettings;
+  document.getElementById('pd1').style.cssText=`width:30px;height:30px;border-radius:8px;background:${color1};box-shadow:0 0 15px ${color1}`;
+  document.getElementById('pd2').style.cssText=`width:30px;height:30px;border-radius:8px;background:${color2};box-shadow:0 0 15px ${color2}`;
+  document.getElementById('pd3').style.cssText=`width:30px;height:30px;border-radius:8px;background:${color3};box-shadow:0 0 15px ${color3}`;
+  document.getElementById('previewLabel').textContent = `${animType} • ${particleCount} particles • ${speed}x`;
+}
+
+/* Slider Controls */
+function toggleSl(key) {
+  slSettings[key] = !slSettings[key];
+  const ids = {enabled:'tgSlEnabled',autoplay:'tgAutoplay',kenBurns:'tgKenBurns',pauseOnHover:'tgPauseHover',showDots:'tgShowDots',showArrows:'tgShowArrows',showCounter:'tgShowCounter',overlayGradient:'tgOverlayGrad'};
+  const el = document.getElementById(ids[key]);
+  if(el) el.classList.toggle('on', slSettings[key]);
+
+  // Apply visibility
+  const dotsEl = document.getElementById('heroDots');
+  const arrowsEl = document.getElementById('heroSlider')?.querySelector('.hero-slider-arrows');
+  const counterEl = document.getElementById('heroCounter');
+  const heroSliderEl = document.getElementById('heroSlider');
+
+  if(key==='showDots' && dotsEl) dotsEl.style.display = slSettings.showDots?'flex':'none';
+  if(key==='showArrows' && arrowsEl) arrowsEl.style.display = slSettings.showArrows?'flex':'none';
+  if(key==='showCounter' && counterEl) counterEl.style.display = slSettings.showCounter?'':'none';
+  if(key==='overlayGradient') {
+    const ov = document.getElementById('heroOverlay');
+    if(ov) { if(slSettings.overlayGradient) ov.classList.add('hero-overlay-gradient'); else ov.classList.remove('hero-overlay-gradient'); }
+  }
+  if(key==='autoplay') restartHeroTimer();
+  if(key==='kenBurns') {
+    document.querySelectorAll('.hero-slide-img').forEach((img,i)=>{
+      if(i===heroIdx) { if(slSettings.kenBurns) img.classList.add('kenburns'); else img.classList.remove('kenburns'); }
+    });
+  }
+}
+function setTrans(t) {
+  slSettings.transition = t;
+  document.getElementById('heroSlider').setAttribute('data-transition', t);
+  document.querySelectorAll('#transPresets .ctrl-preset').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+function setOverlayColor(c) {
+  const ov = document.getElementById('heroOverlay');
+  if(ov && !slSettings.overlayGradient) ov.style.backgroundColor = c;
+}
+function applySlPreset(trans, dur, speed, kb, opac) {
+  slSettings.transition=trans; slSettings.duration=dur; slSettings.transitionSpeed=speed; slSettings.kenBurns=kb;
+  document.getElementById('heroSlider').setAttribute('data-transition', trans);
+  document.getElementById('heroOverlay').style.opacity = opac;
+  document.getElementById('heroDots').style.setProperty('--dot-dur', dur+'ms');
+  document.getElementById('durVal').textContent=(dur/1000).toFixed(1)+'s';
+  document.getElementById('transSpeedVal').textContent=speed+'ms';
+  document.getElementById('ovOpacVal').textContent=Math.round(opac*100)+'%';
+  document.querySelectorAll('#transPresets .ctrl-preset').forEach(b=>b.classList.remove('active'));
+  restartHeroTimer();
+  updateQuickPreview();
+}
+
+/* ============= SLIDE IMAGE MANAGER ============= */
+function initSlideImgMgr() {
+  const mgr = document.getElementById('slideImgMgr');
+  if(!mgr) return;
+  mgr.innerHTML = SLIDES.map((sl,i)=>`
+    <div style="display:flex;gap:12px;align-items:start;padding:14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);margin-bottom:10px">
+      <div style="width:100px;height:60px;border-radius:10px;overflow:hidden;flex-shrink:0;border:${heroIdx===i?'2px solid var(--accent)':'1px solid var(--glass-border)'};cursor:pointer;position:relative" onclick="heroGo(${i})" id="smThumb${i}">
+        <img src="${sl.url}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'"/>
+        <div style="position:absolute;top:4px;left:4px;background:${heroIdx===i?'var(--accent)':'rgba(0,0,0,0.6)'};color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:6px;font-weight:700">${i+1}</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <input type="text" class="ctrl-input" placeholder="Image URL" value="${sl.url}" style="font-size:0.8rem;padding:8px 10px" oninput="SLIDES[${i}].url=this.value;updateSlideImg(${i},this.value);updateQuickPreview()"/>
+        <div style="display:flex;gap:6px">
+          <input type="text" class="ctrl-input" placeholder="Caption EN" value="${sl.capEn}" style="font-size:0.78rem;padding:6px 10px;flex:1" oninput="SLIDES[${i}].capEn=this.value;if(currentLang==='en'&&heroIdx===${i})updateHeroCaption()"/>
+          <input type="text" class="ctrl-input" placeholder="Caption AR" value="${sl.capAr}" dir="rtl" style="font-size:0.78rem;padding:6px 10px;flex:1" oninput="SLIDES[${i}].capAr=this.value;if(currentLang==='ar'&&heroIdx===${i})updateHeroCaption()"/>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <button class="ctrl-preset" style="padding:4px 8px;font-size:0.7rem" onclick="moveSlide(${i},-1)">▲</button>
+        <button class="ctrl-preset" style="padding:4px 8px;font-size:0.7rem" onclick="moveSlide(${i},1)">▼</button>
+      </div>
+    </div>`).join('');
+  updateQuickPreview();
+}
+
+function updateSlideImg(i, url) {
+  const imgEl = document.getElementById('hslide'+i);
+  if(imgEl) imgEl.src = url;
+}
+
+function moveSlide(i, dir) {
+  const j = i + dir;
+  if(j<0||j>=SLIDES.length) return;
+  [SLIDES[i], SLIDES[j]] = [SLIDES[j], SLIDES[i]];
+  // Swap actual img src
+  const a = document.getElementById('hslide'+i);
+  const b = document.getElementById('hslide'+j);
+  if(a&&b){ const tmp=a.src; a.src=b.src; b.src=tmp; }
+  initSlideImgMgr();
+}
+
+function updateQuickPreview() {
+  const qp = document.getElementById('quickPreview');
+  if(!qp) return;
+  qp.innerHTML = SLIDES.map((sl,i)=>`
+    <div style="width:120px;height:70px;border-radius:10px;overflow:hidden;flex-shrink:0;border:${heroIdx===i?'2px solid var(--accent)':'1px solid var(--glass-border)'};cursor:pointer;position:relative;transition:all 0.3s;transform:${heroIdx===i?'scale(1.05)':'scale(1)'}" onclick="heroGo(${i})">
+      <img src="${sl.url}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.background='linear-gradient(135deg,rgba(99,102,241,0.2),rgba(6,182,212,0.2))';this.style.display='none'"/>
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:4px 6px;background:linear-gradient(transparent,rgba(0,0,0,0.7));font-size:0.6rem;color:rgba(255,255,255,0.8);text-align:center;font-weight:600">${currentLang==='en'?sl.capEn:sl.capAr}</div>
+    </div>`).join('');
+}
+
+/* ============= CANVAS ANIMATION ENGINE ============= */
+function initCanvas() {
+  const canvas = document.getElementById('animCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, animId, time=0;
+  let particles=[], orbs=[];
+  const mouse = {x:-999, y:-999};
+
+  window.addEventListener('mousemove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
+
+  const resize = ()=>{ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; };
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Particle {
+    constructor(){ this.reset(); }
+    reset(){
+      this.x=Math.random()*W; this.y=Math.random()*H;
+      this.size=Math.random()*3+1;
+      this.vx=(Math.random()-0.5)*0.8; this.vy=(Math.random()-0.5)*0.8;
+      this.life=Math.random()*200+100; this.maxLife=this.life;
+      this.ci=Math.floor(Math.random()*3);
+    }
+    update(spd,inter){
+      this.x+=this.vx*spd; this.y+=this.vy*spd; this.life--;
+      if(inter){ const dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy); if(d<150){this.x-=dx/d*1.5;this.y-=dy/d*1.5;} }
+      if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50) this.reset();
+    }
+    draw(ctx,colors,glow){
+      const a=(this.life/this.maxLife)*0.8;
+      ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+      ctx.fillStyle=colors[this.ci]; ctx.globalAlpha=a;
+      ctx.shadowColor=colors[this.ci]; ctx.shadowBlur=glow;
+      ctx.fill(); ctx.shadowBlur=0; ctx.globalAlpha=1;
+    }
+  }
+
+  class Orb {
+    constructor(){ this.reset(); }
+    reset(){
+      this.x=Math.random()*W; this.y=Math.random()*H;
+      this.r=Math.random()*120+60;
+      this.vx=(Math.random()-0.5)*0.3; this.vy=(Math.random()-0.5)*0.3;
+      this.ci=Math.floor(Math.random()*3); this.phase=Math.random()*Math.PI*2;
+    }
+    update(spd,t){
+      this.x+=this.vx*spd+Math.sin(t*0.001+this.phase)*0.3;
+      this.y+=this.vy*spd+Math.cos(t*0.0008+this.phase)*0.2;
+      if(this.x<-200)this.x=W+100; if(this.x>W+200)this.x=-100;
+      if(this.y<-200)this.y=H+100; if(this.y>H+200)this.y=-100;
+    }
+    draw(ctx,colors,op){
+      const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+      g.addColorStop(0,colors[this.ci]); g.addColorStop(1,'transparent');
+      ctx.globalAlpha=op*0.15; ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=1;
+    }
+  }
+
+  for(let i=0;i<80;i++) particles.push(new Particle());
+  for(let i=0;i<8;i++) orbs.push(new Orb());
+
+  const animate = ()=>{
+    const s = bgRef.current;
+    if(!s.enabled){ ctx.clearRect(0,0,W,H); animId=requestAnimationFrame(animate); return; }
+    time++;
+    const colors=[s.color1,s.color2,s.color3];
+    ctx.fillStyle=`rgba(0,0,0,${1-s.trailLength})`; ctx.fillRect(0,0,W,H);
+
+    if(s.animType==='particles'||s.animType==='orbs'){
+      while(particles.length<s.particleCount) particles.push(new Particle());
+      while(particles.length>s.particleCount) particles.pop();
+      particles.forEach(p=>{p.update(s.speed,s.interactive);p.draw(ctx,colors,s.glowIntensity);});
+      if(s.animType==='particles'){
+        for(let i=0;i<particles.length;i++){
+          for(let j=i+1;j<particles.length;j++){
+            const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
+            if(d<120){ ctx.strokeStyle=colors[0];ctx.globalAlpha=(1-d/120)*0.15*s.opacity;ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();ctx.globalAlpha=1; }
+          }
+        }
+      }
+    }
+
+    if(s.animType==='orbs'){
+      orbs.forEach(o=>{o.update(s.speed,time);o.draw(ctx,colors,s.opacity);});
+    }
+
+    if(s.animType==='waves'){
+      for(let l=0;l<5;l++){
+        ctx.beginPath(); ctx.strokeStyle=colors[l%3]; ctx.lineWidth=2;
+        ctx.globalAlpha=s.opacity*0.3; ctx.shadowColor=colors[l%3]; ctx.shadowBlur=s.glowIntensity;
+        for(let x=0;x<=W;x+=4){
+          const y=H*0.3+l*80+Math.sin(x*0.003+time*0.02*s.speed+l*1.2)*60+Math.sin(x*0.007+time*0.01*s.speed)*30;
+          x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        }
+        ctx.stroke(); ctx.shadowBlur=0; ctx.globalAlpha=1;
+      }
+    }
+
+    if(s.animType==='aurora'){
+      for(let band=0;band<4;band++){
+        ctx.beginPath();
+        const baseY=H*0.2+band*60;
+        for(let x=0;x<=W;x+=2){
+          const y=baseY+Math.sin(x*0.002+time*0.015*s.speed+band*0.8)*80+Math.sin(x*0.005+time*0.008*s.speed)*40+Math.cos(x*0.001+time*0.012*s.speed+band)*50;
+          x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        }
+        ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+        const g=ctx.createLinearGradient(0,baseY-80,0,baseY+200);
+        g.addColorStop(0,'transparent');g.addColorStop(0.3,colors[band%3]);g.addColorStop(0.7,colors[(band+1)%3]);g.addColorStop(1,'transparent');
+        ctx.fillStyle=g;ctx.globalAlpha=s.opacity*0.08;ctx.fill();ctx.globalAlpha=1;
+      }
+    }
+
+    if(s.animType==='matrix'){
+      if(!canvas._cols){
+        const fs=14,cols=Math.floor(W/fs);
+        canvas._cols=cols;canvas._drops=Array(cols).fill(1);canvas._fs=fs;
+      }
+      ctx.fillStyle=colors[0];ctx.font=canvas._fs+'px monospace';ctx.globalAlpha=s.opacity*0.7;
+      ctx.shadowColor=colors[0];ctx.shadowBlur=s.glowIntensity*0.5;
+      const chars='01Boujlilcar🚗⚡GPS';
+      for(let i=0;i<canvas._cols;i++){
+        ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*canvas._fs,canvas._drops[i]*canvas._fs);
+        if(canvas._drops[i]*canvas._fs>H&&Math.random()>0.975) canvas._drops[i]=0;
+        canvas._drops[i]+=s.speed*0.5;
+      }
+      ctx.shadowBlur=0;ctx.globalAlpha=1;
+    }
+
+    if(s.interactive&&mouse.x>0){
+      const mg=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
+      mg.addColorStop(0,colors[0]);mg.addColorStop(1,'transparent');
+      ctx.globalAlpha=0.06;ctx.fillStyle=mg;
+      ctx.fillRect(mouse.x-200,mouse.y-200,400,400);ctx.globalAlpha=1;
+    }
+
+    animId=requestAnimationFrame(animate);
+  };
+  animate();
+}
+
+/* ============= INTERSECTION OBSERVER ============= */
+function initIntersectionObserver() {
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:0.1});
+  document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+}
+
+function reObserve() {
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:0.1});
+  document.querySelectorAll('.fade-up:not(.visible)').forEach(el=>obs.observe(el));
+}
+</script>
+</body>
+</html>
