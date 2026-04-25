@@ -344,6 +344,19 @@ tr:last-child td{border-bottom:none;}
 .settings-row-label{font-size:0.9rem;font-weight:600;}
 .settings-row-desc{font-size:0.78rem;color:var(--text3);}
 
+/* SECTIONS MANAGER */
+.section-item{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:14px 16px;margin-bottom:12px;}
+.section-row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.section-title-row{display:flex;align-items:center;gap:10px;flex:1;}
+.section-id{font-size:0.72rem;color:var(--text3);font-family:monospace;}
+.section-input{background:var(--input);border:1px solid var(--input-border);color:var(--text);border-radius:8px;padding:6px 10px;font-size:0.82rem;min-width:180px;}
+.section-controls{display:flex;gap:6px;flex-shrink:0;}
+.section-subgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.section-subgrid .form-field{gap:4px;}
+.section-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
+.section-details{margin-top:12px;display:none;}
+.section-details.open{display:block;}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -416,7 +429,7 @@ tr:last-child td{border-bottom:none;}
     <button class="nav-item" onclick="showPanel('hero')"><span class="nav-icon">🖼️</span><span>Hero Slider</span></button>
     <button class="nav-item" onclick="showPanel('testimonials')"><span class="nav-icon">⭐</span><span>Testimonials</span></button>
     <button class="nav-item" onclick="showPanel('faq')"><span class="nav-icon">❓</span><span>FAQ</span></button>
-    <button class="nav-item" onclick="showPanel('texts')"><span class="nav-icon">✏️</span><span>Site Texts</span></button>
+    <button class="nav-item" onclick="showPanel('sections')"><span class="nav-icon">🧩</span><span>Sections</span></button>
     <button class="nav-item" onclick="showPanel('featured')"><span class="nav-icon">🌟</span><span>Featured Cars</span></button>
     <button class="nav-item" onclick="showPanel('gpscontent')"><span class="nav-icon">🗺️</span><span>GPS Content</span></button>
     <button class="nav-item" onclick="showPanel('footer')"><span class="nav-icon">🦶</span><span>Footer & Contact</span></button>
@@ -441,7 +454,7 @@ tr:last-child td{border-bottom:none;}
     <div class="topbar-title" id="topbarTitle">🚗 Fleet Manager</div>
     <div class="topbar-actions">
       <button class="tb-btn" onclick="toggleTheme()">🌙</button>
-      <a href="drivo-car-rental.html" target="_blank" class="tb-btn primary">🌐 View Site</a>
+      <a href="#" onclick="openSite(); return false;" class="tb-btn primary">🌐 View Site</a>
     </div>
   </div>
   <div class="content">
@@ -542,14 +555,28 @@ tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <!-- ===== SITE TEXTS ===== -->
-    <div class="panel" id="panel-texts">
-      <div class="tabs" style="margin-bottom:20px">
-        <button class="tab active" onclick="setTextTab('en')">🇬🇧 English</button>
-        <button class="tab" onclick="setTextTab('ar')">🇲🇦 Arabic</button>
+      <!-- ===== SECTIONS MANAGER ===== -->
+      <div class="panel" id="panel-sections">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🧩 Sections</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span id="sectionsSaveState" style="font-size:0.78rem;color:var(--text3)">Saved</span>
+              <div class="tabs" style="margin:0">
+                <button class="tab active" onclick="setTextTab('en')">🇬🇧 English</button>
+                <button class="tab" onclick="setTextTab('ar')">🇲🇦 Arabic</button>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="selectAllBtn" onclick="toggleSelectAll()">☑ Select All</button>
+              <button class="btn btn-ghost btn-sm" onclick="publishAllSections()">Publish All</button>
+              <button class="btn btn-ghost btn-sm" onclick="resetSectionsDraft()">Reset</button>
+              <button class="btn btn-success btn-sm" id="sectionsSaveBtn" onclick="saveSectionsConfig()">Save Sections</button>
+              <button class="btn btn-primary btn-sm" onclick="addCustomSection()">+ Add Section</button>
+            </div>
+          </div>
+          <p style="color:var(--text2);font-size:0.82rem;margin-bottom:12px">Enable/disable sections, change order, or add custom ones. Changes stay local until you click Save Sections.</p>
+          <div id="sectionsList"></div>
+        </div>
       </div>
-      <div id="textsPanel"></div>
-    </div>
 
     <!-- ===== SETTINGS ===== -->
     <div class="panel" id="panel-settings">
@@ -567,21 +594,33 @@ tr:last-child td{border-bottom:none;}
         </div>
         <div class="card">
           <div class="card-header"><div class="card-title">🎨 Appearance</div></div>
-          <div class="settings-list">
-            <div class="settings-row">
-              <div class="settings-row-info"><div class="settings-row-label">Dark Mode</div><div class="settings-row-desc">Toggle dark/light theme</div></div>
-              <label class="switch"><input type="checkbox" id="darkModeSwitch" checked onchange="toggleTheme()"/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+            <div class="settings-list">
+              <div class="settings-row">
+                <div class="settings-row-info"><div class="settings-row-label">Dark Mode</div><div class="settings-row-desc">Toggle dark/light theme</div></div>
+                <label class="switch"><input type="checkbox" id="darkModeSwitch" checked onchange="toggleTheme()"/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><div class="settings-row-label">Canvas Animation</div><div class="settings-row-desc">Animated background particles</div></div>
+                <label class="switch"><input type="checkbox" id="animSwitch" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><div class="settings-row-label">WhatsApp Float Button</div><div class="settings-row-desc">Floating WhatsApp button</div></div>
+                <label class="switch"><input type="checkbox" id="waSwitch" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+              </div>
+              <div class="settings-row" style="align-items:flex-start">
+                <div class="settings-row-info">
+                  <div class="settings-row-label">Theme Colors</div>
+                  <div class="settings-row-desc">Primary / Accent / Highlight</div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <input type="color" id="set-accent" title="Primary"/>
+                  <input type="color" id="set-accent2" title="Accent 2"/>
+                  <input type="color" id="set-accent3" title="Accent 3"/>
+                </div>
+              </div>
             </div>
-            <div class="settings-row">
-              <div class="settings-row-info"><div class="settings-row-label">Canvas Animation</div><div class="settings-row-desc">Animated background particles</div></div>
-              <label class="switch"><input type="checkbox" id="animSwitch" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
-            </div>
-            <div class="settings-row">
-              <div class="settings-row-info"><div class="settings-row-label">WhatsApp Float Button</div><div class="settings-row-desc">Floating WhatsApp button</div></div>
-              <label class="switch"><input type="checkbox" id="waSwitch" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
-            </div>
+            <div class="form-actions"><button class="btn btn-primary" onclick="saveAppearanceSettings()">💾 Save Colors</button></div>
           </div>
-        </div>
         <div class="card">
           <div class="card-header"><div class="card-title">🔍 SEO Settings</div></div>
           <div class="form-grid col1">
@@ -1029,7 +1068,20 @@ const defaultFAQ = [
   {id:5,qEn:'What is your cancellation policy?',aEn:'Free cancellation up to 24 hours before pickup. After that, a 50% fee applies.',qAr:'ما هي سياسة الإلغاء؟',aAr:'إلغاء مجاني حتى 24 ساعة قبل الاستلام. بعد ذلك تطبق رسوم 50%.'}
 ];
 
-const defaultSettings = {whatsapp:'+212641750719',phone:'+212 641 750 719',email:'contact@drivo.ma',addrEn:'Casablanca, Morocco',addrAr:'الدار البيضاء، المغرب',siteTitle:'Boujlilcar — Premium Car Rental Morocco',siteDesc:'Premium car rental service in Morocco.',siteKw:'car rental morocco, location voiture maroc',password:'drivo2026'};
+  const defaultSettings = {
+    whatsapp:'+212641750719',
+    phone:'+212 641 750 719',
+    email:'contact@drivo.ma',
+    addrEn:'Casablanca, Morocco',
+    addrAr:'الدار البيضاء، المغرب',
+    siteTitle:'Boujlilcar — Premium Car Rental Morocco',
+    siteDesc:'Premium car rental service in Morocco.',
+    siteKw:'car rental morocco, location voiture maroc',
+    password:'drivo2026',
+    accent:'#6366f1',
+    accent2:'#06b6d4',
+    accent3:'#f59e0b'
+  };
 
 // Load data
 let cars = DB.load('cars', defaultCars);
@@ -1270,7 +1322,7 @@ function showPanel(id) {
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
   event.currentTarget.classList.add('active');
-  const titles = {dashboard:'📊 Dashboard',fleet:'🚗 Fleet Manager',bookings:'📅 Bookings',gps:'📍 GPS Tracking',clients:'👥 Clients',pricing:'💰 Pricing Plans',hero:'🖼️ Hero Slider',testimonials:'⭐ Testimonials',faq:'❓ FAQ Manager',texts:'✏️ Site Texts',featured:'🌟 Featured Cars',gpscontent:'🗺️ GPS Content',footer:'🦶 Footer & Contact',whatsapp:'💬 WhatsApp Config',ads:'📊 Ads & Analytics',settings:'⚙️ Settings'};
+    const titles = {dashboard:'📊 Dashboard',fleet:'🚗 Fleet Manager',bookings:'📅 Bookings',gps:'📍 GPS Tracking',clients:'👥 Clients',pricing:'💰 Pricing Plans',hero:'🖼️ Hero Slider',testimonials:'⭐ Testimonials',faq:'❓ FAQ Manager',sections:'🧩 Sections',featured:'🌟 Featured Cars',gpscontent:'🗺️ GPS Content',footer:'🦶 Footer & Contact',whatsapp:'💬 WhatsApp Config',ads:'📊 Ads & Analytics',settings:'⚙️ Settings'};
   document.getElementById('topbarTitle').textContent = titles[id]||id;
   if(id==='fleet') renderFleetTable(cars);
   if(id==='bookings') renderBookingsTable(bookings);
@@ -1278,10 +1330,10 @@ function showPanel(id) {
   if(id==='clients') renderClientsTable(clients);
   if(id==='pricing') renderPricingPanel();
   if(id==='hero') renderSlides();
-  if(id==='testimonials') renderTestimonials();
-  if(id==='faq') renderFAQAdmin();
-  if(id==='texts') renderTextsPanel();
-  if(id==='featured') renderFeaturedCars();
+    if(id==='testimonials') renderTestimonials();
+    if(id==='faq') renderFAQAdmin();
+    if(id==='sections'){ renderSectionsPanel(); renderTextsPanel(); }
+    if(id==='featured') renderFeaturedCars();
   if(id==='gpscontent') loadGPSContentPanel();
   if(id==='footer') loadFooterPanel();
   if(id==='whatsapp') loadWAConfigPanel();
@@ -1667,107 +1719,612 @@ function saveFAQ(){
 function deleteFAQ(i){ faqItems.splice(i,1); DB.save('faq',faqItems); renderFAQAdmin(); toast('Deleted.','info'); saveToSite(); }
 
 /* ===================== SITE TEXTS ===================== */
-const textFields = {
-  hero:{label:'Hero Section',fields:[
-    {key:'hero.badge',label:'Badge Text'},
-    {key:'hero.t1',label:'Title Line 1'},
-    {key:'hero.t2',label:'Title Line 2 (gradient)'},
-    {key:'hero.t3',label:'Title Line 3'},
-    {key:'hero.sub',label:'Subtitle',type:'textarea'},
-    {key:'hero.cta1',label:'WhatsApp Button'},
-    {key:'hero.cta2',label:'Browse Button'}
-  ]},
-  nav:{label:'Navigation',fields:[
-    {key:'nav.home',label:'Home'},{key:'nav.fleet',label:'Fleet'},
-    {key:'nav.pricing',label:'Pricing'},{key:'nav.gps',label:'GPS'},
-    {key:'nav.admin',label:'Admin'},{key:'nav.contact',label:'Contact'},
-    {key:'nav.book',label:'Book Now Button'}
-  ]},
-  cta:{label:'CTA Section',fields:[
-    {key:'cta.title',label:'CTA Title'},{key:'cta.sub',label:'CTA Subtitle',type:'textarea'},
-    {key:'cta.btn1',label:'WhatsApp Button'},{key:'cta.btn2',label:'Call Button'}
-  ]}
-};
+  const defaultTexts = {
+    en:{
+      nav:{home:'Home',fleet:'Fleet',pricing:'Plans',gps:'GPS Tracking',admin:'Admin Panel',contact:'Contact',book:'Book Now'},
+      hero:{badge:'🏆 Premium Car Rental Service',t1:'Drive Your',t2:'Dream Car',t3:'Today',sub:'Experience luxury & performance with our premium fleet.',cta1:'💬 Reserve via WhatsApp',cta2:'Browse Fleet →',stats:['Premium Cars','Happy Clients','Support','Cities']},
+      slider:{title:'Featured Vehicles',sub:'Explore our handpicked selection of premium cars',bookBtn:'Book Now'},
+      fleet:{title:'Our Fleet',sub:'Choose from our diverse collection of vehicles',cats:['All','Economy','SUV','Luxury','Sport','Electric'],day:'/day',bookBtn:'Book Now',details:'Details'},
+      features:{title:'Why Choose Us',sub:'Experience the difference with our premium services'},
+      gps:{badge:'LIVE TRACKING',title:'Live GPS Tracking',sub:'Monitor your entire fleet in real-time'},
+      pricing:{title:'Rental Plans',sub:'Choose the perfect plan for your needs',periods:['Daily','Weekly','Monthly']},
+      admin:{badge:'ADMIN PANEL',title:'Admin Dashboard',sub:'Complete control panel for managing your fleet and business',settingsTitle:'Settings Modules',settingsSub:'Control every aspect of your website from one place'},
+      seo:{title:'SEO & Marketing',sub:'Built-in tools for maximum visibility'},
+      testimonials:{title:'Client Reviews',sub:'What our customers say about us'},
+      faq:{title:'FAQ',sub:'Common questions answered'},
+      cta:{title:'Ready to Hit the Road?',sub:'Book your dream car now via WhatsApp — instant confirmation!',btn1:'💬 Book via WhatsApp',btn2:'Call Us'}
+    },
+    ar:{
+      nav:{home:'الرئيسية',fleet:'الأسطول',pricing:'الباقات',gps:'تتبع GPS',admin:'لوحة التحكم',contact:'اتصل بنا',book:'احجز الآن'},
+      hero:{badge:'🏆 خدمة تأجير سيارات متميزة',t1:'قُد سيارة',t2:'أحلامك',t3:'اليوم',sub:'اكتشف الفخامة والأداء مع أسطولنا المتميز.',cta1:'💬 احجز عبر واتساب',cta2:'تصفح الأسطول ←',stats:['سيارة فاخرة','عميل سعيد','دعم متواصل','مدينة']},
+      slider:{title:'سيارات مميزة',sub:'اكتشف مجموعتنا المختارة من السيارات الفاخرة',bookBtn:'احجز الآن'},
+      fleet:{title:'أسطولنا',sub:'اختر من مجموعتنا المتنوعة من السيارات',cats:['الكل','اقتصادية','SUV','فاخرة','رياضية','كهربائية'],day:'/يوم',bookBtn:'احجز الآن',details:'التفاصيل'},
+      features:{title:'لماذا نحن',sub:'اكتشف الفرق مع خدماتنا المتميزة'},
+      gps:{badge:'تتبع مباشر',title:'تتبع GPS مباشر',sub:'راقب أسطولك بالكامل في الوقت الحقيقي'},
+      pricing:{title:'الباقات',sub:'اختر الباقة المناسبة لاحتياجاتك',periods:['يومي','أسبوعي','شهري']},
+      admin:{badge:'لوحة الإدارة',title:'لوحة التحكم',sub:'لوحة تحكم كاملة لإدارة الأسطول والأعمال',settingsTitle:'وحدات الإعدادات',settingsSub:'تحكّم في كل جانب من موقعك من مكان واحد'},
+      seo:{title:'السيو والتسويق',sub:'أدوات مدمجة لزيادة الظهور'},
+      testimonials:{title:'آراء العملاء',sub:'ماذا يقول زبائننا عنا'},
+      faq:{title:'الأسئلة الشائعة',sub:'إجابات على أكثر الأسئلة تكراراً'},
+      cta:{title:'مستعد للانطلاق؟',sub:'احجز سيارة أحلامك الآن عبر واتساب!',btn1:'💬 احجز عبر واتساب',btn2:'اتصل بنا'}
+    }
+  };
+
+  const textFields = {
+    hero:{label:'Hero Section',fields:[
+      {key:'hero.badge',label:'Badge Text'},
+      {key:'hero.t1',label:'Title Line 1'},
+      {key:'hero.t2',label:'Title Line 2 (gradient)'},
+      {key:'hero.t3',label:'Title Line 3'},
+      {key:'hero.sub',label:'Subtitle',type:'textarea'},
+      {key:'hero.cta1',label:'WhatsApp Button'},
+      {key:'hero.cta2',label:'Browse Button'},
+      {key:'hero.stats',label:'Stats (one per line)',type:'textarea',list:true}
+    ]},
+    nav:{label:'Navigation',fields:[
+      {key:'nav.home',label:'Home'},{key:'nav.fleet',label:'Fleet'},
+      {key:'nav.pricing',label:'Pricing'},{key:'nav.gps',label:'GPS'},
+      {key:'nav.admin',label:'Admin'},{key:'nav.contact',label:'Contact'},
+      {key:'nav.book',label:'Book Now Button'}
+    ]},
+    slider:{label:'Featured Slider',fields:[
+      {key:'slider.title',label:'Title'},
+      {key:'slider.sub',label:'Subtitle',type:'textarea'},
+      {key:'slider.bookBtn',label:'Book Button Text'}
+    ]},
+    fleet:{label:'Fleet Section',fields:[
+      {key:'fleet.title',label:'Title'},
+      {key:'fleet.sub',label:'Subtitle',type:'textarea'},
+      {key:'fleet.cats',label:'Categories (one per line)',type:'textarea',list:true},
+      {key:'fleet.day',label:'Price Suffix (e.g. /day)'},
+      {key:'fleet.bookBtn',label:'Book Button Text'},
+      {key:'fleet.details',label:'Details Button Text'}
+    ]},
+    features:{label:'Features Section',fields:[
+      {key:'features.title',label:'Title'},
+      {key:'features.sub',label:'Subtitle',type:'textarea'}
+    ]},
+    gps:{label:'GPS Section',fields:[
+      {key:'gps.badge',label:'Badge'},
+      {key:'gps.title',label:'Title'},
+      {key:'gps.sub',label:'Subtitle',type:'textarea'}
+    ]},
+    pricing:{label:'Pricing Section',fields:[
+      {key:'pricing.title',label:'Title'},
+      {key:'pricing.sub',label:'Subtitle',type:'textarea'},
+      {key:'pricing.periods',label:'Periods (one per line)',type:'textarea',list:true}
+    ]},
+    admin:{label:'Admin Section',fields:[
+      {key:'admin.badge',label:'Badge'},
+      {key:'admin.title',label:'Title'},
+      {key:'admin.sub',label:'Subtitle',type:'textarea'},
+      {key:'admin.settingsTitle',label:'Settings Title'},
+      {key:'admin.settingsSub',label:'Settings Subtitle',type:'textarea'}
+    ]},
+    seo:{label:'SEO Section',fields:[
+      {key:'seo.title',label:'Title'},
+      {key:'seo.sub',label:'Subtitle',type:'textarea'}
+    ]},
+    testimonials:{label:'Testimonials Section',fields:[
+      {key:'testimonials.title',label:'Title'},
+      {key:'testimonials.sub',label:'Subtitle',type:'textarea'}
+    ]},
+    faq:{label:'FAQ Section',fields:[
+      {key:'faq.title',label:'Title'},
+      {key:'faq.sub',label:'Subtitle',type:'textarea'}
+    ]},
+    cta:{label:'CTA Section',fields:[
+      {key:'cta.title',label:'CTA Title'},{key:'cta.sub',label:'CTA Subtitle',type:'textarea'},
+      {key:'cta.btn1',label:'WhatsApp Button'},{key:'cta.btn2',label:'Call Button'}
+    ]}
+  };
 
 let siteTexts = DB.load('siteTexts', null);
 
 function getNestedVal(obj,path){return path.split('.').reduce((o,k)=>o?.[k],obj);}
 function setNestedVal(obj,path,val){const keys=path.split('.');let o=obj;keys.slice(0,-1).forEach(k=>{if(!o[k])o[k]={};o=o[k];});o[keys[keys.length-1]]=val;}
 
-function renderTextsPanel() {
-  // Load base translations
-  const lang = currentTextTab;
-  const defaultT = {en:{nav:{home:'Home',fleet:'Fleet',pricing:'Plans',gps:'GPS Tracking',admin:'Admin Panel',contact:'Contact',book:'Book Now'},hero:{badge:'🏆 Premium Car Rental Service',t1:'Drive Your',t2:'Dream Car',t3:'Today',sub:'Experience luxury & performance with our premium fleet.',cta1:'💬 Reserve via WhatsApp',cta2:'Browse Fleet →'},cta:{title:'Ready to Hit the Road?',sub:'Book your dream car now via WhatsApp — instant confirmation!',btn1:'💬 Book via WhatsApp',btn2:'Call Us'}},ar:{nav:{home:'الرئيسية',fleet:'الأسطول',pricing:'الباقات',gps:'تتبع GPS',admin:'لوحة التحكم',contact:'اتصل بنا',book:'احجز الآن'},hero:{badge:'🏆 خدمة تأجير سيارات متميزة',t1:'قُد سيارة',t2:'أحلامك',t3:'اليوم',sub:'اكتشف الفخامة والأداء مع أسطولنا المتميز.',cta1:'💬 احجز عبر واتساب',cta2:'تصفح الأسطول ←'},cta:{title:'مستعد للانطلاق؟',sub:'احجز سيارة أحلامك الآن عبر واتساب!',btn1:'💬 احجز عبر واتساب',btn2:'اتصل بنا'}}};
-  const saved = DB.load('siteTexts',{});
-  const base = {...defaultT[lang],...(saved[lang]||{})};
+  function renderTextsPanel() {
+    const lang = currentTextTab;
+    const saved = DB.load('siteTexts',{});
+    const base = {...defaultTexts[lang],...(saved[lang]||{})};
 
   let html='';
   Object.values(textFields).forEach(section=>{
     html+=`<div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title">${section.label}</div></div><div class="form-grid">`;
     section.fields.forEach(f=>{
-      const val = getNestedVal(base,f.key)||'';
+        const rawVal = getNestedVal(base,f.key);
+        const val = f.list ? (Array.isArray(rawVal)?rawVal.join('\n'):(rawVal||'')) : (rawVal||'');
+        const isRTL = lang==='ar';
+        html+=`<div class="form-field ${f.type==='textarea'?'span2':''}"><label>${f.label}</label>`;
+        if(f.type==='textarea') html+=`<textarea id="txt_${f.key}" ${isRTL?'dir="rtl"':''}>${val}</textarea>`;
+        else html+=`<input type="text" id="txt_${f.key}" value="${val.replace(/"/g,'&quot;')}" ${isRTL?'dir="rtl"':''}/>`;
+      html+='</div>';
+    });
+    html+='</div></div>';
+  });
+    html+=`<div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveTexts()">💾 Save All Texts</button></div>`;
+    document.getElementById('textsPanel').innerHTML = html;
+  }
+
+  function setTextTab(lang) {
+    currentTextTab=lang;
+    document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===(lang==='en'?0:1)));
+    if(document.getElementById('sectionsList')) renderSectionsPanel();
+  }
+
+  function saveTexts() {
+    const lang = currentTextTab;
+    const saved = DB.load('siteTexts',{});
+    if(!saved[lang]) saved[lang]={};
+    Object.values(textFields).forEach(section=>{
+      section.fields.forEach(f=>{
+        const el=document.getElementById('txt_'+f.key);
+        if(!el) return;
+        const raw = el.value||el.textContent||'';
+        const v = f.list ? raw.split('\n').map(s=>s.trim()).filter(Boolean) : raw;
+        setNestedVal(saved[lang],f.key,v);
+      });
+    });
+    DB.save('siteTexts',saved);
+    toast('Texts saved! ✏️','success');
+    saveToSite();
+  }
+
+  /* ===================== SECTIONS MANAGER ===================== */
+  const defaultSections = [
+    {id:'s0',label:'Hero',type:'built-in'},
+    {id:'featuredSlider',label:'Featured Slider',type:'built-in'},
+    {id:'s1',label:'Fleet',type:'built-in'},
+    {id:'features',label:'Features',type:'built-in'},
+    {id:'s3',label:'GPS',type:'built-in'},
+    {id:'s2',label:'Pricing',type:'built-in'},
+    {id:'s4',label:'Admin',type:'built-in'},
+    {id:'seo',label:'SEO',type:'built-in'},
+    {id:'testimonials',label:'Testimonials',type:'built-in'},
+    {id:'faq',label:'FAQ',type:'built-in'},
+    {id:'s5',label:'CTA',type:'built-in'}
+  ];
+  let sectionsConfig = null;
+  let sectionsDirty = false;
+  let sectionsExpanded = {};
+  let siteWin = null;
+  let siteSyncTimer = null;
+  const LIVE_PREVIEW_ORIGIN = 'http://127.0.0.1:5500';
+  const sectionTextMap = {
+    s0:'hero',
+    featuredSlider:'slider',
+    s1:'fleet',
+    features:'features',
+    s3:'gps',
+    s2:'pricing',
+    s4:'admin',
+    seo:'seo',
+    testimonials:'testimonials',
+    faq:'faq',
+    s5:'cta'
+  };
+
+  function getTextsBase(lang){
+    const saved = DB.load('siteTexts',{});
+    return {...defaultTexts[lang],...(saved[lang]||{})};
+  }
+
+  function cloneData(obj){
+    try{
+      return JSON.parse(JSON.stringify(obj));
+    }catch(e){
+      return obj;
+    }
+  }
+
+  function ensureSectionsDraft(forceReload=false){
+    if(forceReload || !sectionsConfig){
+      sectionsConfig = cloneData(loadSectionsConfig());
+      sectionsDirty = false;
+    }
+    return sectionsConfig;
+  }
+
+  function updateSectionsSaveState(){
+    const state = document.getElementById('sectionsSaveState');
+    const btn = document.getElementById('sectionsSaveBtn');
+    if(state){
+      state.textContent = sectionsDirty ? 'Unsaved changes' : 'Saved';
+      state.style.color = sectionsDirty ? 'var(--accent3)' : 'var(--text3)';
+    }
+    if(btn){
+      btn.style.opacity = sectionsDirty ? '1' : '0.72';
+    }
+  }
+
+  function markSectionsDirty(){
+    sectionsDirty = true;
+    updateSectionsSaveState();
+  }
+
+  function resetSectionsDraft(){
+    ensureSectionsDraft(true);
+    renderSectionsPanel();
+    toast('Section changes reverted.', 'info');
+  }
+
+  function publishAllSections(){
+    ensureSectionsDraft();
+    sectionsConfig.items.forEach(item => {
+      item.enabled = true;
+      item.removed = false;
+    });
+    markSectionsDirty();
+    renderSectionsPanel();
+    toast('All sections set to published.', 'success');
+  }
+
+  function toggleSelectAll(){
+    ensureSectionsDraft();
+    const allEnabled = sectionsConfig.items.every(i => !!i.enabled && !i.removed);
+    sectionsConfig.items.forEach(item => {
+      item.enabled = !allEnabled;
+      if(!allEnabled) item.removed = false;
+    });
+    markSectionsDirty();
+    renderSectionsPanel();
+    updateSelectAllBtn();
+    toast(allEnabled ? 'All sections deselected.' : 'All sections selected.', 'info');
+  }
+
+  function updateSelectAllBtn(){
+    const btn = document.getElementById('selectAllBtn');
+    if(!btn || !sectionsConfig) return;
+    const allEnabled = sectionsConfig.items.every(i => !!i.enabled && !i.removed);
+    btn.textContent = allEnabled ? '☐ Deselect All' : '☑ Select All';
+  }
+
+  function getSitePageUrl(id=''){
+    const page = 'drivo-car-rental.html?preview=' + Date.now() + (id ? '#' + id : '');
+    if(location.protocol === 'file:') return LIVE_PREVIEW_ORIGIN + '/' + page;
+    return page;
+  }
+
+  function renderTextFieldsForSection(sectionKey, lang, base){
+    const section = textFields[sectionKey];
+    if(!section) return '';
+    let html = `<div class="card" style="margin-bottom:0"><div class="card-header"><div class="card-title">${section.label}</div></div><div class="form-grid">`;
+    section.fields.forEach(f=>{
+      const rawVal = getNestedVal(base,f.key);
+      const val = f.list ? (Array.isArray(rawVal)?rawVal.join('\n'):(rawVal||'')) : (rawVal||'');
       const isRTL = lang==='ar';
       html+=`<div class="form-field ${f.type==='textarea'?'span2':''}"><label>${f.label}</label>`;
       if(f.type==='textarea') html+=`<textarea id="txt_${f.key}" ${isRTL?'dir="rtl"':''}>${val}</textarea>`;
       else html+=`<input type="text" id="txt_${f.key}" value="${val.replace(/"/g,'&quot;')}" ${isRTL?'dir="rtl"':''}/>`;
       html+='</div>';
     });
-    html+='</div></div>';
-  });
-  html+=`<div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveTexts()">💾 Save All Texts</button></div>`;
-  document.getElementById('textsPanel').innerHTML = html;
-}
+    html+=`</div><div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn btn-primary btn-sm" onclick="saveTexts()">💾 Save</button></div></div>`;
+    return html;
+  }
 
-function setTextTab(lang) {
-  currentTextTab=lang;
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===(lang==='en'?0:1)));
-  renderTextsPanel();
-}
-
-function saveTexts() {
-  const lang = currentTextTab;
-  const saved = DB.load('siteTexts',{});
-  if(!saved[lang]) saved[lang]={};
-  Object.values(textFields).forEach(section=>{
-    section.fields.forEach(f=>{
-      const el=document.getElementById('txt_'+f.key);
-      if(el) setNestedVal(saved[lang],f.key,el.value||el.textContent);
+  function normalizeSectionsConfig(saved){
+    const items = (saved && Array.isArray(saved.items)) ? saved.items : [];
+    const map = new Map(items.map(i=>[i.id,i]));
+    const builtinIds = new Set(defaultSections.map(s=>s.id));
+    const merged = defaultSections.map(b=>{
+      const ex = map.get(b.id) || {};
+      return {
+        id:b.id,
+        label:ex.label||b.label,
+        type:'built-in',
+        enabled: ex.enabled !== undefined && ex.enabled !== null ? !!ex.enabled : true,
+        removed: !!ex.removed,
+        alt: !!ex.alt,
+        btnHref: ex.btnHref || '',
+        content: ex.content ? cloneData(ex.content) : undefined
+      };
     });
+    items.forEach(i=>{
+      if(i.type==='custom' || !builtinIds.has(i.id)) merged.push(i);
+    });
+    return {items: merged};
+  }
+
+  function loadSectionsConfig(){
+    return normalizeSectionsConfig(DB.load('sections', null));
+  }
+
+  function saveSectionsConfig(){
+    ensureSectionsDraft();
+    DB.save('sections', sectionsConfig);
+    DB.save('sectionsTick', Date.now());
+    toast('Sections saved! 🧩','success');
+    sectionsDirty = false;
+    updateSectionsSaveState();
+    saveToSite({includeSections:true});
+  }
+
+  function renderSectionsPanel(){
+    ensureSectionsDraft();
+    const list = document.getElementById('sectionsList');
+    if(!list) return;
+    list.innerHTML = sectionsConfig.items.map((s,i)=>{
+      const isCustom = s.type==='custom';
+      const isRemoved = !!s.removed;
+      const en = (s.content && s.content.en) ? s.content.en : {};
+      const ar = (s.content && s.content.ar) ? s.content.ar : {};
+      const isEnabled = !!s.enabled;
+      const status = isRemoved ? 'Removed' : (isEnabled ? 'Published' : 'Draft');
+      const isOpen = !!sectionsExpanded[s.id];
+      const sectionKey = sectionTextMap[s.id];
+      const lang = currentTextTab;
+      const base = getTextsBase(lang);
+      const toggleLabel = isRemoved ? '🗑 Removed' : (isEnabled ? '● Live' : '○ Draft');
+      const toggleStyle = isRemoved
+        ? 'background:rgba(239,68,68,0.15);color:#ef4444;border-color:rgba(239,68,68,0.3)'
+        : isEnabled
+          ? 'background:rgba(34,197,94,0.15);color:#22c55e;border-color:rgba(34,197,94,0.3)'
+          : 'background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.45);border-color:rgba(255,255,255,0.15)';
+      return `
+        <div class="section-item">
+          <div class="section-row">
+            <div class="section-title-row">
+              <button class="btn btn-sm" style="min-width:96px;font-weight:700;font-size:0.78rem;${toggleStyle}" onclick="toggleSection(${i},${!isEnabled})">${toggleLabel}</button>
+              <input class="section-input" type="text" value="${(s.label||'').replace(/\"/g,'&quot;')}" onchange="updateSectionLabel(${i},this.value)"/>
+              <span class="section-id">#${s.id}</span>
+            </div>
+            <div class="section-actions">
+              <button class="btn btn-ghost btn-sm" onclick="toggleSectionOpen('${s.id}')">${isOpen?'▲':'▼'} Drop</button>
+              <button class="btn btn-ghost btn-sm" onclick="previewSection('${s.id}')">Preview</button>
+              ${isRemoved
+                ? `<button class="btn btn-success btn-sm" onclick="restoreSection(${i})">Restore</button>`
+                : `<button class="btn btn-danger btn-sm" onclick="removeSection(${i})">Remove</button>`
+              }
+              <button class="btn btn-ghost btn-sm" onclick="moveSection(${i},-1)">▲</button>
+              <button class="btn btn-ghost btn-sm" onclick="moveSection(${i},1)">▼</button>
+            </div>
+          </div>
+          <div class="section-details ${isOpen?'open':''}">
+            ${isCustom?`
+            <div class="section-subgrid">
+              <div class="form-field"><label>Title (EN)</label><input type="text" value="${(en.title||'').replace(/\"/g,'&quot;')}" onchange="updateSectionContent(${i},'en','title',this.value)"/></div>
+              <div class="form-field"><label>Title (AR)</label><input type="text" dir="rtl" value="${(ar.title||'').replace(/\"/g,'&quot;')}" onchange="updateSectionContent(${i},'ar','title',this.value)"/></div>
+              <div class="form-field"><label>Subtitle (EN)</label><textarea onchange="updateSectionContent(${i},'en','sub',this.value)">${en.sub||''}</textarea></div>
+              <div class="form-field"><label>Subtitle (AR)</label><textarea dir="rtl" onchange="updateSectionContent(${i},'ar','sub',this.value)">${ar.sub||''}</textarea></div>
+              <div class="form-field"><label>Button Text (EN)</label><input type="text" value="${(en.btnText||'').replace(/\"/g,'&quot;')}" onchange="updateSectionContent(${i},'en','btnText',this.value)"/></div>
+              <div class="form-field"><label>Button Text (AR)</label><input type="text" dir="rtl" value="${(ar.btnText||'').replace(/\"/g,'&quot;')}" onchange="updateSectionContent(${i},'ar','btnText',this.value)"/></div>
+              <div class="form-field"><label>Button Link</label><input type="text" value="${(s.btnHref||'').replace(/\"/g,'&quot;')}" onchange="updateSectionHref(${i},this.value)"/></div>
+              <div class="form-field"><label>Alt Background</label><label class="switch"><input type="checkbox" ${s.alt?'checked':''} onchange="toggleSectionAlt(${i},this.checked)"/><div class="switch-track"></div><div class="switch-thumb"></div></label></div>
+            </div>`: (sectionKey ? renderTextFieldsForSection(sectionKey, lang, base) : '')}
+          </div>
+        </div>`;
+    }).join('');
+    updateSectionsSaveState();
+    updateSelectAllBtn();
+  }
+
+  function updateSectionLabel(i,val){
+    if(!sectionsConfig || !sectionsConfig.items[i]) return;
+    sectionsConfig.items[i].label = val;
+    markSectionsDirty();
+  }
+  function toggleSection(i,checked){
+    if(!sectionsConfig || !sectionsConfig.items[i]) return;
+    sectionsConfig.items[i].enabled = !!checked;
+    if(checked) sectionsConfig.items[i].removed = false;
+    renderSectionsPanel();
+    // Auto-save and sync to site immediately
+    DB.save('sections', sectionsConfig);
+    DB.save('sectionsTick', Date.now());
+    sectionsDirty = false;
+    updateSectionsSaveState();
+    saveToSite({includeSections:true});
+  }
+  function moveSection(i,dir){
+    if(!sectionsConfig) return;
+    const j = i + dir;
+    if(j<0 || j>=sectionsConfig.items.length) return;
+    const items = sectionsConfig.items;
+    [items[i], items[j]] = [items[j], items[i]];
+    markSectionsDirty();
+    renderSectionsPanel();
+  }
+  function addCustomSection(){
+    ensureSectionsDraft();
+    const id = 'custom-' + Date.now().toString(36);
+    sectionsConfig.items.push({
+      id,
+      label:'Custom Section',
+      type:'custom',
+      enabled:true,
+      alt:false,
+      btnHref:'#',
+      content:{
+        en:{title:'New Section',sub:'Write a short description here.',btnText:'Learn More'},
+        ar:{title:'قسم جديد',sub:'أضف وصفاً قصيراً هنا.',btnText:'اعرف المزيد'}
+      }
+    });
+    markSectionsDirty();
+    renderSectionsPanel();
+  }
+  function deleteSection(i){
+    if(!sectionsConfig || !sectionsConfig.items[i]) return;
+    if(sectionsConfig.items[i].type!=='custom') return;
+    sectionsConfig.items.splice(i,1);
+    markSectionsDirty();
+    renderSectionsPanel();
+  }
+  function setSectionDraft(i){
+    if(!sectionsConfig || !sectionsConfig.items[i]) return;
+    sectionsConfig.items[i].enabled = false;
+    markSectionsDirty();
+    renderSectionsPanel();
+  }
+  function removeSection(i){
+    if(!sectionsConfig || !sectionsConfig.items[i]) return;
+    const s = sectionsConfig.items[i];
+    if(s.type==='custom'){
+      sectionsConfig.items.splice(i,1);
+    } else {
+      s.enabled = false;
+      s.removed = true;
+    }
+    markSectionsDirty();
+    renderSectionsPanel();
+  }
+  function restoreSection(i){
+    if(!sectionsConfig || !sectionsConfig.items[i]) return;
+    sectionsConfig.items[i].removed = false;
+    sectionsConfig.items[i].enabled = true;
+    markSectionsDirty();
+    renderSectionsPanel();
+  }
+  function openSite(){
+    if(sectionsDirty) toast('You have unsaved section changes. Click Save Sections first.', 'info');
+    const url = getSitePageUrl();
+    siteWin = window.open(url, 'previewTab');
+    setTimeout(()=>sendToSite(true), 200);
+    setTimeout(()=>sendToSite(true), 900);
+    startSiteSyncHeartbeat();
+  }
+  function previewSection(id){
+    if(!id) return;
+    if(sectionsDirty) toast('Preview shows the last saved version. Click Save Sections first.', 'info');
+    const url = getSitePageUrl(id);
+    siteWin = window.open(url, 'previewTab');
+    setTimeout(()=>sendToSite(true), 200);
+    setTimeout(()=>sendToSite(true), 900);
+    startSiteSyncHeartbeat();
+  }
+  window.addEventListener('message', (e) => {
+    if(!e || !e.data) return;
+    if(e.data.type === 'drivo_ready'){
+      sendToSite(true);
+      startSiteSyncHeartbeat();
+    }
   });
-  DB.save('siteTexts',saved);
-  toast('Texts saved! ✏️','success');
-  saveToSite();
-}
+  function startSiteSyncHeartbeat(){
+    if(siteSyncTimer) clearInterval(siteSyncTimer);
+    siteSyncTimer = setInterval(() => {
+      if(!siteWin || siteWin.closed){
+        clearInterval(siteSyncTimer);
+        siteSyncTimer = null;
+        return;
+      }
+      sendToSite(true);
+    }, 1200);
+  }
+  function sendToSite(savedOnly=false){
+    const payload = savedOnly ? {
+      cars: DB.load('cars', cars),
+      pricing: DB.load('pricing', pricing),
+      slides: DB.load('slides', slides),
+      testimonials: DB.load('testimonials', testimonials),
+      faq: DB.load('faq', faqItems),
+      siteTexts: DB.load('siteTexts',{}),
+      settings: DB.load('settings', settings),
+      featuredCars: DB.load('featuredCars', featuredCars),
+      gpsContent: DB.load('gpsContent', gpsContent),
+      footerContent: DB.load('footerContent', footerContent),
+      waConfig: DB.load('waConfig', waConfig),
+      adsConfig: DB.load('adsConfig', adsConfig),
+      sections: DB.load('sections', loadSectionsConfig()),
+      dataTick: String(DB.load('dataTick', Date.now())),
+      sectionsTick: String(DB.load('sectionsTick', Date.now()))
+    } : {
+      cars, pricing, slides, testimonials, faq: faqItems,
+      siteTexts: DB.load('siteTexts',{}),
+      settings, featuredCars, gpsContent, footerContent, waConfig, adsConfig,
+      sections: sectionsConfig || DB.load('sections', null),
+      dataTick: String(Date.now()),
+      sectionsTick: String(Date.now())
+    };
+    const msg = {type:'drivo_sync', payload};
+    try{
+      if(siteWin && !siteWin.closed) siteWin.postMessage(msg, '*');
+    }catch(e){}
+    try{
+      if(window.opener && !window.opener.closed) window.opener.postMessage(msg, '*');
+    }catch(e){}
+  }
+  function toggleSectionOpen(id){
+    const next = !sectionsExpanded[id];
+    sectionsExpanded = {};
+    if(next) sectionsExpanded[id] = true;
+    renderSectionsPanel();
+  }
+  function updateSectionContent(i,lang,key,val){
+    if(!sectionsConfig || !sectionsConfig.items[i]) return;
+    const s = sectionsConfig.items[i];
+    if(s.type!=='custom') return;
+    if(!s.content) s.content = {en:{},ar:{}};
+    if(!s.content[lang]) s.content[lang] = {};
+    s.content[lang][key] = val;
+    markSectionsDirty();
+  }
+  function updateSectionHref(i,val){
+    if(!sectionsConfig || !sectionsConfig.items[i]) return;
+    sectionsConfig.items[i].btnHref = val;
+    markSectionsDirty();
+  }
+  function toggleSectionAlt(i,checked){
+    if(!sectionsConfig || !sectionsConfig.items[i]) return;
+    sectionsConfig.items[i].alt = !!checked;
+    markSectionsDirty();
+  }
 
 /* ===================== SETTINGS ===================== */
-function loadSettings() {
-  settings = DB.load('settings',defaultSettings);
-  document.getElementById('set-whatsapp').value=settings.whatsapp||'';
-  document.getElementById('set-phone').value=settings.phone||'';
-  document.getElementById('set-email').value=settings.email||'';
-  document.getElementById('set-addr-en').value=settings.addrEn||'';
-  document.getElementById('set-addr-ar').value=settings.addrAr||'';
-  document.getElementById('set-title').value=settings.siteTitle||'';
-  document.getElementById('set-desc').value=settings.siteDesc||'';
-  document.getElementById('set-kw').value=settings.siteKw||'';
-  load2FASection();
-}
-function saveContactSettings() {
-  settings.whatsapp=document.getElementById('set-whatsapp').value;
-  settings.phone=document.getElementById('set-phone').value;
-  settings.email=document.getElementById('set-email').value;
-  settings.addrEn=document.getElementById('set-addr-en').value;
+  function loadSettings() {
+    settings = DB.load('settings',defaultSettings);
+    document.getElementById('set-whatsapp').value=settings.whatsapp||'';
+    document.getElementById('set-phone').value=settings.phone||'';
+    document.getElementById('set-email').value=settings.email||'';
+    document.getElementById('set-addr-en').value=settings.addrEn||'';
+    document.getElementById('set-addr-ar').value=settings.addrAr||'';
+    document.getElementById('set-title').value=settings.siteTitle||'';
+    document.getElementById('set-desc').value=settings.siteDesc||'';
+    document.getElementById('set-kw').value=settings.siteKw||'';
+    const a1 = settings.accent || defaultSettings.accent;
+    const a2 = settings.accent2 || defaultSettings.accent2;
+    const a3 = settings.accent3 || defaultSettings.accent3;
+    const c1 = document.getElementById('set-accent');
+    const c2 = document.getElementById('set-accent2');
+    const c3 = document.getElementById('set-accent3');
+    if(c1) c1.value = a1;
+    if(c2) c2.value = a2;
+    if(c3) c3.value = a3;
+    applyThemeColors({accent:a1,accent2:a2,accent3:a3});
+    load2FASection();
+  }
+  function applyThemeColors(c){
+    if(!c) return;
+    const root = document.documentElement;
+    if(c.accent) root.style.setProperty('--accent', c.accent);
+    if(c.accent2) root.style.setProperty('--accent2', c.accent2);
+    if(c.accent3) root.style.setProperty('--accent3', c.accent3);
+  }
+  function saveContactSettings() {
+    settings.whatsapp=document.getElementById('set-whatsapp').value;
+    settings.phone=document.getElementById('set-phone').value;
+    settings.email=document.getElementById('set-email').value;
+    settings.addrEn=document.getElementById('set-addr-en').value;
   settings.addrAr=document.getElementById('set-addr-ar').value;
   DB.save('settings',settings);
-  toast('Contact info saved! 📞','success');
-  saveToSite();
-}
+    toast('Contact info saved! 📞','success');
+    saveToSite();
+  }
+  function saveAppearanceSettings() {
+    settings.accent = document.getElementById('set-accent').value;
+    settings.accent2 = document.getElementById('set-accent2').value;
+    settings.accent3 = document.getElementById('set-accent3').value;
+    DB.save('settings',settings);
+    applyThemeColors(settings);
+    toast('Colors saved! 🎨','success');
+    saveToSite();
+  }
 function saveSEOSettings() {
   settings.siteTitle=document.getElementById('set-title').value;
   settings.siteDesc=document.getElementById('set-desc').value;
   settings.siteKw=document.getElementById('set-kw').value;
   DB.save('settings',settings);
   toast('SEO settings saved! 🔍','success');
+  saveToSite();
 }
 function changePassword() {
   const old=document.getElementById('set-oldpw').value;
@@ -1782,20 +2339,25 @@ function changePassword() {
 }
 
 /* ===================== SAVE TO SITE ===================== */
-function saveToSite() {
-  DB.save('cars', cars);
-  DB.save('pricing', pricing);
-  DB.save('slides', slides);
-  DB.save('testimonials', testimonials);
-  DB.save('faq', faqItems);
-  DB.save('settings', settings);
-  DB.save('featuredCars', featuredCars);
-  DB.save('gpsContent', gpsContent);
-  DB.save('footerContent', footerContent);
-  DB.save('waConfig', waConfig);
-  DB.save('adsConfig', adsConfig);
-  document.title = settings.siteTitle || 'Boujlilcar Admin';
-}
+  function saveToSite(options = {}) {
+    const includeSections = !!options.includeSections;
+    DB.save('cars', cars);
+    DB.save('pricing', pricing);
+    DB.save('slides', slides);
+    DB.save('testimonials', testimonials);
+    DB.save('faq', faqItems);
+    DB.save('siteTexts', DB.load('siteTexts',{}));
+    DB.save('settings', settings);
+    DB.save('featuredCars', featuredCars);
+    DB.save('gpsContent', gpsContent);
+    DB.save('footerContent', footerContent);
+    DB.save('waConfig', waConfig);
+    DB.save('adsConfig', adsConfig);
+    if(includeSections && sectionsConfig) DB.save('sections', sectionsConfig);
+    DB.save('dataTick', Date.now());
+    document.title = settings.siteTitle || 'Boujlilcar Admin';
+    sendToSite(true);
+  }
 
 /* ===================== HELPERS ===================== */
 function openModal(id) { document.getElementById(id).classList.add('open'); }
@@ -1804,7 +2366,9 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 function toast(msg, type='info') {
   const c=document.getElementById('toastContainer');
   const t=document.createElement('div');
-  t.className=`toast toast-${type}`; t.innerHTML=`${type==='success'?'✅':type==='error'?'❌':'ℹ️'} ${msg}`;
+  t.className=`toast toast-${type}`;
+  const icon=type==='success'?'✅':type==='error'?'❌':'ℹ️';
+  t.textContent=`${icon} ${msg}`;
   c.appendChild(t);
   setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(20px)';setTimeout(()=>t.remove(),300);},3000);
 }
@@ -1817,16 +2381,7 @@ function toggleTheme() {
   if(btn) btn.textContent=isDark?'🌙':'☀️';
 }
 
-/* Save slides button — add to hero panel */
-setTimeout(()=>{
-  const heroPanel=document.getElementById('panel-hero');
-  if(heroPanel){
-    const saveBtn=document.createElement('div');
-    saveBtn.style='display:flex;justify-content:flex-end;margin-top:12px';
-    saveBtn.innerHTML='<button class="btn btn-primary" onclick="saveSlides()">💾 Save Slides</button>';
-    heroPanel.appendChild(saveBtn);
-  }
-},100);
+/* Save slides button — added in DOMContentLoaded below */
 
 /* ===================== NEW DATA ===================== */
 const defaultFeaturedCars = [
@@ -2177,6 +2732,25 @@ function deleteClient(id) {
 
 // Init
 document.addEventListener('DOMContentLoaded',()=>{
+  // Add Save Slides button to hero panel
+  const heroPanel=document.getElementById('panel-hero');
+  if(heroPanel){
+    const saveBtn=document.createElement('div');
+    saveBtn.style='display:flex;justify-content:flex-end;margin-top:12px';
+    const btn=document.createElement('button');
+    btn.className='btn btn-primary';
+    btn.textContent='💾 Save Slides';
+    btn.onclick=saveSlides;
+    saveBtn.appendChild(btn);
+    heroPanel.appendChild(saveBtn);
+  }
+
+  if(location.protocol === 'file:'){
+    setTimeout(() => {
+      toast('Live preview on file:// is unstable. Use start-drivo-localhost.bat then open http://127.0.0.1:5500/drivo-admin.html', 'error');
+    }, 600);
+  }
+
   // Check lockout on load
   const lock = getLockState();
   if(lock && lock.until && Date.now() < lock.until) startLockCountdown(lock.until);

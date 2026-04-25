@@ -760,16 +760,17 @@ body{font-family:'Montserrat','Noto Color Emoji','Segoe UI Emoji','Apple Color E
   <div class="admin-panel">
     <div class="admin-header">
       <div>
-        <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:4px" id="apTitle">&#127917; Background Animation Control</h2>
-        <p style="color:var(--text-muted);font-size:0.85rem" id="apSub">Customize the animated background in real-time</p>
+        <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:4px">🧩 Sections Control</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">Show or hide sections on the site</p>
       </div>
       <button class="admin-close" id="adminClose">&#10005;</button>
     </div>
-    <div style="display:flex;gap:4px;padding:4px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:50px;margin-bottom:28px">
-      <button class="ctrl-preset active" id="tabBgBtn" onclick="setAdminTab('bg')" style="flex:1;text-align:center">&#127916; Background Animation</button>
-      <button class="ctrl-preset" id="tabSliderBtn" onclick="setAdminTab('slider')" style="flex:1;text-align:center">&#128444;&#65039; Hero Slider</button>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+      <button class="ctrl-preset" id="frontSelectAllBtn" onclick="frontToggleSelectAll()" style="font-weight:700">☑ Select All</button>
+      <button class="ctrl-preset" onclick="frontSaveApply()" style="margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent;font-weight:700">💾 Save &amp; Apply</button>
     </div>
-    <div id="bgTab">
+    <div id="frontSectionsList"></div>
+    <div id="bgTab" style="display:none">
       <div class="ctrl-section">
         <div class="ctrl-section-title">&#127916; Animation Type</div>
         <div class="ctrl-presets" id="animTypePresets">
@@ -838,7 +839,6 @@ body{font-family:'Montserrat','Noto Color Emoji','Segoe UI Emoji','Apple Color E
         </div>
       </div>
     </div>
-    <!-- SLIDER TAB -->
     <div id="sliderTab" style="display:none">
       <div class="ctrl-section">
         <div class="ctrl-section-title">&#9889; Slider Controls</div>
@@ -1134,8 +1134,180 @@ function loadFromAdmin() {
       const st = savedTexts[lang];
       if(st.nav) Object.keys(st.nav).forEach(k=>{ if(T[lang].nav[k]!==undefined) T[lang].nav[k]=st.nav[k]; });
       if(st.hero) Object.keys(st.hero).forEach(k=>{ if(T[lang].hero[k]!==undefined) T[lang].hero[k]=st.hero[k]; });
+      if(st.slider) Object.keys(st.slider).forEach(k=>{ if(T[lang].slider[k]!==undefined) T[lang].slider[k]=st.slider[k]; });
+      if(st.fleet) Object.keys(st.fleet).forEach(k=>{ if(T[lang].fleet[k]!==undefined) T[lang].fleet[k]=st.fleet[k]; });
+      if(st.features) Object.keys(st.features).forEach(k=>{ if(T[lang].features[k]!==undefined) T[lang].features[k]=st.features[k]; });
+      if(st.gps) Object.keys(st.gps).forEach(k=>{ if(T[lang].gps[k]!==undefined) T[lang].gps[k]=st.gps[k]; });
+      if(st.pricing) Object.keys(st.pricing).forEach(k=>{ if(T[lang].pricing[k]!==undefined) T[lang].pricing[k]=st.pricing[k]; });
+      if(st.admin) Object.keys(st.admin).forEach(k=>{ if(T[lang].admin[k]!==undefined) T[lang].admin[k]=st.admin[k]; });
+      if(st.seo) Object.keys(st.seo).forEach(k=>{ if(T[lang].seo[k]!==undefined) T[lang].seo[k]=st.seo[k]; });
+      if(st.testimonials) Object.keys(st.testimonials).forEach(k=>{ if(T[lang].testimonials[k]!==undefined) T[lang].testimonials[k]=st.testimonials[k]; });
+      if(st.faq) Object.keys(st.faq).forEach(k=>{ if(T[lang].faq[k]!==undefined) T[lang].faq[k]=st.faq[k]; });
       if(st.cta) Object.keys(st.cta).forEach(k=>{ if(T[lang].cta[k]!==undefined) T[lang].cta[k]=st.cta[k]; });
     });
+  }
+
+  const defaultSectionsConfig = {
+    items:[
+      {id:'s0',label:'Hero',type:'built-in',enabled:true},
+      {id:'featuredSlider',label:'Featured Slider',type:'built-in',enabled:true},
+      {id:'s1',label:'Fleet',type:'built-in',enabled:true},
+      {id:'features',label:'Features',type:'built-in',enabled:true},
+      {id:'s3',label:'GPS',type:'built-in',enabled:true},
+      {id:'s2',label:'Pricing',type:'built-in',enabled:true},
+      {id:'s4',label:'Admin',type:'built-in',enabled:true},
+      {id:'seo',label:'SEO',type:'built-in',enabled:true},
+      {id:'testimonials',label:'Testimonials',type:'built-in',enabled:true},
+      {id:'faq',label:'FAQ',type:'built-in',enabled:true},
+      {id:'s5',label:'CTA',type:'built-in',enabled:true}
+    ]
+  };
+
+  function loadLocal(key, def){
+    try{
+      const v = localStorage.getItem('drivo_'+key);
+      return v ? JSON.parse(v) : def;
+    }catch(e){
+      return def;
+    }
+  }
+
+  function upsertMeta(selector, attrName, attrValue, content){
+    let el = document.querySelector(selector);
+    if(!el){
+      el = document.createElement('meta');
+      el.setAttribute(attrName, attrValue);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content || '');
+  }
+
+  function applySeoSettings(savedSettings){
+    if(!savedSettings) return;
+    if(savedSettings.siteTitle) document.title = savedSettings.siteTitle;
+    if(savedSettings.siteDesc){
+      upsertMeta('meta[name=\"description\"]', 'name', 'description', savedSettings.siteDesc);
+      upsertMeta('meta[property=\"og:description\"]', 'property', 'og:description', savedSettings.siteDesc);
+    }
+    if(savedSettings.siteTitle){
+      upsertMeta('meta[property=\"og:title\"]', 'property', 'og:title', savedSettings.siteTitle);
+    }
+    if(savedSettings.siteKw){
+      upsertMeta('meta[name=\"keywords\"]', 'name', 'keywords', savedSettings.siteKw);
+    }
+  }
+
+  function normalizeSectionsConfig(saved){
+    if(!saved || !Array.isArray(saved.items)) return defaultSectionsConfig;
+    const items = saved.items;
+    const map = new Map(items.map(i=>[i.id,i]));
+    const builtinIds = new Set(defaultSectionsConfig.items.map(s=>s.id));
+    const merged = items.filter(i=>i.type==='custom' || builtinIds.has(i.id));
+    defaultSectionsConfig.items.forEach(b=>{
+      if(!map.has(b.id)) merged.push({...b});
+    });
+    return {items: merged};
+  }
+
+  function loadSectionsConfig(){
+    const saved = loadLocal('sections', null);
+    return normalizeSectionsConfig(saved);
+  }
+
+  function ensureSectionsHost(){
+    const footer = document.querySelector('footer');
+    if(!footer) return null;
+    let host = document.getElementById('sectionsHost');
+    if(!host){
+      host = document.createElement('div');
+      host.id = 'sectionsHost';
+      footer.parentNode.insertBefore(host, footer);
+    }
+    return host;
+  }
+
+  function buildCustomSection(sec, lang){
+    const t = (sec.content && sec.content[lang]) ? sec.content[lang] : {};
+    const title = t.title || '';
+    const sub = t.sub || '';
+    const btnText = t.btnText || '';
+    const btnHref = sec.btnHref || '#';
+    const altClass = sec.alt ? ' section-alt' : '';
+    const el = document.createElement('section');
+    el.className = `section custom-section${altClass}`;
+    el.id = sec.id;
+    el.dataset.custom = '1';
+    el.innerHTML = `
+      <div class="container">
+        <div class="section-header fade-up">
+          <h2 class="section-title">${title}</h2>
+          <p class="section-sub">${sub}</p>
+          ${btnText ? `<div style="margin-top:24px"><a class="btn-primary" href="${btnHref}">${btnText}</a></div>` : ''}
+        </div>
+      </div>`;
+    return el;
+  }
+
+  function updateCustomSection(el, sec, lang){
+    const t = (sec.content && sec.content[lang]) ? sec.content[lang] : {};
+    const titleEl = el.querySelector('.section-title');
+    const subEl = el.querySelector('.section-sub');
+    if(titleEl) titleEl.textContent = t.title || '';
+    if(subEl) subEl.textContent = t.sub || '';
+    const btnWrap = el.querySelector('.btn-primary')?.parentElement;
+    if(btnWrap){
+      if(t.btnText){
+        const btn = btnWrap.querySelector('.btn-primary');
+        if(btn){ btn.textContent = t.btnText; btn.href = sec.btnHref || '#'; }
+      } else {
+        btnWrap.remove();
+      }
+    } else if(t.btnText){
+      const header = el.querySelector('.section-header');
+      if(header){
+        const div = document.createElement('div');
+        div.style.marginTop = '24px';
+        div.innerHTML = `<a class="btn-primary" href="${sec.btnHref || '#'}">${t.btnText}</a>`;
+        header.appendChild(div);
+      }
+    }
+    el.classList.toggle('section-alt', !!sec.alt);
+  }
+
+  function applySectionsConfig(){
+    const cfg = loadSectionsConfig();
+    const host = ensureSectionsHost();
+    if(!host || !cfg || !cfg.items) return;
+    const existingMap = {};
+    document.querySelectorAll('section').forEach(s=>{ if(s.id) existingMap[s.id] = s; });
+
+    // Remove orphaned custom sections
+    document.querySelectorAll('section[data-custom="1"]').forEach(s=>{
+      if(!cfg.items.find(i=>i.id===s.id)) s.remove();
+    });
+
+    const ordered = cfg.items.filter(i=>!!i.enabled && !i.removed).map(i=>{
+      let el = existingMap[i.id];
+      if(!el && i.type==='custom') el = buildCustomSection(i, currentLang);
+      if(el && i.type==='custom') updateCustomSection(el, i, currentLang);
+      return el;
+    }).filter(Boolean);
+
+    cfg.items.forEach(i=>{
+      const el = existingMap[i.id];
+      if(el) el.style.display = (!i.enabled || i.removed ? 'none' : '');
+    });
+
+    ordered.forEach(el=>{ el.style.display=''; host.appendChild(el); });
+  }
+
+  let _sectionsTick = null;
+  let _dataTick = null;
+  function getSectionsTick(){
+    try{ return localStorage.getItem('drivo_sectionsTick') || '0'; }catch(e){ return '0'; }
+  }
+  function getDataTick(){
+    try{ return localStorage.getItem('drivo_dataTick') || '0'; }catch(e){ return '0'; }
   }
 
   // Settings (address / WhatsApp number)
@@ -1144,6 +1316,11 @@ function loadFromAdmin() {
     if(savedSettings.addrEn) T.en.footer.addr = savedSettings.addrEn;
     if(savedSettings.addrAr) T.ar.footer.addr = savedSettings.addrAr;
     if(savedSettings.whatsapp) WA_NUM = savedSettings.whatsapp.replace(/[^0-9]/g,'');
+    const root = document.documentElement;
+    if(savedSettings.accent) root.style.setProperty('--accent', savedSettings.accent);
+    if(savedSettings.accent2) root.style.setProperty('--accent2', savedSettings.accent2);
+    if(savedSettings.accent3) root.style.setProperty('--accent3', savedSettings.accent3);
+    applySeoSettings(savedSettings);
   }
 
   // WhatsApp config (messages + float button)
@@ -1259,6 +1436,10 @@ function loadFromAdmin() {
       document.head.appendChild(s);
     }
   }
+  // Expose internal functions globally so DOMContentLoaded and front controls can use them
+  window._drivoApplySections = applySectionsConfig;
+  window._drivoGetSectionsTick = getSectionsTick;
+  window._drivoGetDataTick = getDataTick;
 }
 
 /* ============= FEATURED SLIDER FROM ADMIN ============= */
@@ -1311,16 +1492,33 @@ const slSettings = {enabled:true,autoplay:true,duration:5000,transitionSpeed:100
 
 /* ============= INIT ============= */
 document.addEventListener('DOMContentLoaded', () => {
-  loadFromAdmin();
-  initSlideImgMgr();
-  renderAll();
-  startHeroTimer();
-  startFeatTimer();
-  initCanvas();
-  initIntersectionObserver();
-  document.getElementById('adminFab').addEventListener('click', openAdmin);
-  document.getElementById('adminClose').addEventListener('click', closeAdmin);
-  document.getElementById('adminOverlay').addEventListener('click', function(e){ if(e.target===this) closeAdmin(); });
+    loadFromAdmin();
+    initSlideImgMgr();
+    renderAll();
+    startHeroTimer();
+    startFeatTimer();
+    initCanvas();
+    initIntersectionObserver();
+    window._drivoApplySections && window._drivoApplySections();
+    _sectionsTick = window._drivoGetSectionsTick ? window._drivoGetSectionsTick() : '0';
+    _dataTick    = window._drivoGetDataTick    ? window._drivoGetDataTick()    : '0';
+    setInterval(() => {
+      const t = window._drivoGetSectionsTick ? window._drivoGetSectionsTick() : '0';
+      if(t !== _sectionsTick){
+        _sectionsTick = t;
+        window._drivoApplySections && window._drivoApplySections();
+      }
+      const dt = window._drivoGetDataTick ? window._drivoGetDataTick() : '0';
+      if(dt !== _dataTick){
+        _dataTick = dt;
+        loadFromAdmin();
+        renderAll();
+        window._drivoApplySections && window._drivoApplySections();
+      }
+    }, 700);
+    document.getElementById('adminFab').addEventListener('click', openAdmin);
+    document.getElementById('adminClose').addEventListener('click', closeAdmin);
+    document.getElementById('adminOverlay').addEventListener('click', function(e){ if(e.target===this) closeAdmin(); });
   document.getElementById('langBtn').addEventListener('click', toggleLang);
   document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 
@@ -1335,6 +1533,54 @@ document.addEventListener('DOMContentLoaded', () => {
       initSlideImgMgr();
     }
   });
+
+  // Notify admin tab that the site is ready to receive sync
+  try{
+    if(window.opener && !window.opener.closed){
+      window.opener.postMessage({type:'drivo_ready'}, '*');
+    }
+  }catch(e){}
+});
+
+window.addEventListener('storage', (e) => {
+  if(!e || !e.key) return;
+  if(e.key === 'drivo_sections' || e.key === 'drivo_sectionsTick'){
+    window._drivoApplySections && window._drivoApplySections();
+  }
+  if(e.key === 'drivo_dataTick'){
+    loadFromAdmin();
+    renderAll();
+    window._drivoApplySections && window._drivoApplySections();
+  }
+});
+
+window.addEventListener('message', (e) => {
+  // Accept only from same origin (localhost) or null (file://)
+  const trusted = e.origin === window.location.origin || e.origin === 'null' || e.origin === '';
+  if(!trusted || !e || !e.data || e.data.type !== 'drivo_sync') return;
+  const p = e.data.payload || {};
+  const save = (k, v) => {
+    if(v === undefined) return;
+    try{ localStorage.setItem('drivo_'+k, JSON.stringify(v)); }catch(err){}
+  };
+  save('cars', p.cars);
+  save('pricing', p.pricing);
+  save('slides', p.slides);
+  save('testimonials', p.testimonials);
+  save('faq', p.faq);
+  save('siteTexts', p.siteTexts);
+  save('settings', p.settings);
+  save('featuredCars', p.featuredCars);
+  save('gpsContent', p.gpsContent);
+  save('footerContent', p.footerContent);
+  save('waConfig', p.waConfig);
+  save('adsConfig', p.adsConfig);
+  save('sections', p.sections);
+  if(p.dataTick) try{ localStorage.setItem('drivo_dataTick', p.dataTick); }catch(err){}
+  if(p.sectionsTick) try{ localStorage.setItem('drivo_sectionsTick', p.sectionsTick); }catch(err){}
+  loadFromAdmin();
+  renderAll();
+  window._drivoApplySections && window._drivoApplySections();
 });
 
 /* ============= RENDER ALL ============= */
@@ -1445,8 +1691,10 @@ function renderAll() {
   document.getElementById('fContactTitle').textContent = t.footer.contact;
   document.getElementById('fAddr').textContent = t.footer.addr;
   document.getElementById('footerCopy').textContent = t.footer.copy;
-  ['flegal0','flegal1','flegal2'].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.textContent=t.footer.legal[i]; });
-}
+    ['flegal0','flegal1','flegal2'].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.textContent=t.footer.legal[i]; });
+
+    window._drivoApplySections && window._drivoApplySections();
+  }
 
 /* ============= RENDER FLEET ============= */
 function renderFleet() {
@@ -1809,14 +2057,109 @@ function closeMobile() {
 }
 
 /* ============= ADMIN PANEL ============= */
-function openAdmin() { document.getElementById('adminOverlay').classList.add('open'); }
+function openAdmin() {
+  renderFrontSections();
+  document.getElementById('adminOverlay').classList.add('open');
+}
 function closeAdmin() { document.getElementById('adminOverlay').classList.remove('open'); }
 
-function setAdminTab(tab) {
-  document.getElementById('bgTab').style.display = tab==='bg'?'':'none';
-  document.getElementById('sliderTab').style.display = tab==='slider'?'':'none';
-  document.getElementById('tabBgBtn').classList.toggle('active', tab==='bg');
-  document.getElementById('tabSliderBtn').classList.toggle('active', tab==='slider');
+/* ============= FRONT SECTIONS CONTROL ============= */
+let _frontSectionsDraft = null;
+
+const _frontDefaults = [
+  {id:'s0',label:'Hero'},{id:'featuredSlider',label:'Featured Slider'},
+  {id:'s1',label:'Fleet'},{id:'features',label:'Features'},
+  {id:'s3',label:'GPS'},{id:'s2',label:'Pricing'},
+  {id:'s4',label:'Admin'},{id:'seo',label:'SEO'},
+  {id:'testimonials',label:'Testimonials'},{id:'faq',label:'FAQ'},{id:'s5',label:'CTA'}
+];
+
+function getFrontDraft() {
+  if (!_frontSectionsDraft) {
+    let raw = null;
+    try { raw = JSON.parse(localStorage.getItem('drivo_sections')); } catch(e) {}
+    const saved = (raw && Array.isArray(raw.items)) ? raw.items : [];
+    const map = new Map(saved.map(i => [i.id, i]));
+    _frontSectionsDraft = _frontDefaults.map(d => {
+      const ex = map.get(d.id) || {};
+      return {
+        id: d.id,
+        label: ex.label || d.label,
+        type: ex.type || 'built-in',
+        enabled: (ex.enabled !== undefined && ex.enabled !== null) ? !!ex.enabled : true,
+        removed: !!ex.removed
+      };
+    });
+    saved.forEach(i => { if (i.type === 'custom' && !map.has(i.id)) _frontSectionsDraft.push({...i, enabled: !!i.enabled}); });
+  }
+  return _frontSectionsDraft;
+}
+
+function renderFrontSections() {
+  const items = getFrontDraft();
+  const list = document.getElementById('frontSectionsList');
+  if (!list) return;
+
+  list.innerHTML = items.map((s, i) => {
+    const isEnabled = !!s.enabled;
+    const isRemoved = !!s.removed;
+    const liveActive  = !isRemoved && isEnabled;
+    const draftActive = !isRemoved && !isEnabled;
+    const liveStyle  = liveActive
+      ? 'background:rgba(34,197,94,0.2);color:#22c55e;border-color:rgba(34,197,94,0.5);font-weight:800'
+      : 'background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.35);border-color:rgba(255,255,255,0.1);font-weight:600';
+    const draftStyle = draftActive
+      ? 'background:rgba(255,183,3,0.18);color:#ffb703;border-color:rgba(255,183,3,0.45);font-weight:800'
+      : 'background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.35);border-color:rgba(255,255,255,0.1);font-weight:600';
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);margin-bottom:8px">
+        <span style="font-weight:600;font-size:0.9rem">${s.label}</span>
+        <div style="display:flex;gap:6px">
+          <button class="ctrl-preset" style="min-width:72px;font-size:0.78rem;${liveStyle}" onclick="frontSetSection(${i},true)">● Live</button>
+          <button class="ctrl-preset" style="min-width:72px;font-size:0.78rem;${draftStyle}" onclick="frontSetSection(${i},false)">○ Draft</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  updateFrontSelectAllBtn();
+}
+
+function frontSetSection(i, enabled) {
+  const items = getFrontDraft();
+  if (!items[i] || items[i].removed) return;
+  items[i].enabled = enabled;
+  renderFrontSections();
+}
+
+function frontToggleSelectAll() {
+  const items = getFrontDraft();
+  const allEnabled = items.every(i => !!i.enabled && !i.removed);
+  items.forEach(i => { if (!i.removed) i.enabled = !allEnabled; });
+  renderFrontSections();
+}
+
+function updateFrontSelectAllBtn() {
+  const btn = document.getElementById('frontSelectAllBtn');
+  if (!btn || !_frontSectionsDraft) return;
+  const allEnabled = _frontSectionsDraft.every(i => !!i.enabled && !i.removed);
+  btn.textContent = allEnabled ? '☐ Deselect All' : '☑ Select All';
+}
+
+function frontSaveApply() {
+  const items = getFrontDraft();
+  try {
+    localStorage.setItem('drivo_sections', JSON.stringify({items}));
+    localStorage.setItem('drivo_sectionsTick', String(Date.now()));
+  } catch(e) {}
+  // Apply visibility directly to DOM
+  items.forEach(i => {
+    const el = document.getElementById(i.id);
+    if (el) el.style.display = (!!i.enabled && !i.removed) ? '' : 'none';
+  });
+  // Also call the full applySections if available (handles ordering/custom sections)
+  if (window._drivoApplySections) window._drivoApplySections();
+  _frontSectionsDraft = null;
+  closeAdmin();
 }
 
 /* BG Controls */
@@ -2107,18 +2450,17 @@ function initCanvas() {
 }
 
 /* ============= INTERSECTION OBSERVER ============= */
+const _fadeObserver = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.1});
+
 function initIntersectionObserver() {
-  const obs = new IntersectionObserver(entries=>{
-    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-  },{threshold:0.1});
-  document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+  document.querySelectorAll('.fade-up').forEach(el=>_fadeObserver.observe(el));
 }
 
+// Called after dynamic content is added to observe newly inserted .fade-up elements
 function reObserve() {
-  const obs = new IntersectionObserver(entries=>{
-    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-  },{threshold:0.1});
-  document.querySelectorAll('.fade-up:not(.visible)').forEach(el=>obs.observe(el));
+  document.querySelectorAll('.fade-up:not(.visible)').forEach(el=>_fadeObserver.observe(el));
 }
 </script>
 </body>
