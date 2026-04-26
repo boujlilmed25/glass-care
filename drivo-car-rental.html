@@ -102,17 +102,35 @@ body{font-family:'Montserrat','Noto Color Emoji','Segoe UI Emoji','Apple Color E
 .hamburger.open span:nth-child(2){opacity:0;}
 .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
 /* HERO LAVA */
-.hero-lava{position:absolute;inset:0;z-index:0;overflow:hidden;background:#080601;}
-.lava-scene{position:absolute;inset:-120px;filter:blur(70px) contrast(22);background:#080601;}
-.lava-blob{position:absolute;border-radius:50%;}
-.lb1{width:650px;height:650px;background:radial-gradient(circle at 32% 30%,#fef3c7 0%,#fbbf24 28%,#d97706 55%,#92400e 78%,#451a03 100%);box-shadow:inset -30px -30px 60px rgba(0,0,0,0.5),inset 15px 15px 40px rgba(254,243,199,0.25);top:5%;left:15%;animation:lb1 20s ease-in-out infinite;}
-.lb2{width:450px;height:450px;background:radial-gradient(circle at 38% 28%,#fffbeb 0%,#fcd34d 25%,#f59e0b 52%,#b45309 78%,#451a03 100%);box-shadow:inset -25px -25px 50px rgba(0,0,0,0.5),inset 12px 12px 35px rgba(255,251,235,0.22);top:45%;left:58%;animation:lb2 25s ease-in-out infinite;}
-.lb3{width:520px;height:520px;background:radial-gradient(circle at 30% 33%,#fde68a 0%,#f59e0b 30%,#b45309 58%,#78350f 82%,#3a1a00 100%);box-shadow:inset -28px -28px 55px rgba(0,0,0,0.55),inset 14px 14px 38px rgba(253,230,138,0.2);top:55%;left:5%;animation:lb3 18s ease-in-out infinite;}
-.lb4{width:320px;height:320px;background:radial-gradient(circle at 35% 30%,#fef9c3 0%,#fde68a 22%,#fbbf24 50%,#d97706 75%,#78350f 100%);box-shadow:inset -18px -18px 40px rgba(0,0,0,0.5),inset 10px 10px 28px rgba(254,249,195,0.25);top:15%;left:68%;animation:lb4 28s ease-in-out infinite;}
-.lb5{width:380px;height:380px;background:radial-gradient(circle at 33% 32%,#fcd34d 0%,#d97706 35%,#92400e 62%,#451a03 88%,#1c0a00 100%);box-shadow:inset -22px -22px 45px rgba(0,0,0,0.55),inset 11px 11px 32px rgba(252,211,77,0.18);top:38%;left:35%;animation:lb5 22s ease-in-out infinite;}
-.lb6{width:280px;height:280px;background:radial-gradient(circle at 36% 29%,#fffbeb 0%,#fcd34d 28%,#f59e0b 55%,#92400e 80%,#3a1a00 100%);box-shadow:inset -16px -16px 35px rgba(0,0,0,0.5),inset 9px 9px 25px rgba(255,251,235,0.22);top:65%;left:50%;animation:lb6 15s ease-in-out infinite;}
-.lb7{width:220px;height:220px;background:radial-gradient(circle at 34% 31%,#fde68a 0%,#fbbf24 30%,#b45309 60%,#451a03 100%);box-shadow:inset -12px -12px 30px rgba(0,0,0,0.5),inset 7px 7px 20px rgba(253,230,138,0.2);top:25%;left:48%;animation:lb7 21s ease-in-out infinite;}
-.lb8{width:300px;height:300px;background:radial-gradient(circle at 37% 30%,#fef3c7 0%,#f59e0b 30%,#d97706 58%,#78350f 82%,#1c0a00 100%);box-shadow:inset -17px -17px 38px rgba(0,0,0,0.52),inset 9px 9px 26px rgba(254,243,199,0.2);top:75%;left:25%;animation:lb8 17s ease-in-out infinite;}
+.hero-lava{position:absolute;inset:0;z-index:0;overflow:hidden;background:linear-gradient(160deg,#0c0800 0%,#180d00 40%,#0c0800 100%);}
+.lava-glow-layer{position:absolute;inset:-80px;filter:blur(90px);opacity:0.55;pointer-events:none;}
+.lava-glow{position:absolute;border-radius:50%;}
+.lg1{width:700px;height:700px;background:#c97a00;top:5%;left:15%;animation:lb1 20s ease-in-out infinite;}
+.lg2{width:500px;height:500px;background:#f59e0b;top:45%;left:55%;animation:lb2 25s ease-in-out infinite;}
+.lg3{width:550px;height:550px;background:#a16207;top:55%;left:3%;animation:lb3 18s ease-in-out infinite;}
+.lg4{width:350px;height:350px;background:#fbbf24;top:12%;left:65%;animation:lb4 28s ease-in-out infinite;}
+.lg5{width:400px;height:400px;background:#d97706;top:35%;left:33%;animation:lb5 22s ease-in-out infinite;}
+.lava-spheres{position:absolute;inset:0;pointer-events:none;}
+.lava-blob{position:absolute;border-radius:50%;will-change:transform;}
+.lb1{width:260px;height:260px;top:8%;left:18%;animation:lb1 20s ease-in-out infinite;}
+.lb2{width:180px;height:180px;top:48%;left:60%;animation:lb2 25s ease-in-out infinite;}
+.lb3{width:210px;height:210px;top:58%;left:6%;animation:lb3 18s ease-in-out infinite;}
+.lb4{width:130px;height:130px;top:14%;left:68%;animation:lb4 28s ease-in-out infinite;}
+.lb5{width:155px;height:155px;top:38%;left:36%;animation:lb5 22s ease-in-out infinite;}
+.lb6{width:115px;height:115px;top:68%;left:52%;animation:lb6 15s ease-in-out infinite;}
+.lb7{width:90px;height:90px;top:28%;left:50%;animation:lb7 21s ease-in-out infinite;}
+.lb8{width:120px;height:120px;top:78%;left:28%;animation:lb8 17s ease-in-out infinite;}
+.lava-blob{
+  background:
+    radial-gradient(circle at 30% 24%, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 20%),
+    radial-gradient(circle at 62% 68%, rgba(255,220,80,0.55) 0%, transparent 28%),
+    radial-gradient(circle at 50% 50%, #fffbeb 0%, #fde68a 12%, #fbbf24 28%, #f59e0b 46%, #d97706 62%, #92400e 78%, #451a03 92%, #1a0800 100%);
+  box-shadow:
+    0 0 55px rgba(245,158,11,0.38),
+    0 25px 55px rgba(0,0,0,0.75),
+    inset 0 -18px 40px rgba(0,0,0,0.5),
+    inset 4px 4px 18px rgba(255,255,255,0.07);
+}
 @keyframes lb1{0%{transform:translate(0,0) scale(1);}25%{transform:translate(110px,-90px) scale(1.18);}50%{transform:translate(-70px,130px) scale(0.88);}75%{transform:translate(55px,55px) scale(1.08);}100%{transform:translate(0,0) scale(1);}}
 @keyframes lb2{0%{transform:translate(0,0) scale(1);}33%{transform:translate(-130px,70px) scale(1.28);}66%{transform:translate(90px,-110px) scale(0.78);}100%{transform:translate(0,0) scale(1);}}
 @keyframes lb3{0%{transform:translate(0,0) scale(1);}20%{transform:translate(90px,-55px) scale(1.12);}60%{transform:translate(-110px,90px) scale(0.92);}80%{transform:translate(35px,-35px) scale(1.04);}100%{transform:translate(0,0) scale(1);}}
@@ -122,7 +140,7 @@ body{font-family:'Montserrat','Noto Color Emoji','Segoe UI Emoji','Apple Color E
 @keyframes lb7{0%{transform:translate(0,0) scale(1);}25%{transform:translate(90px,110px) scale(1.35);}75%{transform:translate(-70px,-90px) scale(0.65);}100%{transform:translate(0,0) scale(1);}}
 @keyframes lb8{0%{transform:translate(0,0) scale(1);}45%{transform:translate(80px,-100px) scale(1.2);}80%{transform:translate(-60px,70px) scale(0.85);}100%{transform:translate(0,0) scale(1);}}
 .hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;}
-.hero-overlay-gradient{background:linear-gradient(135deg,rgba(8,6,1,0.75) 0%,rgba(8,6,1,0.2) 40%,rgba(8,6,1,0.6) 100%),linear-gradient(to top,rgba(8,6,1,0.88) 0%,transparent 55%);}
+.hero-overlay-gradient{background:linear-gradient(135deg,rgba(10,6,0,0.78) 0%,rgba(10,6,0,0.18) 40%,rgba(10,6,0,0.6) 100%),linear-gradient(to top,rgba(10,6,0,0.9) 0%,transparent 55%);}
 /* HERO */
 .hero{min-height:100vh;display:flex;align-items:center;padding:120px 24px 80px;position:relative;z-index:1;}
 .hero-content{max-width:1280px;margin:0 auto;width:100%;}
@@ -519,7 +537,14 @@ body{font-family:'Montserrat','Noto Color Emoji','Segoe UI Emoji','Apple Color E
 <!-- HERO -->
 <section class="hero" id="s0">
   <div class="hero-lava" id="heroLava">
-    <div class="lava-scene">
+    <div class="lava-glow-layer">
+      <div class="lava-glow lg1"></div>
+      <div class="lava-glow lg2"></div>
+      <div class="lava-glow lg3"></div>
+      <div class="lava-glow lg4"></div>
+      <div class="lava-glow lg5"></div>
+    </div>
+    <div class="lava-spheres">
       <div class="lava-blob lb1"></div>
       <div class="lava-blob lb2"></div>
       <div class="lava-blob lb3"></div>
