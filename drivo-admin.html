@@ -531,6 +531,58 @@ tr:last-child td{border-bottom:none;}
         </div>
         <div id="slidesList"></div>
       </div>
+      <div class="card" style="margin-top:20px">
+        <div class="card-header"><div class="card-title">⚙️ Hero Slider Settings</div></div>
+        <div class="settings-list">
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Autoplay</div><div class="settings-row-desc">Automatically advance slides</div></div>
+            <label class="switch"><input type="checkbox" id="hsl-autoplay" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Ken Burns Effect</div><div class="settings-row-desc">Slow zoom animation on slide images</div></div>
+            <label class="switch"><input type="checkbox" id="hsl-kenburns" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Pause on Hover</div><div class="settings-row-desc">Stop autoplay when mouse is over slider</div></div>
+            <label class="switch"><input type="checkbox" id="hsl-pausehover" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Show Dots</div><div class="settings-row-desc">Navigation dots at the bottom of slider</div></div>
+            <label class="switch"><input type="checkbox" id="hsl-showdots" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Show Arrows</div><div class="settings-row-desc">Previous / Next navigation arrows</div></div>
+            <label class="switch"><input type="checkbox" id="hsl-showarrows" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Show Counter</div><div class="settings-row-desc">Slide counter e.g. 01 / 06</div></div>
+            <label class="switch"><input type="checkbox" id="hsl-showcounter" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Overlay Gradient</div><div class="settings-row-desc">Dark gradient overlay over slide images</div></div>
+            <label class="switch"><input type="checkbox" id="hsl-overlay" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+        </div>
+        <div class="form-grid" style="margin-top:20px">
+          <div class="form-field">
+            <label>Slide Duration — <span id="hsl-dur-val" style="color:var(--accent);font-weight:700">5.0s</span></label>
+            <input type="range" min="2000" max="15000" step="500" value="5000" id="hsl-duration" style="width:100%;accent-color:var(--accent)" oninput="document.getElementById('hsl-dur-val').textContent=(this.value/1000).toFixed(1)+'s'"/>
+          </div>
+          <div class="form-field">
+            <label>Transition Speed — <span id="hsl-speed-val" style="color:var(--accent);font-weight:700">1000ms</span></label>
+            <input type="range" min="300" max="3000" step="100" value="1000" id="hsl-transSpeed" style="width:100%;accent-color:var(--accent)" oninput="document.getElementById('hsl-speed-val').textContent=this.value+'ms'"/>
+          </div>
+          <div class="form-field">
+            <label>Transition Type</label>
+            <select id="hsl-transition">
+              <option value="fade">Fade</option>
+              <option value="slide">Slide</option>
+              <option value="zoom">Zoom</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="saveHeroSlSettings()">💾 Save Slider Settings</button></div>
+      </div>
     </div>
 
     <!-- ===== TESTIMONIALS ===== -->
@@ -656,6 +708,30 @@ tr:last-child td{border-bottom:none;}
         <p style="color:var(--text2);font-size:0.82rem;margin-bottom:16px">These cars appear in the Featured Vehicles slider on the homepage. Each "Book Now" button opens WhatsApp with the message below.</p>
         <div id="featuredCarsList"></div>
         <div class="form-actions"><button class="btn btn-primary" onclick="saveFeaturedCars()">💾 Save Featured Cars</button></div>
+      </div>
+      <div class="card" style="margin-top:20px">
+        <div class="card-header"><div class="card-title">⚙️ Featured Slider Settings</div></div>
+        <div class="settings-list">
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Autoplay</div><div class="settings-row-desc">Automatically cycle through featured cars</div></div>
+            <label class="switch"><input type="checkbox" id="fsl-autoplay" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Show Dots</div><div class="settings-row-desc">Navigation dots below the slider</div></div>
+            <label class="switch"><input type="checkbox" id="fsl-showdots" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info"><div class="settings-row-label">Show Arrows</div><div class="settings-row-desc">Previous / Next navigation arrows</div></div>
+            <label class="switch"><input type="checkbox" id="fsl-showarrows" checked/><div class="switch-track"></div><div class="switch-thumb"></div></label>
+          </div>
+        </div>
+        <div class="form-grid" style="margin-top:20px">
+          <div class="form-field">
+            <label>Slide Duration — <span id="fsl-dur-val" style="color:var(--accent);font-weight:700">5.0s</span></label>
+            <input type="range" min="2000" max="15000" step="500" value="5000" id="fsl-duration" style="width:100%;accent-color:var(--accent)" oninput="document.getElementById('fsl-dur-val').textContent=(this.value/1000).toFixed(1)+'s'"/>
+          </div>
+        </div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="saveFeatSlSettings()">💾 Save Slider Settings</button></div>
       </div>
     </div>
 
@@ -1329,11 +1405,11 @@ function showPanel(id) {
   if(id==='gps') renderGPSTable();
   if(id==='clients') renderClientsTable(clients);
   if(id==='pricing') renderPricingPanel();
-  if(id==='hero') renderSlides();
+  if(id==='hero') { renderSlides(); loadHeroSlSettings(); }
     if(id==='testimonials') renderTestimonials();
     if(id==='faq') renderFAQAdmin();
     if(id==='sections'){ renderSectionsPanel(); renderTextsPanel(); }
-    if(id==='featured') renderFeaturedCars();
+    if(id==='featured') { renderFeaturedCars(); loadFeatSlSettings(); }
   if(id==='gpscontent') loadGPSContentPanel();
   if(id==='footer') loadFooterPanel();
   if(id==='whatsapp') loadWAConfigPanel();
@@ -2225,6 +2301,8 @@ function setNestedVal(obj,path,val){const keys=path.split('.');let o=obj;keys.sl
       waConfig: DB.load('waConfig', waConfig),
       adsConfig: DB.load('adsConfig', adsConfig),
       sections: DB.load('sections', loadSectionsConfig()),
+      slSettings: DB.load('slSettings', null),
+      featSettings: DB.load('featSettings', null),
       dataTick: String(DB.load('dataTick', Date.now())),
       sectionsTick: String(DB.load('sectionsTick', Date.now()))
     } : {
@@ -2232,6 +2310,8 @@ function setNestedVal(obj,path,val){const keys=path.split('.');let o=obj;keys.sl
       siteTexts: DB.load('siteTexts',{}),
       settings, featuredCars, gpsContent, footerContent, waConfig, adsConfig,
       sections: sectionsConfig || DB.load('sections', null),
+      slSettings: DB.load('slSettings', null),
+      featSettings: DB.load('featSettings', null),
       dataTick: String(Date.now()),
       sectionsTick: String(Date.now())
     };
@@ -2358,6 +2438,69 @@ function changePassword() {
     document.title = settings.siteTitle || 'Boujlilcar Admin';
     sendToSite(true);
   }
+
+/* ===================== SLIDER SETTINGS ===================== */
+const _defHeroSl = {autoplay:true,kenBurns:true,pauseOnHover:true,showDots:true,showArrows:true,showCounter:true,overlayGradient:true,duration:5000,transitionSpeed:1000,transition:'fade'};
+const _defFeatSl = {autoplay:true,showDots:true,showArrows:true,duration:5000};
+
+function loadHeroSlSettings() {
+  const s = DB.load('slSettings', _defHeroSl);
+  document.getElementById('hsl-autoplay').checked    = s.autoplay !== false;
+  document.getElementById('hsl-kenburns').checked    = s.kenBurns !== false;
+  document.getElementById('hsl-pausehover').checked  = s.pauseOnHover !== false;
+  document.getElementById('hsl-showdots').checked    = s.showDots !== false;
+  document.getElementById('hsl-showarrows').checked  = s.showArrows !== false;
+  document.getElementById('hsl-showcounter').checked = s.showCounter !== false;
+  document.getElementById('hsl-overlay').checked     = s.overlayGradient !== false;
+  const dur = s.duration || 5000;
+  document.getElementById('hsl-duration').value = dur;
+  document.getElementById('hsl-dur-val').textContent = (dur/1000).toFixed(1)+'s';
+  const spd = s.transitionSpeed || 1000;
+  document.getElementById('hsl-transSpeed').value = spd;
+  document.getElementById('hsl-speed-val').textContent = spd+'ms';
+  document.getElementById('hsl-transition').value = s.transition || 'fade';
+}
+
+function saveHeroSlSettings() {
+  const s = {
+    autoplay:        document.getElementById('hsl-autoplay').checked,
+    kenBurns:        document.getElementById('hsl-kenburns').checked,
+    pauseOnHover:    document.getElementById('hsl-pausehover').checked,
+    showDots:        document.getElementById('hsl-showdots').checked,
+    showArrows:      document.getElementById('hsl-showarrows').checked,
+    showCounter:     document.getElementById('hsl-showcounter').checked,
+    overlayGradient: document.getElementById('hsl-overlay').checked,
+    duration:        +document.getElementById('hsl-duration').value,
+    transitionSpeed: +document.getElementById('hsl-transSpeed').value,
+    transition:      document.getElementById('hsl-transition').value,
+    enabled:         true
+  };
+  DB.save('slSettings', s);
+  sendToSite(true);
+  toast('Hero slider settings saved!', 'success');
+}
+
+function loadFeatSlSettings() {
+  const s = DB.load('featSettings', _defFeatSl);
+  document.getElementById('fsl-autoplay').checked   = s.autoplay !== false;
+  document.getElementById('fsl-showdots').checked   = s.showDots !== false;
+  document.getElementById('fsl-showarrows').checked = s.showArrows !== false;
+  const dur = s.duration || 5000;
+  document.getElementById('fsl-duration').value = dur;
+  document.getElementById('fsl-dur-val').textContent = (dur/1000).toFixed(1)+'s';
+}
+
+function saveFeatSlSettings() {
+  const s = {
+    autoplay:   document.getElementById('fsl-autoplay').checked,
+    showDots:   document.getElementById('fsl-showdots').checked,
+    showArrows: document.getElementById('fsl-showarrows').checked,
+    duration:   +document.getElementById('fsl-duration').value
+  };
+  DB.save('featSettings', s);
+  sendToSite(true);
+  toast('Featured slider settings saved!', 'success');
+}
 
 /* ===================== HELPERS ===================== */
 function openModal(id) { document.getElementById(id).classList.add('open'); }
