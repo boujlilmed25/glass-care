@@ -695,6 +695,21 @@ tr:last-child td{border-bottom:none;}
           <div class="card-header"><div class="card-title">📱 Two-Factor Authentication (2FA)</div></div>
           <div id="twoFASection"></div>
         </div>
+        <div class="card" style="grid-column:span 2">
+          <div class="card-header"><div class="card-title">🖼️ Image Hosting (ImgBB)</div></div>
+          <p style="font-size:0.82rem;color:var(--text2);margin-bottom:14px">
+            Bla API key, les images dyal upload katkhdmu <strong>ghir f had l-browser</strong> — l-iPhone w devices akhor ma ychofuhomch.<br/>
+            Dkhl <strong>imgbb.com</strong> → Sign up → API → Copy key → dir Save.
+          </p>
+          <div class="form-grid" style="grid-template-columns:1fr auto;align-items:end;gap:10px">
+            <div class="form-field">
+              <label>ImgBB API Key</label>
+              <input type="text" id="set-imgbb-key" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="font-family:monospace"/>
+            </div>
+            <button class="btn btn-primary" onclick="saveImgBBKey()" style="white-space:nowrap">💾 Save Key</button>
+          </div>
+          <div id="imgbb-status" style="font-size:0.78rem;margin-top:8px;color:var(--text3)">No key saved — images stored locally only</div>
+        </div>
       </div>
     </div>
 
@@ -1513,6 +1528,45 @@ function deleteCar(id) {
   saveToSite();
 }
 
+/* ---- ImgBB Image Hosting ---- */
+function saveImgBBKey() {
+  const key = (document.getElementById('set-imgbb-key').value || '').trim();
+  DB.save('imgbbKey', key);
+  const statusEl = document.getElementById('imgbb-status');
+  if(statusEl) statusEl.innerHTML = key
+    ? '✅ <span style="color:var(--green)">Key saved — images will work on all devices</span>'
+    : '⚠️ No key — uploaded images only work on this browser';
+  toast(key ? 'ImgBB key saved! 🖼️' : 'Key cleared', key ? 'success' : 'info');
+}
+
+function uploadToImgBB(file, onSuccess, onError) {
+  const key = DB.load('imgbbKey', '');
+  const reader = new FileReader();
+  reader.onload = e => {
+    const base64raw = e.target.result.split(',')[1];
+    if(!key) { onError(e.target.result); return; }
+    toast('Uploading image...', 'info');
+    const fd = new FormData();
+    fd.append('key', key);
+    fd.append('image', base64raw);
+    fetch('https://api.imgbb.com/1/upload', {method:'POST', body:fd})
+      .then(r => r.json())
+      .then(data => {
+        if(data && data.success && data.data && data.data.url) {
+          onSuccess(data.data.url);
+        } else {
+          toast('ImgBB error — check your API key', 'error');
+          onError(e.target.result);
+        }
+      })
+      .catch(() => {
+        toast('Upload failed — using local image', 'error');
+        onError(e.target.result);
+      });
+  };
+  reader.readAsDataURL(file);
+}
+
 /* ---- Car Image Upload ---- */
 function setCarImgPreview(val) {
   const preview = document.getElementById('carImgPreview');
@@ -1528,16 +1582,23 @@ function setCarImgPreview(val) {
 function handleCarImgUpload(input) {
   const file = input.files[0];
   if(!file) return;
-  if(file.size > 2 * 1024 * 1024) { toast('Image too large (max 2MB)', 'error'); return; }
-  const reader = new FileReader();
-  reader.onload = e => {
-    const base64 = e.target.result;
-    document.getElementById('car-img').value = base64;
-    document.getElementById('car-img-emoji').value = '';
-    setCarImgPreview(base64);
-    toast('Image uploaded! 📷', 'success');
-  };
-  reader.readAsDataURL(file);
+  if(file.size > 5 * 1024 * 1024) { toast('Image too large (max 5MB)', 'error'); return; }
+  uploadToImgBB(
+    file,
+    url => {
+      document.getElementById('car-img').value = url;
+      document.getElementById('car-img-emoji').value = url;
+      setCarImgPreview(url);
+      toast('Image uploaded to ImgBB! 🌐', 'success');
+    },
+    base64 => {
+      document.getElementById('car-img').value = base64;
+      document.getElementById('car-img-emoji').value = '';
+      setCarImgPreview(base64);
+      toast('Saved locally — add ImgBB key in Settings for cross-device support', 'info');
+    }
+  );
+  input.value = '';
 }
 
 function setCarImgEmoji(val) {
@@ -1692,11 +1753,20 @@ function renderSlides() {
   document.getElementById('slidesList').innerHTML = slides.map((s,i)=>`
     <div style="display:flex;gap:16px;align-items:start;padding:20px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;margin-bottom:12px">
       <div style="flex-shrink:0;text-align:center">
-        <img src="${s.url}" class="hero-thumb" style="width:120px;height:72px;object-fit:cover;border-radius:8px;border:2px solid var(--card-border)" onerror="this.style.background='rgba(99,102,241,0.2)';this.style.display='block'"/>
+        <img id="sthumb-${i}" src="${s.url}" class="hero-thumb" style="width:120px;height:72px;object-fit:cover;border-radius:8px;border:2px solid var(--card-border)" onerror="this.style.background='rgba(99,102,241,0.2)'"/>
         <div style="font-size:0.75rem;color:var(--text3);margin-top:4px">Slide ${i+1}</div>
       </div>
       <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="form-field" style="grid-column:span 2"><label>Image URL</label><input type="text" value="${s.url}" oninput="slides[${i}].url=this.value;this.previousElementSibling?.previousElementSibling?.querySelector('img')?.setAttribute('src',this.value)" style="padding:8px 12px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;font-size:0.82rem;outline:none;width:100%"/></div>
+        <div class="form-field" style="grid-column:span 2">
+          <label>Image URL</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="slide-url-${i}" value="${s.url}" oninput="slides[${i}].url=this.value;document.getElementById('sthumb-${i}').src=this.value" style="padding:8px 12px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;font-size:0.82rem;outline:none;flex:1"/>
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer;white-space:nowrap;padding:7px 12px">
+              📷 Upload
+              <input type="file" accept="image/*" style="display:none" onchange="handleSlideImgUpload(this,${i})"/>
+            </label>
+          </div>
+        </div>
         <div class="form-field"><label>Caption EN</label><input type="text" value="${s.capEn}" oninput="slides[${i}].capEn=this.value" style="padding:8px 12px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;font-size:0.82rem;outline:none;width:100%"/></div>
         <div class="form-field"><label>Caption AR</label><input type="text" value="${s.capAr}" dir="rtl" oninput="slides[${i}].capAr=this.value" style="padding:8px 12px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);color:var(--text);font-family:inherit;font-size:0.82rem;outline:none;width:100%;direction:rtl"/></div>
       </div>
@@ -1718,6 +1788,32 @@ function moveSlide(i,d) {
 }
 function deleteSlide(i) { slides.splice(i,1); renderSlides(); }
 function saveSlides() { DB.save('slides',slides); toast('Slides saved! 🖼️','success'); saveToSite(); }
+
+function handleSlideImgUpload(input, i) {
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024) { toast('Image too large (max 5MB)', 'error'); return; }
+  uploadToImgBB(
+    file,
+    url => {
+      slides[i].url = url;
+      const inp = document.getElementById('slide-url-'+i);
+      const th  = document.getElementById('sthumb-'+i);
+      if(inp) inp.value = url;
+      if(th)  th.src   = url;
+      toast('Slide image uploaded! 🌐', 'success');
+    },
+    base64 => {
+      slides[i].url = base64;
+      const inp = document.getElementById('slide-url-'+i);
+      const th  = document.getElementById('sthumb-'+i);
+      if(inp) inp.value = base64;
+      if(th)  th.src   = base64;
+      toast('Saved locally — add ImgBB key in Settings', 'info');
+    }
+  );
+  input.value = '';
+}
 
 /* ===================== TESTIMONIALS ===================== */
 function renderTestimonials() {
@@ -2371,6 +2467,14 @@ function setNestedVal(obj,path,val){const keys=path.split('.');let o=obj;keys.sl
     if(c3) c3.value = a3;
     applyThemeColors({accent:a1,accent2:a2,accent3:a3});
     load2FASection();
+    // ImgBB key
+    const imgbbKey = DB.load('imgbbKey', '');
+    const keyEl = document.getElementById('set-imgbb-key');
+    const statusEl = document.getElementById('imgbb-status');
+    if(keyEl) keyEl.value = imgbbKey;
+    if(statusEl) statusEl.innerHTML = imgbbKey
+      ? '✅ <span style="color:var(--green)">ImgBB key saved — images will be hosted publicly on all devices</span>'
+      : '⚠️ No key saved — uploaded images only work on this browser';
   }
   function applyThemeColors(c){
     if(!c) return;
@@ -2619,7 +2723,16 @@ function renderFeaturedCars() {
         <div class="form-field"><label>Car Name</label><input type="text" value="${name}" onchange="featuredCars[${i}].nameEn=this.value"/></div>
         <div class="form-field"><label>Category</label><input type="text" value="${cat}" onchange="featuredCars[${i}].catEn=this.value"/></div>
         <div class="form-field"><label>Price (e.g. 1,200)</label><input type="text" value="${price}" onchange="featuredCars[${i}].price=this.value"/></div>
-        <div class="form-field"><label>Emoji / Image URL</label><input type="text" value="${img}" onchange="featuredCars[${i}].img=this.value"/></div>
+        <div class="form-field">
+          <label>Emoji / Image URL</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="feat-img-${i}" value="${img}" onchange="featuredCars[${i}].img=this.value" style="flex:1"/>
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer;white-space:nowrap;padding:7px 12px">
+              📷 Upload
+              <input type="file" accept="image/*" style="display:none" onchange="handleFeatImgUpload(this,${i})"/>
+            </label>
+          </div>
+        </div>
         <div class="form-field span2"><label>Specs (e.g. 4.0L V8 · 585 HP)</label><input type="text" value="${specs}" onchange="featuredCars[${i}].specs=this.value"/></div>
         <div class="form-field span2"><label>WhatsApp Message (pre-filled for "Book Now")</label><input type="text" value="${waMsg}" onchange="featuredCars[${i}].waMsg=this.value"/></div>
       </div>
@@ -2632,6 +2745,28 @@ function addFeaturedSlide() {
 }
 function removeFeaturedSlide(i) { featuredCars.splice(i,1); renderFeaturedCars(); }
 function saveFeaturedCars() { DB.save('featuredCars',featuredCars); toast('Featured cars saved! 🌟','success'); saveToSite(); }
+
+function handleFeatImgUpload(input, i) {
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024) { toast('Image too large (max 5MB)', 'error'); return; }
+  uploadToImgBB(
+    file,
+    url => {
+      featuredCars[i].img = url;
+      const inp = document.getElementById('feat-img-'+i);
+      if(inp) inp.value = url;
+      toast('Image uploaded! 🌐', 'success');
+    },
+    base64 => {
+      featuredCars[i].img = base64;
+      const inp = document.getElementById('feat-img-'+i);
+      if(inp) inp.value = base64;
+      toast('Saved locally — add ImgBB key in Settings', 'info');
+    }
+  );
+  input.value = '';
+}
 
 /* ===================== GPS CONTENT ===================== */
 function loadGPSContentPanel() {
