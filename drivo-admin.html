@@ -698,8 +698,8 @@ tr:last-child td{border-bottom:none;}
         <div class="card" style="grid-column:span 2">
           <div class="card-header"><div class="card-title">🖼️ Image Hosting (ImgBB)</div></div>
           <p style="font-size:0.82rem;color:var(--text2);margin-bottom:14px">
-            Bla API key, les images dyal upload katkhdmu <strong>ghir f had l-browser</strong> — l-iPhone w devices akhor ma ychofuhomch.<br/>
-            Dkhl <strong>imgbb.com</strong> → Sign up → API → Copy key → dir Save.
+            Images khasshom yiw k <strong>public URL</strong> bach ybanou f ga3 devices (iPhone, PC, tablette...).<br/>
+            <strong>Setup:</strong> <a href="https://imgbb.com" target="_blank" style="color:var(--accent)">imgbb.com</a> → Sign up (free) → API → Copy key
           </p>
           <div class="form-grid" style="grid-template-columns:1fr auto;align-items:end;gap:10px">
             <div class="form-field">
@@ -709,6 +709,23 @@ tr:last-child td{border-bottom:none;}
             <button class="btn btn-primary" onclick="saveImgBBKey()" style="white-space:nowrap">💾 Save Key</button>
           </div>
           <div id="imgbb-status" style="font-size:0.78rem;margin-top:8px;color:var(--text3)">No key saved — images stored locally only</div>
+
+          <!-- Migrate button -->
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+            <div style="font-size:0.82rem;color:var(--text2);margin-bottom:10px">
+              🔄 <strong>3andek images déjà uploaded?</strong> — Click bach kolhom yitconvertiw l ImgBB URLs w ybanou f ga3 devices:
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <button class="btn btn-primary" id="migrate-btn" onclick="migrateImagesToCloud()">🌐 Convert All Images → Cloud</button>
+              <span id="migrate-status" style="font-size:0.78rem;color:var(--text3)"></span>
+            </div>
+            <div id="migrate-progress" style="display:none;margin-top:10px">
+              <div style="background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;height:8px">
+                <div id="migrate-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.3s;width:0%"></div>
+              </div>
+              <div id="migrate-log" style="font-size:0.74rem;color:var(--text3);margin-top:6px;max-height:80px;overflow-y:auto"></div>
+            </div>
+          </div>
         </div>
 
         <!-- CLOUD SYNC -->
@@ -1657,6 +1674,108 @@ function _updateGistStatus() {
   } else {
     statusEl.innerHTML = '🔑 Token saved — click Sync to activate cross-device';
   }
+}
+
+/* ===================== IMAGE MIGRATION ===================== */
+async function migrateImagesToCloud() {
+  const key = DB.load('imgbbKey', '');
+  if (!key) {
+    toast('❌ Dkhl ImgBB API key lwl!', 'error');
+    document.getElementById('set-imgbb-key').focus();
+    return;
+  }
+
+  const btn = document.getElementById('migrate-btn');
+  const statusEl = document.getElementById('migrate-status');
+  const progressEl = document.getElementById('migrate-progress');
+  const barEl = document.getElementById('migrate-bar');
+  const logEl = document.getElementById('migrate-log');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Converting...';
+  progressEl.style.display = '';
+  logEl.innerHTML = '';
+
+  // Collect all base64 images across cars, slides, featuredCars
+  const tasks = [];
+
+  const savedCars = DB.load('cars', []);
+  savedCars.forEach((car, i) => {
+    if (car.img && car.img.startsWith('data:')) {
+      tasks.push({ type: 'car', index: i, label: car.nameEn || `Car ${i+1}`, data: car.img });
+    }
+  });
+
+  const savedSlides = DB.load('slides', []);
+  savedSlides.forEach((slide, i) => {
+    if (slide.img && slide.img.startsWith('data:')) {
+      tasks.push({ type: 'slide', index: i, label: slide.caption || `Slide ${i+1}`, data: slide.img });
+    }
+  });
+
+  const savedFeat = DB.load('featuredCars', []);
+  savedFeat.forEach((fc, i) => {
+    if (fc.img && fc.img.startsWith('data:')) {
+      tasks.push({ type: 'feat', index: i, label: fc.name || `Featured ${i+1}`, data: fc.img });
+    }
+  });
+
+  if (tasks.length === 0) {
+    statusEl.innerHTML = '✅ <span style="color:var(--green)">Kolchi images déjà cloud URLs — mashi shi image local</span>';
+    btn.disabled = false;
+    btn.textContent = '🌐 Convert All Images → Cloud';
+    return;
+  }
+
+  const log = (msg) => {
+    logEl.innerHTML += msg + '<br/>';
+    logEl.scrollTop = logEl.scrollHeight;
+  };
+
+  log(`Found ${tasks.length} local image(s) to convert...`);
+  let done = 0, errors = 0;
+
+  for (const task of tasks) {
+    try {
+      const base64raw = task.data.split(',')[1];
+      const fd = new FormData();
+      fd.append('key', key);
+      fd.append('image', base64raw);
+      const resp = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: fd });
+      const result = await resp.json();
+      if (result && result.success && result.data && result.data.url) {
+        const url = result.data.url;
+        if (task.type === 'car')   savedCars[task.index].img    = url;
+        if (task.type === 'slide') savedSlides[task.index].img  = url;
+        if (task.type === 'feat')  savedFeat[task.index].img    = url;
+        done++;
+        log(`✅ ${task.label} → uploaded`);
+      } else {
+        throw new Error(result.error?.message || 'Upload failed');
+      }
+    } catch(e) {
+      errors++;
+      log(`❌ ${task.label} → ${e.message}`);
+    }
+    barEl.style.width = Math.round(((done + errors) / tasks.length) * 100) + '%';
+  }
+
+  // Save updated data
+  if (done > 0) {
+    DB.save('cars', savedCars);
+    DB.save('slides', savedSlides);
+    DB.save('featuredCars', savedFeat);
+    // Re-sync to gist with cloud URLs
+    await syncToGist(false);
+  }
+
+  statusEl.innerHTML = done > 0
+    ? `✅ <span style="color:var(--green)">${done} image(s) converted — ibano daba f ga3 devices!</span>`
+    : `❌ <span style="color:var(--red)">0 converted (${errors} errors)</span>`;
+
+  btn.disabled = false;
+  btn.textContent = '🌐 Convert All Images → Cloud';
+  if (done > 0) toast(`🌐 ${done} images now on cloud — visible everywhere!`, 'success');
 }
 
 function saveImgBBKey() {
