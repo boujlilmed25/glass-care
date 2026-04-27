@@ -1460,8 +1460,59 @@ const bgRef = {current: bgSettings};
 const slSettings = {enabled:true,autoplay:true,duration:5000,transitionSpeed:1000,transition:'fade',kenBurns:true,pauseOnHover:true,showDots:true,showArrows:true,showCounter:true,overlayGradient:true};
 const featSlSettings = {autoplay:true,showDots:true,showArrows:true,duration:5000};
 
+/* ============= CLOUD SYNC (GitHub Gist) ============= */
+async function loadFromGist(gistId) {
+  if (!gistId) return false;
+  try {
+    const resp = await fetch(`https://api.github.com/gists/${gistId}`, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' },
+      cache: 'no-store'
+    });
+    if (!resp.ok) return false;
+    const data = await resp.json();
+    const raw = data.files && data.files['drivo-settings.json'] && data.files['drivo-settings.json'].content;
+    if (!raw) return false;
+    const p = JSON.parse(raw);
+    const save = (k, v) => { if(v !== undefined && v !== null) try{ localStorage.setItem('drivo_'+k, JSON.stringify(v)); }catch(e){} };
+    save('cars', p.cars); save('pricing', p.pricing); save('slides', p.slides);
+    save('testimonials', p.testimonials); save('faq', p.faq);
+    save('siteTexts', p.siteTexts); save('settings', p.settings);
+    save('featuredCars', p.featuredCars); save('gpsContent', p.gpsContent);
+    save('footerContent', p.footerContent); save('waConfig', p.waConfig);
+    save('adsConfig', p.adsConfig); save('sections', p.sections);
+    save('slSettings', p.slSettings); save('featSettings', p.featSettings);
+    return true;
+  } catch(e) { return false; }
+}
+
+function _getGistId() {
+  // 1) URL param ?gist=xxxx (first visit on new device)
+  const urlParam = new URLSearchParams(window.location.search).get('gist');
+  if (urlParam) {
+    localStorage.setItem('drivo_ghGistId', urlParam);
+    // Clean URL
+    const url = new URL(window.location.href);
+    url.searchParams.delete('gist');
+    history.replaceState({}, '', url.toString());
+    return urlParam;
+  }
+  // 2) Already stored locally (same device as admin OR previously linked)
+  return localStorage.getItem('drivo_ghGistId') || null;
+}
+
 /* ============= INIT ============= */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Try cloud sync first (non-blocking — site renders from localStorage while fetching)
+    const gistId = _getGistId();
+    if (gistId) {
+      loadFromGist(gistId).then(ok => {
+        if (ok) { loadFromAdmin(); renderAll(); window._drivoApplySections && window._drivoApplySections(); }
+      });
+      // Poll every 90s when tab is visible (for live updates)
+      setInterval(() => {
+        if (!document.hidden) loadFromGist(gistId).then(ok => { if(ok){ loadFromAdmin(); renderAll(); } });
+      }, 90000);
+    }
     loadFromAdmin();
     initSlideImgMgr();
     renderAll();

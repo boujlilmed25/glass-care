@@ -710,6 +710,38 @@ tr:last-child td{border-bottom:none;}
           </div>
           <div id="imgbb-status" style="font-size:0.78rem;margin-top:8px;color:var(--text3)">No key saved — images stored locally only</div>
         </div>
+
+        <!-- CLOUD SYNC -->
+        <div class="card" style="grid-column:span 2">
+          <div class="card-header"><div class="card-title">☁️ Cross-Device Sync</div></div>
+          <p style="font-size:0.82rem;color:var(--text2);margin-bottom:16px">
+            Settings dyal admin kaytsjendu f <strong>GitHub Gist</strong> (free) — kolchi device li yfet7 site kayqlb automatically l-settings dyalek.<br/>
+            <strong>Setup wahd merra:</strong> dkhl GitHub token → Sync → share l-link m3a ay device.
+          </p>
+          <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:10px;padding:14px;margin-bottom:14px;font-size:0.8rem;color:var(--text2);line-height:1.7">
+            🔑 <strong>GitHub Token:</strong> github.com → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate → select <code>gist</code> scope only
+          </div>
+          <div class="form-grid" style="grid-template-columns:1fr auto;align-items:end;gap:10px;margin-bottom:10px">
+            <div class="form-field" style="margin:0">
+              <label>GitHub Personal Access Token</label>
+              <input type="password" id="set-gh-token" placeholder="ghp_xxxxxxxxxxxxxxxx" style="font-family:monospace"/>
+            </div>
+            <button class="btn btn-primary" onclick="saveGistConfig()" style="white-space:nowrap">💾 Save Token</button>
+          </div>
+          <div id="gist-status" style="font-size:0.8rem;margin-bottom:14px;color:var(--text3)">No token — settings sync f had browser ghir</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" id="gist-sync-btn" onclick="syncToGist()">☁️ Sync All Settings Now</button>
+            <button class="btn btn-ghost btn-sm" id="gist-share-btn" onclick="shareGistLink()" style="display:none">🔗 Copy Device Link</button>
+          </div>
+          <div id="gist-share-info" style="display:none;margin-top:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:8px;padding:12px;font-size:0.8rem">
+            <strong style="color:var(--green)">📱 Pour connecter un nouveau device:</strong><br/>
+            Ouvre ce lien sur n'importe quel device — settings dyal site kayitchargiu automatiquement:
+            <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+              <input id="gist-link-input" type="text" readonly style="font-size:0.75rem;font-family:monospace;flex:1;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text1)"/>
+              <button class="btn btn-ghost btn-sm" onclick="copyGistLink()">📋 Copy</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1529,6 +1561,104 @@ function deleteCar(id) {
 }
 
 /* ---- ImgBB Image Hosting ---- */
+/* ===================== CLOUD SYNC (GitHub Gist) ===================== */
+function saveGistConfig() {
+  const token = (document.getElementById('set-gh-token').value || '').trim();
+  DB.save('ghToken', token);
+  _updateGistStatus();
+  toast(token ? '🔑 Token saved!' : 'Token cleared', token ? 'success' : 'info');
+}
+
+function _getGistPayload() {
+  return JSON.stringify({
+    cars: DB.load('cars', []),
+    pricing: DB.load('pricing', []),
+    slides: DB.load('slides', []),
+    testimonials: DB.load('testimonials', []),
+    faq: DB.load('faq', []),
+    siteTexts: DB.load('siteTexts', {}),
+    settings: DB.load('settings', defaultSettings),
+    featuredCars: DB.load('featuredCars', []),
+    gpsContent: DB.load('gpsContent', {}),
+    footerContent: DB.load('footerContent', {}),
+    waConfig: DB.load('waConfig', {}),
+    adsConfig: DB.load('adsConfig', {}),
+    sections: DB.load('sections', null),
+    slSettings: DB.load('slSettings', null),
+    featSettings: DB.load('featSettings', null),
+    syncedAt: new Date().toISOString()
+  });
+}
+
+async function syncToGist(silent) {
+  const token = DB.load('ghToken', '');
+  if (!token) { if(!silent) toast('⚠️ Enter GitHub token first', 'warn'); return false; }
+  const btn = document.getElementById('gist-sync-btn');
+  if (btn) { btn.textContent = '⏳ Syncing...'; btn.disabled = true; }
+  const content = _getGistPayload();
+  const gistId = DB.load('ghGistId', '');
+  try {
+    const url = gistId ? `https://api.github.com/gists/${gistId}` : 'https://api.github.com/gists';
+    const method = gistId ? 'PATCH' : 'POST';
+    const body = gistId
+      ? JSON.stringify({ files: { 'drivo-settings.json': { content } } })
+      : JSON.stringify({ public: true, description: 'Drivo Car Rental — Site Settings', files: { 'drivo-settings.json': { content } } });
+    const resp = await fetch(url, { method, headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' }, body });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.message || 'GitHub API error');
+    if (!gistId) DB.save('ghGistId', data.id);
+    _updateGistStatus();
+    if (!silent) toast('☁️ Synced to all devices!', 'success');
+    return true;
+  } catch(e) {
+    const statusEl = document.getElementById('gist-status');
+    if (statusEl) statusEl.innerHTML = `❌ <span style="color:var(--red)">Error: ${e.message}</span>`;
+    if (!silent) toast('❌ Sync failed: ' + e.message, 'error');
+    return false;
+  } finally {
+    if (btn) { btn.textContent = '☁️ Sync All Settings Now'; btn.disabled = false; }
+  }
+}
+
+function _getSiteOrigin() {
+  return window.location.origin + window.location.pathname.replace('drivo-admin.html', 'drivo-car-rental.html');
+}
+
+function shareGistLink() {
+  const gistId = DB.load('ghGistId', '');
+  if (!gistId) { toast('Sync first to get a link', 'warn'); return; }
+  const link = `${_getSiteOrigin()}?gist=${gistId}`;
+  const inp = document.getElementById('gist-link-input');
+  const info = document.getElementById('gist-share-info');
+  if (inp) inp.value = link;
+  if (info) info.style.display = '';
+  navigator.clipboard.writeText(link).then(() => toast('🔗 Link copied!', 'success')).catch(()=>{});
+}
+
+function copyGistLink() {
+  const inp = document.getElementById('gist-link-input');
+  if (!inp) return;
+  navigator.clipboard.writeText(inp.value).then(() => toast('📋 Copied!', 'success')).catch(()=>{});
+}
+
+function _updateGistStatus() {
+  const token = DB.load('ghToken', '');
+  const gistId = DB.load('ghGistId', '');
+  const tokenEl = document.getElementById('set-gh-token');
+  const statusEl = document.getElementById('gist-status');
+  const shareBtn = document.getElementById('gist-share-btn');
+  if (tokenEl && !tokenEl.value) tokenEl.value = token ? '••••••••••••••••' : '';
+  if (shareBtn) shareBtn.style.display = gistId ? '' : 'none';
+  if (!statusEl) return;
+  if (!token) {
+    statusEl.innerHTML = '⚠️ No token — settings sync f had browser ghir';
+  } else if (gistId) {
+    statusEl.innerHTML = `✅ <span style="color:var(--green)">Ready — Gist: <code style="font-size:0.75rem">${gistId}</code></span>`;
+  } else {
+    statusEl.innerHTML = '🔑 Token saved — click Sync to activate cross-device';
+  }
+}
+
 function saveImgBBKey() {
   const key = (document.getElementById('set-imgbb-key').value || '').trim();
   DB.save('imgbbKey', key);
@@ -2475,6 +2605,7 @@ function setNestedVal(obj,path,val){const keys=path.split('.');let o=obj;keys.sl
     if(statusEl) statusEl.innerHTML = imgbbKey
       ? '✅ <span style="color:var(--green)">ImgBB key saved — images will be hosted publicly on all devices</span>'
       : '⚠️ No key saved — uploaded images only work on this browser';
+    _updateGistStatus();
   }
   function applyThemeColors(c){
     if(!c) return;
@@ -2541,6 +2672,7 @@ function changePassword() {
     DB.save('dataTick', Date.now());
     document.title = settings.siteTitle || 'Boujlilcar Admin';
     sendToSite(true);
+    syncToGist(true); // silent auto-sync
   }
 
 /* ===================== SLIDER SETTINGS ===================== */
