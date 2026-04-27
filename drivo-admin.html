@@ -2932,17 +2932,21 @@ let editingClientId = null;
 /* ===================== FEATURED CARS ===================== */
 function renderFeaturedCars() {
   document.getElementById('featuredCarsList').innerHTML = featuredCars.map((c,i) => {
-    const name = (c.nameEn||'').replace(/"/g,'&quot;');
-    const cat = (c.catEn||'').replace(/"/g,'&quot;');
+    const name  = (c.nameEn||'').replace(/"/g,'&quot;');
+    const cat   = (c.catEn||'').replace(/"/g,'&quot;');
     const price = (c.price||'').replace(/"/g,'&quot;');
-    const img = (c.img||'🚗').replace(/"/g,'&quot;');
     const specs = (c.specs||'').replace(/"/g,'&quot;');
     const waMsg = (c.waMsg||'').replace(/"/g,'&quot;');
+    const isImg = c.img && (c.img.startsWith('data:') || c.img.startsWith('http'));
+    const thumbHtml = isImg
+      ? `<img src="${c.img}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.outerHTML='<span style=font-size:2rem>🚗</span>'"/>`
+      : `<span style="font-size:2rem">${c.img||'🚗'}</span>`;
+    const imgDisplay = isImg ? '📷 Image uploaded' : (c.img||'🚗');
     return `<div style="background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:16px;margin-bottom:12px">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="font-size:2rem;width:48px;text-align:center">${c.img||'🚗'}</div>
-        <div style="flex:1;font-weight:700">${c.nameEn}</div>
-        <span class="badge badge-blue">${c.catEn}</span>
+        ${thumbHtml}
+        <div style="flex:1;font-weight:700">${c.nameEn||'New Car'}</div>
+        <span class="badge badge-blue">${c.catEn||''}</span>
         <button class="btn btn-danger btn-sm" onclick="removeFeaturedSlide(${i})">🗑️</button>
       </div>
       <div class="form-grid">
@@ -2950,17 +2954,21 @@ function renderFeaturedCars() {
         <div class="form-field"><label>Category</label><input type="text" value="${cat}" onchange="featuredCars[${i}].catEn=this.value"/></div>
         <div class="form-field"><label>Price (e.g. 1,200)</label><input type="text" value="${price}" onchange="featuredCars[${i}].price=this.value"/></div>
         <div class="form-field">
-          <label>Emoji / Image URL</label>
+          <label>Image</label>
           <div style="display:flex;gap:8px;align-items:center">
-            <input type="text" id="feat-img-${i}" value="${img}" onchange="featuredCars[${i}].img=this.value" style="flex:1"/>
-            <label class="btn btn-ghost btn-sm" style="cursor:pointer;white-space:nowrap;padding:7px 12px">
-              📷 Upload
+            <div style="flex:1;padding:8px 12px;border-radius:8px;background:var(--input-bg,rgba(255,255,255,0.06));border:1px solid var(--border);font-size:0.8rem;color:var(--text2);overflow:hidden;white-space:nowrap;text-overflow:ellipsis">
+              ${isImg ? `<span style="color:var(--green)">✅ Image uploaded</span>` : `<span style="color:var(--text3)">${c.img||'no image'}</span>`}
+            </div>
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer;white-space:nowrap;padding:7px 12px;flex-shrink:0">
+              📷 ${isImg ? 'Change' : 'Upload'}
               <input type="file" accept="image/*" style="display:none" onchange="handleFeatImgUpload(this,${i})"/>
             </label>
+            ${isImg ? `<button class="btn btn-ghost btn-sm" onclick="featuredCars[${i}].img='🚗';renderFeaturedCars()" title="Remove image" style="padding:7px 10px;flex-shrink:0">🗑️</button>` : ''}
           </div>
+          <input type="hidden" id="feat-img-${i}" value=""/>
         </div>
         <div class="form-field span2"><label>Specs (e.g. 4.0L V8 · 585 HP)</label><input type="text" value="${specs}" onchange="featuredCars[${i}].specs=this.value"/></div>
-        <div class="form-field span2"><label>WhatsApp Message (pre-filled for "Book Now")</label><input type="text" value="${waMsg}" onchange="featuredCars[${i}].waMsg=this.value"/></div>
+        <div class="form-field span2"><label>WhatsApp Message</label><input type="text" value="${waMsg}" onchange="featuredCars[${i}].waMsg=this.value"/></div>
       </div>
     </div>`;
   }).join('');
