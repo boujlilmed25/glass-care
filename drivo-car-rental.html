@@ -1467,6 +1467,31 @@ const slSettings = {enabled:true,autoplay:true,duration:5000,transitionSpeed:100
 const featSlSettings = {autoplay:true,showDots:true,showArrows:true,duration:5000};
 
 /* ============= CLOUD SYNC (GitHub Gist) ============= */
+/* ---- Apply remote settings payload ---- */
+function _applyRemotePayload(p) {
+  if (!p) return false;
+  const save = (k, v) => { if(v !== undefined && v !== null) try{ localStorage.setItem('drivo_'+k, JSON.stringify(v)); }catch(e){} };
+  save('cars', p.cars); save('pricing', p.pricing); save('slides', p.slides);
+  save('testimonials', p.testimonials); save('faq', p.faq);
+  save('siteTexts', p.siteTexts); save('settings', p.settings);
+  save('featuredCars', p.featuredCars); save('gpsContent', p.gpsContent);
+  save('footerContent', p.footerContent); save('waConfig', p.waConfig);
+  save('adsConfig', p.adsConfig); save('sections', p.sections);
+  save('slSettings', p.slSettings); save('featSettings', p.featSettings);
+  return true;
+}
+
+/* ---- Load from Railway server (primary — works on all devices) ---- */
+async function loadFromServer() {
+  try {
+    const resp = await fetch('/api/data', { cache: 'no-store' });
+    if (!resp.ok) return false;
+    const p = await resp.json();
+    return _applyRemotePayload(p);
+  } catch(e) { return false; }
+}
+
+/* ---- Load from GitHub Gist (fallback) ---- */
 async function loadFromGist(gistId) {
   if (!gistId) return false;
   try {
@@ -1478,16 +1503,7 @@ async function loadFromGist(gistId) {
     const data = await resp.json();
     const raw = data.files && data.files['drivo-settings.json'] && data.files['drivo-settings.json'].content;
     if (!raw) return false;
-    const p = JSON.parse(raw);
-    const save = (k, v) => { if(v !== undefined && v !== null) try{ localStorage.setItem('drivo_'+k, JSON.stringify(v)); }catch(e){} };
-    save('cars', p.cars); save('pricing', p.pricing); save('slides', p.slides);
-    save('testimonials', p.testimonials); save('faq', p.faq);
-    save('siteTexts', p.siteTexts); save('settings', p.settings);
-    save('featuredCars', p.featuredCars); save('gpsContent', p.gpsContent);
-    save('footerContent', p.footerContent); save('waConfig', p.waConfig);
-    save('adsConfig', p.adsConfig); save('sections', p.sections);
-    save('slSettings', p.slSettings); save('featSettings', p.featSettings);
-    return true;
+    return _applyRemotePayload(JSON.parse(raw));
   } catch(e) { return false; }
 }
 
@@ -1508,16 +1524,21 @@ function _getGistId() {
 
 /* ============= INIT ============= */
 document.addEventListener('DOMContentLoaded', async () => {
-    // Try cloud sync first (non-blocking — site renders from localStorage while fetching)
+    // 1) Try Railway server first (fast, same origin, includes images)
+    loadFromServer().then(ok => {
+      if (ok) { loadFromAdmin(); renderAll(); window._drivoApplySections && window._drivoApplySections(); }
+    });
+    // Poll every 60s for live admin updates
+    setInterval(() => {
+      if (!document.hidden) loadFromServer().then(ok => { if(ok){ loadFromAdmin(); renderAll(); } });
+    }, 60000);
+
+    // 2) Gist fallback (if server has no data)
     const gistId = _getGistId();
     if (gistId) {
       loadFromGist(gistId).then(ok => {
         if (ok) { loadFromAdmin(); renderAll(); window._drivoApplySections && window._drivoApplySections(); }
       });
-      // Poll every 90s when tab is visible (for live updates)
-      setInterval(() => {
-        if (!document.hidden) loadFromGist(gistId).then(ok => { if(ok){ loadFromAdmin(); renderAll(); } });
-      }, 90000);
     }
     loadFromAdmin();
     initSlideImgMgr();

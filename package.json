@@ -1,0 +1,12 @@
+{
+  "name": "drivo-car-rental",
+  "version": "1.0.0",
+  "description": "Drivo Premium Car Rental",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,6 +1,8 @@
-FROM nginx:alpine
-COPY . /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-RUN rm -f /etc/nginx/conf.d/default.conf.bak
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --production
+COPY . .
+RUN mkdir -p _data
 ENV PORT=8080
-CMD ["/bin/sh", "-c", "sed -i \"s/__PORT__/$PORT/g\" /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["node", "server.js"]

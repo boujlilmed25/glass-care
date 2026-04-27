@@ -735,9 +735,11 @@ tr:last-child td{border-bottom:none;}
           </div>
           <div id="gist-status" style="font-size:0.8rem;margin-bottom:14px;color:var(--text3)">No token — settings sync f had browser ghir</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-primary" id="gist-sync-btn" onclick="syncToGist()">☁️ Sync All Settings Now</button>
+            <button class="btn btn-primary" id="railway-push-btn" onclick="pushToRailway()">🚀 Push to Railway (All Devices)</button>
+            <button class="btn btn-primary" id="gist-sync-btn" onclick="syncToGist()" style="background:var(--glass-bg);border:1px solid var(--border)">☁️ Gist Backup</button>
             <button class="btn btn-ghost btn-sm" id="gist-share-btn" onclick="shareGistLink()" style="display:none">🔗 Copy Device Link</button>
           </div>
+          <div id="railway-push-status" style="font-size:0.78rem;margin-top:8px;color:var(--text3)"></div>
           <div id="gist-share-info" style="display:none;margin-top:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:8px;padding:12px;font-size:0.8rem">
             <strong style="color:var(--green)">📱 Pour connecter un nouveau device:</strong><br/>
             Ouvre ce lien sur n'importe quel device — settings dyal site kayitchargiu automatiquement:
@@ -1566,6 +1568,68 @@ function deleteCar(id) {
 }
 
 /* ---- ImgBB Image Hosting ---- */
+/* ===================== RAILWAY SERVER PUSH ===================== */
+async function pushToRailway(silent) {
+  const btn = document.getElementById('railway-push-btn');
+  const statusEl = document.getElementById('railway-push-status');
+  if (btn && !silent) { btn.disabled = true; btn.textContent = '⏳ Pushing...'; }
+
+  const payload = {
+    cars: DB.load('cars', []),
+    pricing: DB.load('pricing', []),
+    slides: DB.load('slides', []),
+    testimonials: DB.load('testimonials', []),
+    faq: DB.load('faq', []),
+    siteTexts: DB.load('siteTexts', {}),
+    settings: DB.load('settings', defaultSettings),
+    featuredCars: DB.load('featuredCars', []),
+    gpsContent: DB.load('gpsContent', {}),
+    footerContent: DB.load('footerContent', {}),
+    waConfig: DB.load('waConfig', {}),
+    adsConfig: DB.load('adsConfig', {}),
+    sections: DB.load('sections', null),
+    slSettings: DB.load('slSettings', null),
+    featSettings: DB.load('featSettings', null),
+    syncedAt: new Date().toISOString()
+  };
+
+  try {
+    const resp = await fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const result = await resp.json();
+    if (!result.ok) throw new Error(result.error || 'Server error');
+    if (statusEl) statusEl.innerHTML = `✅ <span style="color:var(--green)">Pushed at ${new Date().toLocaleTimeString()} — ibano f ga3 devices!</span>`;
+    if (!silent) toast('🚀 Settings pushed — visible on all devices!', 'success');
+    return true;
+  } catch(e) {
+    if (statusEl) statusEl.innerHTML = `❌ <span style="color:var(--red)">${e.message}</span>`;
+    if (!silent) toast('❌ Push failed: ' + e.message, 'error');
+    return false;
+  } finally {
+    if (btn && !silent) { btn.disabled = false; btn.textContent = '🚀 Push to Railway (All Devices)'; }
+  }
+}
+
+/* Check Railway server status on load */
+async function checkRailwayStatus() {
+  try {
+    const resp = await fetch('/api/status');
+    const data = await resp.json();
+    const statusEl = document.getElementById('railway-push-status');
+    if (statusEl) {
+      if (data.hasData) {
+        const t = data.savedAt ? new Date(data.savedAt).toLocaleString() : 'unknown';
+        statusEl.innerHTML = `✅ <span style="color:var(--green)">Server has data — last push: ${t}</span>`;
+      } else {
+        statusEl.innerHTML = `⚠️ <span style="color:var(--accent3)">Server mfiyach data — click Push!</span>`;
+      }
+    }
+  } catch(e) {}
+}
+
 /* ===================== CLOUD SYNC (GitHub Gist) ===================== */
 function saveGistConfig() {
   const token = (document.getElementById('set-gh-token').value || '').trim();
@@ -2634,6 +2698,7 @@ function setNestedVal(obj,path,val){const keys=path.split('.');let o=obj;keys.sl
       ? '✅ <span style="color:var(--green)">ImgBB key saved — images will be hosted publicly on all devices</span>'
       : '⚠️ No key saved — uploaded images only work on this browser';
     _updateGistStatus();
+    checkRailwayStatus();
   }
   function applyThemeColors(c){
     if(!c) return;
@@ -2700,7 +2765,8 @@ function changePassword() {
     DB.save('dataTick', Date.now());
     document.title = settings.siteTitle || 'Boujlilcar Admin';
     sendToSite(true);
-    syncToGist(true); // silent auto-sync
+    pushToRailway(true);  // silent push to server
+    syncToGist(true);     // silent backup to Gist
   }
 
 /* ===================== SLIDER SETTINGS ===================== */
