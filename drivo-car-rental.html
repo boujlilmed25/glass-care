@@ -1467,9 +1467,17 @@ const slSettings = {enabled:true,autoplay:true,duration:5000,transitionSpeed:100
 const featSlSettings = {autoplay:true,showDots:true,showArrows:true,duration:5000};
 
 /* ============= CLOUD SYNC (GitHub Gist) ============= */
+/* Track last syncedAt seen from server — avoid re-rendering when data hasn't changed */
+let _lastServerSyncedAt = null;
+
 /* ---- Apply remote settings payload ---- */
+/* Returns: 'new' if data changed (should re-render), 'same' if identical, false if no data */
 function _applyRemotePayload(p) {
   if (!p) return false;
+  // Compare syncedAt to avoid redundant re-renders
+  const syncedAt = p.syncedAt || null;
+  const isNew = (syncedAt !== _lastServerSyncedAt);
+  if (syncedAt) _lastServerSyncedAt = syncedAt;
   const save = (k, v) => { if(v !== undefined && v !== null) try{ localStorage.setItem('drivo_'+k, JSON.stringify(v)); }catch(e){} };
   save('cars', p.cars); save('pricing', p.pricing); save('slides', p.slides);
   save('testimonials', p.testimonials); save('faq', p.faq);
@@ -1478,16 +1486,17 @@ function _applyRemotePayload(p) {
   save('footerContent', p.footerContent); save('waConfig', p.waConfig);
   save('adsConfig', p.adsConfig); save('sections', p.sections);
   save('slSettings', p.slSettings); save('featSettings', p.featSettings);
-  return true;
+  return isNew ? 'new' : 'same';
 }
 
 /* ---- Load from Railway server (primary — works on all devices) ---- */
+/* Returns: 'new' (data changed → re-render needed), 'same' (no change), false (no data/error) */
 async function loadFromServer() {
   try {
     const resp = await fetch('/api/data', { cache: 'no-store' });
     if (!resp.ok) return false;
     const p = await resp.json();
-    return _applyRemotePayload(p);
+    return _applyRemotePayload(p);  // 'new' | 'same' | false
   } catch(e) { return false; }
 }
 
@@ -1524,17 +1533,33 @@ function _getGistId() {
 
 /* ============= INIT ============= */
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1) Try Railway server first (fast, same origin, includes images)
-    const serverOk = await loadFromServer();
-    if (serverOk) { loadFromAdmin(); renderAll(); window._drivoApplySections && window._drivoApplySections(); }
+    // Always render from localStorage first (instant — no network wait)
+    loadFromAdmin();
+    initSlideImgMgr();
+    renderAll();
+    startHeroTimer();
+    startFeatTimer();
+    initCanvas();
 
-    // Poll every 60s for live admin updates
+    // 1) Fetch from Railway server — re-render ONLY if data is new
+    const serverResult = await loadFromServer();  // 'new' | 'same' | false
+    if (serverResult === 'new') {
+      loadFromAdmin();
+      renderAll();
+      window._drivoApplySections && window._drivoApplySections();
+    }
+
+    // Poll every 90s for live admin updates — only re-render if data actually changed
     setInterval(() => {
-      if (!document.hidden) loadFromServer().then(ok => { if(ok){ loadFromAdmin(); renderAll(); } });
-    }, 60000);
+      if (!document.hidden) {
+        loadFromServer().then(result => {
+          if (result === 'new') { loadFromAdmin(); renderAll(); }
+        });
+      }
+    }, 90000);
 
-    // 2) Gist fallback — if server had no data, try Gist
-    if (!serverOk) {
+    // 2) Gist fallback — only if server returned no data at all
+    if (!serverResult) {
       // Discover gistId: local storage first, then ask server for its stored ID
       let gistId = _getGistId();
       if (!gistId) {
@@ -1553,16 +1578,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       }
     }
-    loadFromAdmin();
-    initSlideImgMgr();
-    renderAll();
-    startHeroTimer();
-    startFeatTimer();
-    initCanvas();
     initIntersectionObserver();
     window._drivoApplySections && window._drivoApplySections();
     _sectionsTick = window._drivoGetSectionsTick ? window._drivoGetSectionsTick() : '0';
     _dataTick    = window._drivoGetDataTick    ? window._drivoGetDataTick()    : '0';
+    // Cross-tab sync: detect when admin tab saves changes (localStorage change)
+    // Only fires when admin + site are open in the same browser — not on remote devices
     setInterval(() => {
       const t = window._drivoGetSectionsTick ? window._drivoGetSectionsTick() : '0';
       if(t !== _sectionsTick){
@@ -1576,7 +1597,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderAll();
         window._drivoApplySections && window._drivoApplySections();
       }
-    }, 700);
+    }, 2000);
     document.getElementById('adminFab').addEventListener('click', openAdmin);
     document.getElementById('adminClose').addEventListener('click', closeAdmin);
     document.getElementById('adminOverlay').addEventListener('click', function(e){ if(e.target===this) closeAdmin(); });
