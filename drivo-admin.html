@@ -696,36 +696,24 @@ tr:last-child td{border-bottom:none;}
           <div id="twoFASection"></div>
         </div>
         <div class="card" style="grid-column:span 2">
-          <div class="card-header"><div class="card-title">🖼️ Image Hosting (ImgBB)</div></div>
+          <div class="card-header"><div class="card-title">🖼️ Images — Cross-Device</div></div>
           <p style="font-size:0.82rem;color:var(--text2);margin-bottom:14px">
-            Images khasshom yiw k <strong>public URL</strong> bach ybanou f ga3 devices (iPhone, PC, tablette...).<br/>
-            <strong>Setup:</strong> <a href="https://imgbb.com" target="_blank" style="color:var(--accent)">imgbb.com</a> → Sign up (free) → API → Copy key
+            Images kayitcompressiw <strong>auto</strong> w kayitsejdou m3a settings f GitHub Gist — ibano f <strong>ga3 devices</strong> bla ay service kharji.<br/>
+            Klik <strong>Compress &amp; Sync</strong> bach kolhom yitcompressiw w yitsynciw daba.
           </p>
-          <div class="form-grid" style="grid-template-columns:1fr auto;align-items:end;gap:10px">
-            <div class="form-field">
-              <label>ImgBB API Key</label>
-              <input type="text" id="set-imgbb-key" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="font-family:monospace"/>
-            </div>
-            <button class="btn btn-primary" onclick="saveImgBBKey()" style="white-space:nowrap">💾 Save Key</button>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button class="btn btn-primary" id="migrate-btn" onclick="compressAndSyncImages()">🗜️ Compress &amp; Sync All Images</button>
+            <span id="migrate-status" style="font-size:0.78rem;color:var(--text3)"></span>
           </div>
-          <div id="imgbb-status" style="font-size:0.78rem;margin-top:8px;color:var(--text3)">No key saved — images stored locally only</div>
-
-          <!-- Migrate button -->
-          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-            <div style="font-size:0.82rem;color:var(--text2);margin-bottom:10px">
-              🔄 <strong>3andek images déjà uploaded?</strong> — Click bach kolhom yitconvertiw l ImgBB URLs w ybanou f ga3 devices:
+          <div id="migrate-progress" style="display:none;margin-top:10px">
+            <div style="background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;height:8px">
+              <div id="migrate-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.3s;width:0%"></div>
             </div>
-            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-              <button class="btn btn-primary" id="migrate-btn" onclick="migrateImagesToCloud()">🌐 Convert All Images → Cloud</button>
-              <span id="migrate-status" style="font-size:0.78rem;color:var(--text3)"></span>
-            </div>
-            <div id="migrate-progress" style="display:none;margin-top:10px">
-              <div style="background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;height:8px">
-                <div id="migrate-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.3s;width:0%"></div>
-              </div>
-              <div id="migrate-log" style="font-size:0.74rem;color:var(--text3);margin-top:6px;max-height:80px;overflow-y:auto"></div>
-            </div>
+            <div id="migrate-log" style="font-size:0.74rem;color:var(--text3);margin-top:6px;max-height:80px;overflow-y:auto"></div>
           </div>
+          <!-- hidden compat inputs -->
+          <input type="hidden" id="set-imgbb-key"/>
+          <div id="imgbb-status" style="display:none"></div>
         </div>
 
         <!-- CLOUD SYNC -->
@@ -1677,141 +1665,84 @@ function _updateGistStatus() {
 }
 
 /* ===================== IMAGE MIGRATION ===================== */
-async function migrateImagesToCloud() {
-  const key = DB.load('imgbbKey', '');
-  if (!key) {
-    toast('❌ Dkhl ImgBB API key lwl!', 'error');
-    document.getElementById('set-imgbb-key').focus();
-    return;
-  }
+/* ---- Image compression (Canvas) — no external service ---- */
+function compressImage(dataUri, maxW, quality) {
+  maxW = maxW || 900; quality = quality || 0.72;
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => resolve(dataUri); // fallback: original
+    img.src = dataUri;
+  });
+}
 
+/* ---- Compress & sync all images ---- */
+async function compressAndSyncImages() {
   const btn = document.getElementById('migrate-btn');
   const statusEl = document.getElementById('migrate-status');
   const progressEl = document.getElementById('migrate-progress');
   const barEl = document.getElementById('migrate-bar');
   const logEl = document.getElementById('migrate-log');
+  btn.disabled = true; btn.textContent = '⏳ Processing...';
+  progressEl.style.display = ''; logEl.innerHTML = '';
+  const log = m => { logEl.innerHTML += m + '<br/>'; logEl.scrollTop = logEl.scrollHeight; };
 
-  btn.disabled = true;
-  btn.textContent = '⏳ Converting...';
-  progressEl.style.display = '';
-  logEl.innerHTML = '';
-
-  // Collect all base64 images across cars, slides, featuredCars
-  const tasks = [];
-
-  const savedCars = DB.load('cars', []);
-  savedCars.forEach((car, i) => {
-    if (car.img && car.img.startsWith('data:')) {
-      tasks.push({ type: 'car', index: i, label: car.nameEn || `Car ${i+1}`, data: car.img });
-    }
-  });
-
+  const savedCars  = DB.load('cars', []);
   const savedSlides = DB.load('slides', []);
-  savedSlides.forEach((slide, i) => {
-    if (slide.img && slide.img.startsWith('data:')) {
-      tasks.push({ type: 'slide', index: i, label: slide.caption || `Slide ${i+1}`, data: slide.img });
-    }
-  });
+  const savedFeat  = DB.load('featuredCars', []);
+  const tasks = [];
+  savedCars.forEach((c,i)   => { if(c.img && c.img.startsWith('data:')) tasks.push({obj:c, label:c.nameEn||`Car ${i+1}`}); });
+  savedSlides.forEach((s,i) => { if(s.img && s.img.startsWith('data:')) tasks.push({obj:s, label:s.caption||`Slide ${i+1}`}); });
+  savedFeat.forEach((f,i)   => { if(f.img && f.img.startsWith('data:')) tasks.push({obj:f, label:f.name||`Featured ${i+1}`}); });
 
-  const savedFeat = DB.load('featuredCars', []);
-  savedFeat.forEach((fc, i) => {
-    if (fc.img && fc.img.startsWith('data:')) {
-      tasks.push({ type: 'feat', index: i, label: fc.name || `Featured ${i+1}`, data: fc.img });
-    }
-  });
-
-  if (tasks.length === 0) {
-    statusEl.innerHTML = '✅ <span style="color:var(--green)">Kolchi images déjà cloud URLs — mashi shi image local</span>';
-    btn.disabled = false;
-    btn.textContent = '🌐 Convert All Images → Cloud';
-    return;
+  if (!tasks.length) {
+    statusEl.innerHTML = '✅ <span style="color:var(--green)">Ma kaynch images local — kolchi mzyan</span>';
+    btn.disabled = false; btn.textContent = '🗜️ Compress & Sync All Images'; return;
   }
-
-  const log = (msg) => {
-    logEl.innerHTML += msg + '<br/>';
-    logEl.scrollTop = logEl.scrollHeight;
-  };
-
-  log(`Found ${tasks.length} local image(s) to convert...`);
-  let done = 0, errors = 0;
-
-  for (const task of tasks) {
+  log(`${tasks.length} image(s) found — compressing...`);
+  let done = 0;
+  for (const t of tasks) {
     try {
-      const base64raw = task.data.split(',')[1];
-      const fd = new FormData();
-      fd.append('key', key);
-      fd.append('image', base64raw);
-      const resp = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: fd });
-      const result = await resp.json();
-      if (result && result.success && result.data && result.data.url) {
-        const url = result.data.url;
-        if (task.type === 'car')   savedCars[task.index].img    = url;
-        if (task.type === 'slide') savedSlides[task.index].img  = url;
-        if (task.type === 'feat')  savedFeat[task.index].img    = url;
-        done++;
-        log(`✅ ${task.label} → uploaded`);
-      } else {
-        throw new Error(result.error?.message || 'Upload failed');
-      }
-    } catch(e) {
-      errors++;
-      log(`❌ ${task.label} → ${e.message}`);
-    }
-    barEl.style.width = Math.round(((done + errors) / tasks.length) * 100) + '%';
+      const sizeBefore = Math.round(t.obj.img.length * 0.75 / 1024);
+      t.obj.img = await compressImage(t.obj.img);
+      const sizeAfter = Math.round(t.obj.img.length * 0.75 / 1024);
+      done++;
+      barEl.style.width = Math.round((done / tasks.length) * 80) + '%';
+      log(`✅ ${t.label} — ${sizeBefore}KB → ${sizeAfter}KB`);
+    } catch(e) { log(`⚠️ ${t.label} — skipped`); }
   }
-
-  // Save updated data
-  if (done > 0) {
-    DB.save('cars', savedCars);
-    DB.save('slides', savedSlides);
-    DB.save('featuredCars', savedFeat);
-    // Re-sync to gist with cloud URLs
-    await syncToGist(false);
-  }
-
-  statusEl.innerHTML = done > 0
-    ? `✅ <span style="color:var(--green)">${done} image(s) converted — ibano daba f ga3 devices!</span>`
-    : `❌ <span style="color:var(--red)">0 converted (${errors} errors)</span>`;
-
-  btn.disabled = false;
-  btn.textContent = '🌐 Convert All Images → Cloud';
-  if (done > 0) toast(`🌐 ${done} images now on cloud — visible everywhere!`, 'success');
+  DB.save('cars', savedCars); DB.save('slides', savedSlides); DB.save('featuredCars', savedFeat);
+  log('Syncing to cloud (GitHub Gist)...');
+  barEl.style.width = '90%';
+  const synced = await syncToGist(true);
+  barEl.style.width = '100%';
+  statusEl.innerHTML = synced
+    ? `✅ <span style="color:var(--green)">${done} image(s) compressed w synced — ibano f ga3 devices!</span>`
+    : `⚠️ <span style="color:var(--accent3)">${done} compressed locally — setup GitHub Sync lwl bach ybanou f ga3 devices</span>`;
+  btn.disabled = false; btn.textContent = '🗜️ Compress & Sync All Images';
+  if (synced) toast(`✅ ${done} images synced — visible f ga3 devices!`, 'success');
+  else toast(`🗜️ ${done} images compressed`, 'info');
 }
 
-function saveImgBBKey() {
-  const key = (document.getElementById('set-imgbb-key').value || '').trim();
-  DB.save('imgbbKey', key);
-  const statusEl = document.getElementById('imgbb-status');
-  if(statusEl) statusEl.innerHTML = key
-    ? '✅ <span style="color:var(--green)">Key saved — images will work on all devices</span>'
-    : '⚠️ No key — uploaded images only work on this browser';
-  toast(key ? 'ImgBB key saved! 🖼️' : 'Key cleared', key ? 'success' : 'info');
-}
+/* ---- compat stubs (ImgBB removed) ---- */
+function saveImgBBKey() {}
 
 function uploadToImgBB(file, onSuccess, onError) {
-  const key = DB.load('imgbbKey', '');
+  // ImgBB removed — compress locally and return data URI
   const reader = new FileReader();
-  reader.onload = e => {
-    const base64raw = e.target.result.split(',')[1];
-    if(!key) { onError(e.target.result); return; }
-    toast('Uploading image...', 'info');
-    const fd = new FormData();
-    fd.append('key', key);
-    fd.append('image', base64raw);
-    fetch('https://api.imgbb.com/1/upload', {method:'POST', body:fd})
-      .then(r => r.json())
-      .then(data => {
-        if(data && data.success && data.data && data.data.url) {
-          onSuccess(data.data.url);
-        } else {
-          toast('ImgBB error — check your API key', 'error');
-          onError(e.target.result);
-        }
-      })
-      .catch(() => {
-        toast('Upload failed — using local image', 'error');
-        onError(e.target.result);
-      });
+  reader.onload = async e => {
+    toast('🗜️ Compressing image...', 'info');
+    const compressed = await compressImage(e.target.result);
+    onSuccess(compressed); // treat compressed data URI as "success"
+    // auto-sync to gist in background
+    setTimeout(() => syncToGist(true), 800);
   };
   reader.readAsDataURL(file);
 }
@@ -1831,22 +1762,12 @@ function setCarImgPreview(val) {
 function handleCarImgUpload(input) {
   const file = input.files[0];
   if(!file) return;
-  if(file.size > 5 * 1024 * 1024) { toast('Image too large (max 5MB)', 'error'); return; }
-  uploadToImgBB(
-    file,
-    url => {
-      document.getElementById('car-img').value = url;
-      document.getElementById('car-img-emoji').value = url;
-      setCarImgPreview(url);
-      toast('Image uploaded to ImgBB! 🌐', 'success');
-    },
-    base64 => {
-      document.getElementById('car-img').value = base64;
-      document.getElementById('car-img-emoji').value = '';
-      setCarImgPreview(base64);
-      toast('Saved locally — add ImgBB key in Settings for cross-device support', 'info');
-    }
-  );
+  uploadToImgBB(file, dataUri => {
+    document.getElementById('car-img').value = dataUri;
+    document.getElementById('car-img-emoji').value = '';
+    setCarImgPreview(dataUri);
+    toast('✅ Image ready — sync to see on all devices', 'success');
+  }, () => {});
   input.value = '';
 }
 
@@ -2041,26 +1962,14 @@ function saveSlides() { DB.save('slides',slides); toast('Slides saved! 🖼️',
 function handleSlideImgUpload(input, i) {
   const file = input.files[0];
   if(!file) return;
-  if(file.size > 5*1024*1024) { toast('Image too large (max 5MB)', 'error'); return; }
-  uploadToImgBB(
-    file,
-    url => {
-      slides[i].url = url;
-      const inp = document.getElementById('slide-url-'+i);
-      const th  = document.getElementById('sthumb-'+i);
-      if(inp) inp.value = url;
-      if(th)  th.src   = url;
-      toast('Slide image uploaded! 🌐', 'success');
-    },
-    base64 => {
-      slides[i].url = base64;
-      const inp = document.getElementById('slide-url-'+i);
-      const th  = document.getElementById('sthumb-'+i);
-      if(inp) inp.value = base64;
-      if(th)  th.src   = base64;
-      toast('Saved locally — add ImgBB key in Settings', 'info');
-    }
-  );
+  uploadToImgBB(file, dataUri => {
+    slides[i].url = dataUri;
+    const inp = document.getElementById('slide-url-'+i);
+    const th  = document.getElementById('sthumb-'+i);
+    if(inp) inp.value = dataUri;
+    if(th)  th.src   = dataUri;
+    toast('✅ Slide image ready', 'success');
+  }, () => {});
   input.value = '';
 }
 
@@ -3000,22 +2909,12 @@ function saveFeaturedCars() { DB.save('featuredCars',featuredCars); toast('Featu
 function handleFeatImgUpload(input, i) {
   const file = input.files[0];
   if(!file) return;
-  if(file.size > 5*1024*1024) { toast('Image too large (max 5MB)', 'error'); return; }
-  uploadToImgBB(
-    file,
-    url => {
-      featuredCars[i].img = url;
-      const inp = document.getElementById('feat-img-'+i);
-      if(inp) inp.value = url;
-      toast('Image uploaded! 🌐', 'success');
-    },
-    base64 => {
-      featuredCars[i].img = base64;
-      const inp = document.getElementById('feat-img-'+i);
-      if(inp) inp.value = base64;
-      toast('Saved locally — add ImgBB key in Settings', 'info');
-    }
-  );
+  uploadToImgBB(file, dataUri => {
+    featuredCars[i].img = dataUri;
+    const inp = document.getElementById('feat-img-'+i);
+    if(inp) inp.value = dataUri;
+    toast('✅ Image ready', 'success');
+  }, () => {});
   input.value = '';
 }
 
