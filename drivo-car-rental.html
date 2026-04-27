@@ -1097,7 +1097,11 @@ function loadFromAdmin() {
       if(st.hero) Object.keys(st.hero).forEach(k=>{ if(T[lang].hero[k]!==undefined) T[lang].hero[k]=st.hero[k]; });
       if(st.slider) Object.keys(st.slider).forEach(k=>{ if(T[lang].slider[k]!==undefined) T[lang].slider[k]=st.slider[k]; });
       if(st.fleet) Object.keys(st.fleet).forEach(k=>{ if(T[lang].fleet[k]!==undefined) T[lang].fleet[k]=st.fleet[k]; });
-      if(st.features) Object.keys(st.features).forEach(k=>{ if(T[lang].features[k]!==undefined) T[lang].features[k]=st.features[k]; });
+      // features: only allow title/sub — never overwrite hardcoded items array
+      if(st.features) Object.keys(st.features).forEach(k=>{
+        if(k === 'items') return;  // items are hardcoded defaults, not admin-editable
+        if(T[lang].features[k]!==undefined) T[lang].features[k]=st.features[k];
+      });
       if(st.gps) Object.keys(st.gps).forEach(k=>{ if(T[lang].gps[k]!==undefined) T[lang].gps[k]=st.gps[k]; });
       if(st.pricing) Object.keys(st.pricing).forEach(k=>{ if(T[lang].pricing[k]!==undefined) T[lang].pricing[k]=st.pricing[k]; });
       if(st.admin) Object.keys(st.admin).forEach(k=>{ if(T[lang].admin[k]!==undefined) T[lang].admin[k]=st.admin[k]; });
@@ -2581,12 +2585,36 @@ const _fadeObserver = new IntersectionObserver(entries=>{
 },{threshold:0.1});
 
 function initIntersectionObserver() {
-  document.querySelectorAll('.fade-up').forEach(el=>_fadeObserver.observe(el));
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.fade-up').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView) { el.classList.add('visible'); }
+        else { _fadeObserver.observe(el); }
+      });
+    });
+  });
 }
 
-// Called after dynamic content is added to observe newly inserted .fade-up elements
+// Called after dynamic content is added to observe newly inserted .fade-up elements.
+// Double rAF ensures browser has completed layout before IntersectionObserver checks
+// which elements are in viewport — fixes blank sections after re-render.
 function reObserve() {
-  document.querySelectorAll('.fade-up:not(.visible)').forEach(el=>_fadeObserver.observe(el));
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => {
+        // If element is already in viewport, make it visible immediately (no animation delay)
+        const rect = el.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView) {
+          el.classList.add('visible');
+        } else {
+          _fadeObserver.observe(el);
+        }
+      });
+    });
+  });
 }
 
 /* ============= ROAD CANVAS ANIMATION ============= */
