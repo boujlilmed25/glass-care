@@ -735,11 +735,12 @@ tr:last-child td{border-bottom:none;}
           </div>
           <div id="gist-status" style="font-size:0.8rem;margin-bottom:14px;color:var(--text3)">No token — settings sync f had browser ghir</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-primary" id="railway-push-btn" onclick="pushToRailway()">🚀 Push to Railway (All Devices)</button>
+            <button class="btn btn-primary" id="railway-push-btn" onclick="pushAll()">🚀 Push to All Devices</button>
             <button class="btn btn-primary" id="gist-sync-btn" onclick="syncToGist()" style="background:var(--glass-bg);border:1px solid var(--border)">☁️ Gist Backup</button>
             <button class="btn btn-ghost btn-sm" id="gist-share-btn" onclick="shareGistLink()" style="display:none">🔗 Copy Device Link</button>
           </div>
           <div id="railway-push-status" style="font-size:0.78rem;margin-top:8px;color:var(--text3)"></div>
+          <div id="auto-heal-section" style="margin-top:14px"></div>
           <div id="gist-share-info" style="display:none;margin-top:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:8px;padding:12px;font-size:0.8rem">
             <strong style="color:var(--green)">📱 Pour connecter un nouveau device:</strong><br/>
             Ouvre ce lien sur n'importe quel device — settings dyal site kayitchargiu automatiquement:
@@ -1590,6 +1591,9 @@ async function pushToRailway(silent) {
     sections: DB.load('sections', null),
     slSettings: DB.load('slSettings', null),
     featSettings: DB.load('featSettings', null),
+    // Gist credentials — server persists them for auto-heal on restart
+    ghToken:  DB.load('ghToken', ''),
+    ghGistId: DB.load('ghGistId', ''),
     syncedAt: new Date().toISOString()
   };
 
@@ -1613,21 +1617,100 @@ async function pushToRailway(silent) {
   }
 }
 
+/* Push to Railway + Gist in one click */
+async function pushAll() {
+  const btn = document.getElementById('railway-push-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Pushing...'; }
+  // Push to Railway first (always works, includes images)
+  const railwayOk = await pushToRailway(true);
+  // Also backup to Gist if token is configured
+  const token = DB.load('ghToken', '');
+  if (token) await syncToGist(true);
+  if (btn) { btn.disabled = false; btn.textContent = '🚀 Push to All Devices'; }
+  if (railwayOk) {
+    toast('🚀 Pushed! Images visible on all devices ✓', 'success');
+    checkRailwayStatus();
+  } else {
+    toast('❌ Push failed — check connection', 'error');
+  }
+}
+
 /* Check Railway server status on load */
 async function checkRailwayStatus() {
   try {
-    const resp = await fetch('/api/status');
-    const data = await resp.json();
+    const [statusResp, envResp] = await Promise.all([
+      fetch('/api/status'),
+      fetch('/api/env-check')
+    ]);
+    const status = await statusResp.json();
+    const env    = await envResp.json();
     const statusEl = document.getElementById('railway-push-status');
     if (statusEl) {
-      if (data.hasData) {
-        const t = data.savedAt ? new Date(data.savedAt).toLocaleString() : 'unknown';
-        statusEl.innerHTML = `✅ <span style="color:var(--green)">Server has data — last push: ${t}</span>`;
-      } else {
-        statusEl.innerHTML = `⚠️ <span style="color:var(--accent3)">Server mfiyach data — click Push!</span>`;
-      }
+      const dataLine = status.hasData
+        ? `✅ <span style="color:var(--green)">Server has data — last push: ${status.savedAt ? new Date(status.savedAt).toLocaleString() : 'unknown'}</span>`
+        : `⚠️ <span style="color:var(--accent3)">Server mfiyach data — click Push!</span>`;
+      const healLine = env.autoHealReady
+        ? `<br/>🔄 <span style="color:var(--green)">Auto-heal active — server ikathel mn Gist after every deploy ✓</span>`
+        : `<br/>⚙️ <span style="color:var(--accent3)">Auto-heal machi msetup — chuf instructions ⬇️</span>`;
+      statusEl.innerHTML = dataLine + healLine;
     }
+    _renderAutoHealInstructions(env);
   } catch(e) {}
+}
+
+function _renderAutoHealInstructions(env) {
+  const el = document.getElementById('auto-heal-section');
+  if (!el) return;
+  if (env.autoHealReady) {
+    el.innerHTML = `<div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:14px;font-size:0.8rem;color:var(--text2);line-height:1.7">
+      🔄 <strong style="color:var(--green)">Auto-heal msetup ✓</strong> — Railway ghadi ikathal settings.json mn Gist automatically after kol deploy.<br/>
+      Kol li khask dir: <strong>Push to Railway</strong> + <strong>Gist Backup</strong> dyal merra, w daba forever katkhdem ✓
+    </div>`;
+    return;
+  }
+  const gistId = DB.load('ghGistId', '');
+  const token  = DB.load('ghToken', '');
+  el.innerHTML = `
+    <div style="background:rgba(255,183,3,0.08);border:1px solid rgba(255,183,3,0.3);border-radius:10px;padding:16px;font-size:0.8rem;color:var(--text2);line-height:1.9">
+      <strong style="color:var(--accent3)">⚙️ Setup Auto-Heal (wahd merra — lkol devices forever)</strong><br/>
+      <span style="color:var(--text3);font-size:0.75rem">Hadchi kayhel l-mochkila: images katban emoji w machi photo f iPhone bach Railway yban9a data after deploy</span>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+        <div>
+          <strong>Khutwa 1:</strong> Sync to Gist (si ma dartiha)
+          <button class="btn btn-ghost btn-sm" style="margin-left:8px;font-size:0.75rem" onclick="syncToGist()">☁️ Sync to Gist</button>
+        </div>
+        <div>
+          <strong>Khutwa 2:</strong> Fth <a href="https://railway.app" target="_blank" style="color:var(--accent2)">railway.app</a> →
+          Dashboard → Project → <strong>Variables</strong> → Add:
+        </div>
+        <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-family:monospace;font-size:0.8rem">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+            <span style="color:var(--accent3);min-width:130px">GIST_TOKEN</span>
+            <input id="copy-token-val" type="password" value="${token || ''}" placeholder="ghp_xxxxxxxxxxxxxxxx" readonly
+              style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:5px 8px;color:#fff;font-family:monospace;font-size:0.78rem"/>
+            <button class="btn btn-ghost btn-sm" style="font-size:0.72rem" onclick="copyHealVar('copy-token-val')">📋</button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="color:var(--accent3);min-width:130px">GIST_ID</span>
+            <input id="copy-gist-val" type="text" value="${gistId || ''}" placeholder="(sync to Gist first)" readonly
+              style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:5px 8px;color:#fff;font-family:monospace;font-size:0.78rem"/>
+            <button class="btn btn-ghost btn-sm" style="font-size:0.72rem" onclick="copyHealVar('copy-gist-val')">📋</button>
+          </div>
+        </div>
+        <div>
+          <strong>Khutwa 3:</strong> Railway ghadi idir redeploy auto → server kathal mn Gist ✓
+        </div>
+      </div>
+    </div>`;
+}
+
+function copyHealVar(id) {
+  const el = document.getElementById(id);
+  if (!el || !el.value) { toast('Sync to Gist first!', 'warn'); return; }
+  const tmp = document.createElement('input');
+  tmp.value = el.value; document.body.appendChild(tmp);
+  tmp.select(); document.execCommand('copy'); document.body.removeChild(tmp);
+  toast('📋 Copied!', 'success');
 }
 
 /* ===================== CLOUD SYNC (GitHub Gist) ===================== */

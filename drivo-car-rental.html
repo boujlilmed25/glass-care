@@ -1525,20 +1525,33 @@ function _getGistId() {
 /* ============= INIT ============= */
 document.addEventListener('DOMContentLoaded', async () => {
     // 1) Try Railway server first (fast, same origin, includes images)
-    loadFromServer().then(ok => {
-      if (ok) { loadFromAdmin(); renderAll(); window._drivoApplySections && window._drivoApplySections(); }
-    });
+    const serverOk = await loadFromServer();
+    if (serverOk) { loadFromAdmin(); renderAll(); window._drivoApplySections && window._drivoApplySections(); }
+
     // Poll every 60s for live admin updates
     setInterval(() => {
       if (!document.hidden) loadFromServer().then(ok => { if(ok){ loadFromAdmin(); renderAll(); } });
     }, 60000);
 
-    // 2) Gist fallback (if server has no data)
-    const gistId = _getGistId();
-    if (gistId) {
-      loadFromGist(gistId).then(ok => {
-        if (ok) { loadFromAdmin(); renderAll(); window._drivoApplySections && window._drivoApplySections(); }
-      });
+    // 2) Gist fallback — if server had no data, try Gist
+    if (!serverOk) {
+      // Discover gistId: local storage first, then ask server for its stored ID
+      let gistId = _getGistId();
+      if (!gistId) {
+        try {
+          const r = await fetch('/api/gist-id', { cache: 'no-store' });
+          const d = await r.json();
+          if (d && d.gistId) {
+            gistId = d.gistId;
+            localStorage.setItem('drivo_ghGistId', gistId);
+          }
+        } catch(_) {}
+      }
+      if (gistId) {
+        loadFromGist(gistId).then(ok => {
+          if (ok) { loadFromAdmin(); renderAll(); window._drivoApplySections && window._drivoApplySections(); }
+        });
+      }
     }
     loadFromAdmin();
     initSlideImgMgr();
