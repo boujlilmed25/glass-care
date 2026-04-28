@@ -3,6 +3,20 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<script>
+// Auto cache-bust: increment SITE_VER whenever a breaking deploy happens
+var SITE_VER = '3';
+try {
+  if (localStorage.getItem('drivo_site_ver') !== SITE_VER) {
+    localStorage.setItem('drivo_site_ver', SITE_VER);
+    // Force reload bypassing cache — runs before any CSS/JS loads
+    window.location.reload(true);
+  }
+} catch(e) {}
+</script>
 <title>boujlilcars.online — Premium Car Rental Morocco</title>
 <meta name="description" content="Premium car rental service in Morocco. GPS-tracked fleet, full insurance, 24/7 WhatsApp support. Casablanca, Rabat, Marrakech, Tangier, Agadir."/>
 <meta property="og:title" content="boujlilcars.online — Premium Car Rental Morocco"/>
