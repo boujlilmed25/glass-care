@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Boujlilcar — Admin Dashboard</title>
+<title>boujlilcars.online — Admin Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet"/>
 <style>
@@ -379,7 +379,7 @@ tr:last-child td{border-bottom:none;}
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box" id="loginBox">
-    <div class="login-logo"><span>Boujlil</span>car</div>
+    <div class="login-logo"><span>boujlilcars</span>.online</div>
     <p class="login-sub">Admin Dashboard — Secure Access</p>
     <div class="login-field">
       <label>Username</label>
@@ -394,7 +394,7 @@ tr:last-child td{border-bottom:none;}
     <p class="login-error" id="loginLocked" style="color:#f59e0b">🔒 Too many attempts. Try again in <span id="lockCountdown">15:00</span></p>
   </div>
   <div class="login-box" id="twoFABox" style="display:none">
-    <div class="login-logo"><span>Boujlil</span>car</div>
+    <div class="login-logo"><span>boujlilcars</span>.online</div>
     <p class="login-sub">Two-Factor Authentication</p>
     <p style="color:rgba(255,255,255,0.55);font-size:0.83rem;margin-bottom:24px;line-height:1.6">Open your authenticator app and enter the 6-digit code.</p>
     <div class="login-field">
@@ -414,7 +414,7 @@ tr:last-child td{border-bottom:none;}
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <div class="logo"><span>Boujlil</span>car</div>
+    <div class="logo"><span>boujlilcars</span>.online</div>
     <div class="tagline">Admin Dashboard</div>
   </div>
   <nav class="sidebar-nav">
@@ -676,7 +676,7 @@ tr:last-child td{border-bottom:none;}
         <div class="card">
           <div class="card-header"><div class="card-title">🔍 SEO Settings</div></div>
           <div class="form-grid col1">
-            <div class="form-field"><label>Site Title</label><input type="text" id="set-title" placeholder="Boujlilcar — Premium Car Rental Morocco"/></div>
+            <div class="form-field"><label>Site Title</label><input type="text" id="set-title" placeholder="boujlilcars.online — Premium Car Rental Morocco"/></div>
             <div class="form-field"><label>Meta Description</label><textarea id="set-desc" placeholder="Premium car rental in Morocco..."></textarea></div>
             <div class="form-field"><label>Keywords</label><input type="text" id="set-kw" placeholder="car rental morocco, location voiture maroc..."/></div>
           </div>
@@ -1205,7 +1205,7 @@ const defaultFAQ = [
     email:'contact@drivo.ma',
     addrEn:'Casablanca, Morocco',
     addrAr:'الدار البيضاء، المغرب',
-    siteTitle:'Boujlilcar — Premium Car Rental Morocco',
+    siteTitle:'boujlilcars.online — Premium Car Rental Morocco',
     siteDesc:'Premium car rental service in Morocco.',
     siteKw:'car rental morocco, location voiture maroc',
     password:'drivo2026',
@@ -1389,7 +1389,7 @@ function load2FASection(){
       <div class="form-actions"><button class="btn" style="background:var(--red);color:#fff" onclick="disable2FA()">🗑️ Disable 2FA</button></div>`;
   } else {
     if(!_setup2FASecret)_setup2FASecret=genSecret();
-    const issuer='Boujlilcar';
+    const issuer='boujlilcars.online';
     const uri=encodeURIComponent(`otpauth://totp/${issuer}:admin?secret=${_setup2FASecret}&issuer=${issuer}`);
     const qr=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${uri}`;
     el.innerHTML=`
@@ -2846,7 +2846,7 @@ function changePassword() {
     DB.save('adsConfig', adsConfig);
     if(includeSections && sectionsConfig) DB.save('sections', sectionsConfig);
     DB.save('dataTick', Date.now());
-    document.title = settings.siteTitle || 'Boujlilcar Admin';
+    document.title = settings.siteTitle || 'boujlilcars.online Admin';
     sendToSite(true);
     pushToRailway(true);  // silent push to server
     syncToGist(true);     // silent backup to Gist
@@ -2982,20 +2982,20 @@ const defaultFooterContent = {
   col2LinksEn:'Casablanca\nRabat\nMarrakech\nTangier\nAgadir\nFes',
   col2LinksAr:'الدار البيضاء\nالرباط\nمراكش\nطنجة\nأكادير\nفاس',
   contactTitleEn:'Contact Us',contactTitleAr:'اتصل بنا',
-  copyrightEn:'© 2026 Boujlilcar. All rights reserved.',
-  copyrightAr:'© 2026 Boujlilcar لتأجير السيارات. جميع الحقوق محفوظة.',
+  copyrightEn:'© 2026 boujlilcars.online. All rights reserved.',
+  copyrightAr:'© 2026 boujlilcars.online لتأجير السيارات. جميع الحقوق محفوظة.',
   legalLinksEn:'Privacy Policy\nTerms of Service\nCookie Policy',
   legalLinksAr:'سياسة الخصوصية\nشروط الخدمة\nسياسة الكوكيز'
 };
 const defaultWAConfig = {
   number:'+212641750719',
   messages:{
-    hero:"Hello Boujlilcar! I'd like to reserve a car.",
+    hero:"Hello boujlilcars.online! I'd like to reserve a car.",
     fleet:'I want to book: ',
     featured:"I'm interested in: ",
     pricing:'I want the plan: ',
-    cta:'Hello Boujlilcar!',
-    footer:'Hello Boujlilcar!'
+    cta:'Hello boujlilcars.online!',
+    footer:'Hello boujlilcars.online!'
   },
   floatBtnShow:true
 };
